@@ -22,30 +22,20 @@ public class ClientHandler implements Runnable {
 				InputStream in = client.getInputStream();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-				String s = null;
+				String s;
+				String response = "";
 
 				while ((s = reader.readLine()) != null) {
-
-					// if(s.equals("on")){
-					// 	System.out.println();
-					// 	System.out.println("Lampan tnds");
-					// }
-					// else if(s.equals("off")){
-					// 	System.out.println();
-					// 	System.out.println("Lampan slcks");
-					// }
-
 					if(s.equals("open")) {
 						RootServer.setOpenStatus(true);
+						response = "Ok, lets open the lock" + "\n";
+					} else {
+						response = "Server received message: " = s;
 					}
 
-					writer.write("Ok, lets open the lock" + "\n");
+					writer.write(response);
 					writer.flush();
 					System.out.println("Mottaget frn klient: " + s);
-//
-
-
-
 				}
 				writer.close();
 				reader.close();
