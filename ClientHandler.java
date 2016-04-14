@@ -30,7 +30,7 @@ public class ClientHandler implements Runnable {
 						RootServer.setOpenStatus(true);
 						response = "Ok, lets open the lock" + "\n";
 					} else {
-						response = "Server received message: " = s;
+						response = "Server received message: " + s;
 					}
 
 					writer.write(response);
