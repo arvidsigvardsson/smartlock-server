@@ -48,7 +48,7 @@ public class LockHandler implements Runnable {
 						// annars skicka lista med tillåtna id
 						else {
 							// response = "This is a list\n";
-							response = "labcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12";
+							response = "labcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12\n";
 						}
 					}
 					// ifall låset skickar ett blip
