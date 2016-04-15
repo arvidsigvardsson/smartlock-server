@@ -47,7 +47,8 @@ public class LockHandler implements Runnable {
 						}
 						// annars skicka lista med tillåtna id
 						else {
-							response = "This is a list\n";
+							// response = "This is a list\n";
+							response = "labcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12,abcdef12";
 						}
 					}
 					// ifall låset skickar ett blip
