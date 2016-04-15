@@ -14,7 +14,7 @@ public class ClientHttpServer implements Runnable {
 	public void run() {
 		try {
 			HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-			server.createContext("/client", new ClientHttpHandler());//new MyHandler());
+			server.createContext("/client", new ClientHttpHandler()); //new MyHandler());
 			server.setExecutor(Executors.newFixedThreadPool(30));
 			server.start();
 		} catch (IOException e) {
