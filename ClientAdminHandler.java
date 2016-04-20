@@ -22,7 +22,9 @@ public class ClientAdminHandler implements HttpHandler {
 			try {
 				System.out.println("Post request");//, detta är body: " + readBody(ex.getRequestBody()));
 				String body = readBody(ex.getRequestBody());
-				readJSON(body);
+				JsonRFID jsonRfid = readJSON(body);
+				RootServer.getDataContainer().updateAcceptanceMap(jsonRfid.getRfidMap());
+
 				ex.sendResponseHeaders(200, body.length());
 				OutputStream os = ex.getResponseBody();
 				os.write(body.getBytes());
@@ -34,7 +36,14 @@ public class ClientAdminHandler implements HttpHandler {
 			try {
 				System.out.println("Get request");
 
-				String response = "{\"rfidMap\": {\"abcdef12\": true,\"e5a1ea45\": true,\"f1397af0\": false} }";
+				// String response = "{\"rfidMap\": {\"abcdef12\": true,\"e5a1ea45\": true,\"f1397af0\": false} }";
+				JsonRFID jmap = new JsonRFID();
+				jmap.setRfidMap(RootServer.getDataContainer().getAcceptanceList());
+
+				ObjectMapper mapper = new ObjectMapper();
+
+				String response = mapper.writeValueAsString(jmap);
+
 				ex.sendResponseHeaders(200, response.length());
 
 				OutputStream os = ex.getResponseBody();
@@ -64,12 +73,11 @@ public class ClientAdminHandler implements HttpHandler {
 		}
 	}
 
-	public HashMap<String,Boolean> readJSON(String jsonString) {
+	public JsonRFID readJSON(String jsonString) {
 		try {
-		ObjectMapper mapper = new ObjectMapper();
-		HashMap<String, Boolean> idMap = mapper.readValue(jsonString, HashMap.class);
-		System.out.println("Skriver ut json: " + idMap.toString());
-		return idMap;
+			ObjectMapper mapper = new ObjectMapper();
+			JsonRFID jobj = mapper.readValue(jsonString, JsonRFID.class);
+			return jobj;
 		} catch (IOException e) {
 			System.out.println(e);
 			return null;
