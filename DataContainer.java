@@ -90,7 +90,7 @@ public class DataContainer {
 	}
 
 	public String getAcceptanceListArdu(){
-		String str = "";
+		String str = "l";
 		System.out.println(acceptanceMap.keySet());
 		Iterator<String> iter = acceptanceMap.keySet().iterator();
 		while(iter.hasNext()){
