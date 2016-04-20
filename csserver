@@ -1,0 +1,2 @@
+javac *.java
+nohup java RootServer < /dev/null > stdout.txt 2> stderr.txt &
