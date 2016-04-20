@@ -22,9 +22,9 @@ public class DataContainer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void readFile(String filename) throws IOException{
 		try{
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
@@ -32,34 +32,34 @@ public class DataContainer {
 			System.out.println("Filen fanns inte.");
 			return;
 		}
-		
+
 		String input;
 		String key;
 		Boolean value;
 		String[] data;
-		
+
 		while((input = bReader.readLine()) != null){
-			data = input.split(",");		
+			data = input.split(",");
 				key = data[0];
-				value = data[1].equals("true"); 
+				value = data[1].equals("true");
 				acceptanceMap.put(key, value);
 		}
 		bReader.close();
-	}	
-	
+	}
+
 	public void blip(String id) throws IOException{
 		//Användas för vidare funktionalitet, Servern kan lägga på data på id:T
 		System.out.println("BLIP REGISTERED");
 		addToAcceptanceMap(id,true);//LÄGG TILL ID
-		
+
 	}
-	
-	
+
+
 	public void updateAcceptanceMap(HashMap<String,Boolean> update) throws IOException{
 		this.acceptanceMap = update;
 		write();
 	}
-	
+
 	public void write() throws IOException{
 		ArrayList<String> keys = new ArrayList<String>();
 		ArrayList<Boolean> values = new ArrayList<Boolean>();
@@ -79,16 +79,16 @@ public class DataContainer {
 		}
 		bw.close();
 	}
-	
+
 	public void addToAcceptanceMap(String key,Boolean value) throws IOException{
 		this.acceptanceMap.put(key, value);
 		write();
 	}
-	
+
 	public HashMap<String,Boolean> getAcceptanceList(){
 		return this.acceptanceMap;
 	}
-	
+
 	public String getAcceptanceListArdu(){
 		String str = "";
 		System.out.println(acceptanceMap.keySet());
@@ -101,14 +101,14 @@ public class DataContainer {
 				str += id+",";
 			}
 		}
-		return str+"\\n";
+		return str+"\n";
 	}
-	
-	
-	
+
+
+
 	public static void main(String[] args) throws IOException{
 		DataContainer dc = new DataContainer("filer/text.txt");
-		System.out.println(dc.getAcceptanceListArdu());		
+		System.out.println(dc.getAcceptanceListArdu());
 		HashMap<String,Boolean> map = new HashMap<String,Boolean>();
 		map.put("asdasd1", false);
 		map.put("asdsa2", true);

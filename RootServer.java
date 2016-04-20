@@ -1,8 +1,8 @@
 public class RootServer {
 	private static boolean openStatus = false;
-	private static DataContainer3 dataContainer = new DataContainer3("filer/idlist.txt");
+	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt");
 
-	public static DataContainer3 getDataContainer() {
+	public static DataContainer getDataContainer() {
 		return dataContainer;
 	}
 
