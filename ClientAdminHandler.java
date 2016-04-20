@@ -10,17 +10,26 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.util.*;
 
-// import com.fasterxml.jackson.databind.*;
-// import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonParseException;
 
 public class ClientAdminHandler implements HttpHandler {
 	public void handle(HttpExchange ex) {
 		System.out.println("Adminhanterare");
 		// avgöra om det är GET eller POST
 		if ("POST".equals(ex.getRequestMethod())) {
-			System.out.println("Post request");//, detta är body: " + readBody(ex.getRequestBody()));
-			// readJSON(readBody(ex.getRequestBody()));
+			try {
+				System.out.println("Post request");//, detta är body: " + readBody(ex.getRequestBody()));
+				String body = readBody(ex.getRequestBody());
+				readJSON(body);
+				ex.sendResponseHeaders(200, body.length());
+				OutputStream os = ex.getResponseBody();
+				os.write(body.getBytes());
+				os.close();
+			} catch (IOException e) {
+				System.out.println(e);
+			}
 		} else if ("GET".equals(ex.getRequestMethod())) {
 			try {
 				System.out.println("Get request");
@@ -55,15 +64,15 @@ public class ClientAdminHandler implements HttpHandler {
 		}
 	}
 
-	// public HashMap<String,Boolean> readJSON(String jsonString) {
-	// 	try {
-	// 	ObjectMapper mapper = new ObjectMapper();
-	// 	HashMap<String, Boolean> idMap = mapper.readValue(jsonString, HashMap.class);
-	// 	System.out.println("Skriver ut json: " + idMap.toString());
-	// 	return idMap;
-	// 	} catch (IOException e) {
-	// 		System.out.println(e);
-	// 		return null;
-	// 	}
-	// }
+	public HashMap<String,Boolean> readJSON(String jsonString) {
+		try {
+		ObjectMapper mapper = new ObjectMapper();
+		HashMap<String, Boolean> idMap = mapper.readValue(jsonString, HashMap.class);
+		System.out.println("Skriver ut json: " + idMap.toString());
+		return idMap;
+		} catch (IOException e) {
+			System.out.println(e);
+			return null;
+		}
+	}
 }
