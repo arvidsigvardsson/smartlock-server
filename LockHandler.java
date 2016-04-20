@@ -54,6 +54,7 @@ public class LockHandler implements Runnable {
 					// ifall låset skickar ett blip
 					else if (s.charAt(0) == 'c') {
 						response = "blip received";
+						RootServer.getDataContainer().blip(s.substring(1));
 					}
 
 					// OutputStream out = client.getOutputStream();

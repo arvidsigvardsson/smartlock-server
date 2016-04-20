@@ -11,11 +11,23 @@ import java.util.*;
 public class ClientHttpHandler implements HttpHandler {
 	public void handle(HttpExchange ex) throws IOException {
 		System.out.println("Http request received, detta är query: " + ex.getRequestURI().getQuery());
+		System.out.println("Detta är request method: " + ex.getRequestMethod());
+
+		// // avgöra om det är GET eller POST
+		// if ("POST".equals(ex.getRequestMethod()) {
+
+		// } else if ("GET".equals(ex.getRequestMethod()) {
+
+		// } else {
+
+		// }
+
+
 		String response = "";
 		Map<String, String> params = queryToMap(ex.getRequestURI().getQuery());
 		if ("open".equals(params.get("message"))) {
 			RootServer.setOpenStatus(true);
-			response = "Opening the lock";
+			response = "Opening the lock\n";
 		} else {
 			response = "Server received your message\n";
 		}

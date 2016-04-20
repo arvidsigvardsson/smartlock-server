@@ -15,18 +15,12 @@ public class ClientHttpServer implements Runnable {
 		try {
 			HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 			server.createContext("/client", new ClientHttpHandler()); //new MyHandler());
+			server.createContext("/admin", new ClientAdminHandler());
 			server.setExecutor(Executors.newFixedThreadPool(30));
 			server.start();
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-
 	}
-
-	static class MyHandler implements HttpHandler {
-	public void handle(HttpExchange t) throws IOException {
-
-	}
-}
 }
 
