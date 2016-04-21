@@ -50,7 +50,9 @@ public class DataContainer {
 	public void blip(String id) throws IOException{
 		//Användas för vidare funktionalitet, Servern kan lägga på data på id:T
 		System.out.println("BLIP REGISTERED");
-		addToAcceptanceMap(id,false);//LÄGG TILL ID
+		if (!acceptanceMap.containsKey(id)) {
+			addToAcceptanceMap(id,false);//LÄGG TILL ID
+		}
 
 	}
 
