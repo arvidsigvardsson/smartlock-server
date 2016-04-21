@@ -91,12 +91,12 @@ public class DataContainer {
 
 	public String getAcceptanceListArdu(){
 		String str = "l";
-		System.out.println(acceptanceMap.keySet());
+		// System.out.println(acceptanceMap.keySet());
 		Iterator<String> iter = acceptanceMap.keySet().iterator();
 		while(iter.hasNext()){
 			String id = iter.next();
-			System.out.println(id);
-			System.out.println(acceptanceMap.get(id));
+			// System.out.println(id);
+			// System.out.println(acceptanceMap.get(id));
 			if(acceptanceMap.get(id)){
 				str += id+",";
 			}
@@ -108,7 +108,7 @@ public class DataContainer {
 
 	public static void main(String[] args) throws IOException{
 		DataContainer dc = new DataContainer("filer/text.txt");
-		System.out.println(dc.getAcceptanceListArdu());
+		// System.out.println(dc.getAcceptanceListArdu());
 		HashMap<String,Boolean> map = new HashMap<String,Boolean>();
 		map.put("asdasd1", false);
 		map.put("asdsa2", true);

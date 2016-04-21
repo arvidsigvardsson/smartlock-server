@@ -2,3 +2,7 @@
 stderr.txt
 stdout.txt
 .DS_Store
+filer/
+jsontest.txt
+servererr.txt
+serverlogg.txt
