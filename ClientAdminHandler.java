@@ -20,7 +20,7 @@ public class ClientAdminHandler implements HttpHandler {
 		// avgöra om det är GET eller POST
 		if ("POST".equals(ex.getRequestMethod())) {
 			try {
-				System.out.println("Post request");//, detta är body: " + readBody(ex.getRequestBody()));
+				System.out.println("Post request, detta är body: " + readBody(ex.getRequestBody()));
 				String body = readBody(ex.getRequestBody());
 				JsonRFID jsonRfid = readJSON(body);
 				RootServer.getDataContainer().updateAcceptanceMap(jsonRfid.getRfidMap());
