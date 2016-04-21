@@ -20,8 +20,9 @@ public class ClientAdminHandler implements HttpHandler {
 		// avgöra om det är GET eller POST
 		if ("POST".equals(ex.getRequestMethod())) {
 			try {
-				System.out.println("Post request, detta är body: " + readBody(ex.getRequestBody()));
 				String body = readBody(ex.getRequestBody());
+				System.out.println("Post request, detta är body: " + body ); //readBody(ex.getRequestBody()));
+				// String body = readBody(ex.getRequestBody());
 				JsonRFID jsonRfid = readJSON(body);
 				RootServer.getDataContainer().updateAcceptanceMap(jsonRfid.getRfidMap());
 
@@ -79,7 +80,7 @@ public class ClientAdminHandler implements HttpHandler {
 			JsonRFID jobj = mapper.readValue(jsonString, JsonRFID.class);
 			return jobj;
 		} catch (IOException e) {
-			System.out.println("Något fel med jsonparsing: " + e);
+			System.out.println("Något fel med jsonparsing: Detta var strängen: " + jsonString + e);
 			return null;
 		}
 	}
