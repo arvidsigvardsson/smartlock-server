@@ -79,7 +79,7 @@ public class ClientAdminHandler implements HttpHandler {
 			JsonRFID jobj = mapper.readValue(jsonString, JsonRFID.class);
 			return jobj;
 		} catch (IOException e) {
-			System.out.println(e);
+			System.out.println("Något fel med jsonparsing: " + e);
 			return null;
 		}
 	}
