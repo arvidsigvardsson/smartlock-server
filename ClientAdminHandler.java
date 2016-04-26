@@ -25,6 +25,7 @@ public class ClientAdminHandler implements HttpHandler {
 				// String body = readBody(ex.getRequestBody());
 				JsonRFID jsonRfid = readJSON(body);
 				RootServer.getDataContainer().updateAcceptanceMap(jsonRfid.getRfidMap());
+				RootServer.getDataContainer().setIdNameMap(jsonRfid.getIdNameMap());
 
 				ex.sendResponseHeaders(200, body.length());
 				OutputStream os = ex.getResponseBody();

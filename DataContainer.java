@@ -99,7 +99,8 @@ public class DataContainer {
 		write();
 	}
 
-	public void saveIdNameMapToDisk() throws IOException {
+	public void saveIdNameMapToDisk() {
+		try {
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(idNameMapFileName),"UTF-8"));
 
 		for (Entry<String, String> entry : idNameMap.entrySet()) {
@@ -108,6 +109,16 @@ public class DataContainer {
 		}
 
 		bw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setIdNameMap(HashMap<String, String> map) {
+		this.idNameMap = map;
+		saveIdNameMapToDisk();
 	}
 
 	public void write() throws IOException{
@@ -160,6 +171,11 @@ public class DataContainer {
 		DataContainer dc = new DataContainer("filer/text.txt", "filer/testavidnamn.txt");
 
 		System.out.println("idNameMap: " + dc.getIdNameMap());
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("666", "Number of the beast");
+		dc.setIdNameMap(map);
+		System.out.println("idNameMap: " + dc.getIdNameMap());
+
 
 
 		// System.out.println(dc.getAcceptanceListArdu());
