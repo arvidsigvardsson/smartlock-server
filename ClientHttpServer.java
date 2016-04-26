@@ -19,10 +19,10 @@ public class ClientHttpServer implements Runnable {
 			HttpContext aContext =server.createContext("/admin", new ClientAdminHandler());
 			server.setExecutor(Executors.newFixedThreadPool(30));
 
-			UserAuthentication uAuth = new UserAuthentication("Logga in med ditt användarnamn och lösenord.");
+			UserAuthentication uAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
 			uContext.setAuthenticator(uAuth);
 			//BYTA MOT ADMIN AUTHENTICATION SENARE (VID BEHOV):
-			UserAuthentication aAuth = new UserAuthentication("Logga in med ditt användarnamn och lösenord.");
+			UserAuthentication aAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
 			// 
 			aContext.setAuthenticator(aAuth); 
 			
