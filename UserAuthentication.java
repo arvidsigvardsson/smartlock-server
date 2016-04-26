@@ -10,8 +10,7 @@ public class UserAuthentication extends BasicAuthenticator{
 	}
 
 		public boolean checkCredentials(String user, String pass) {
-			user = user.hashCode()+"";
-			pass = pass.hashCode()+"";
+
 			HashMap<String,String> list = container.getAcceptanceList();
 			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 			

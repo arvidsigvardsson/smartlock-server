@@ -1,4 +1,4 @@
-import java.io.BufferedReader;
+﻿import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 public class UserContainer {
 	private HashMap<String,String> acceptanceMap = new HashMap<String,String>();
@@ -40,8 +42,8 @@ public class UserContainer {
 
 		while((input = bReader.readLine()) != null){
 			data = input.split(",");
-				key = data[0].hashCode()+"";
-				value = data[1].hashCode()+"";
+				key = data[0];
+				value = data[1];
 				acceptanceMap.put(key, value);
 		}
 		bReader.close();
@@ -80,6 +82,18 @@ public class UserContainer {
 
 	public HashMap<String,String> getAcceptanceList(){
 		return this.acceptanceMap;
+	}
+	public static void main(String[] args) throws IOException{
+		UserContainer uc = new UserContainer("filer/userList.txt");
+		String key = JOptionPane.showInputDialog("namn");
+		String value = JOptionPane.showInputDialog("lösen");
+		while(! (key.equals("0") || value.equals("0"))){
+			uc.addToAcceptanceMap(key, value);
+			key = JOptionPane.showInputDialog("namn");
+			value = JOptionPane.showInputDialog("lösen");
+		}
+		
+		
 	}
 
 }
