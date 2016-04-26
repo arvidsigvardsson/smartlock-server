@@ -7,6 +7,15 @@ import java.util.HashMap;
 
 public class JsonRFID {
 	private HashMap<String, Boolean> rfidMap;
+	private HashMap<String, String> idNameMap;
+
+	public HashMap<String, String> getIdNameMap() {
+		return idNameMap;
+	}
+
+	public void setIdNameMap(HashMap<String, String> map) {
+		idNameMap = map;
+	}
 
 	public HashMap<String, Boolean> getRfidMap() {
 		return rfidMap;

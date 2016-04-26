@@ -40,6 +40,7 @@ public class ClientAdminHandler implements HttpHandler {
 				// String response = "{\"rfidMap\": {\"abcdef12\": true,\"e5a1ea45\": true,\"f1397af0\": false} }";
 				JsonRFID jmap = new JsonRFID();
 				jmap.setRfidMap(RootServer.getDataContainer().getAcceptanceList());
+				jmap.setIdNameMap(RootServer.getDataContainer().getIdNameMap());
 
 				ObjectMapper mapper = new ObjectMapper();
 

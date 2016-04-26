@@ -10,19 +10,56 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Map.Entry;
 
 public class DataContainer {
 	private HashMap<String,Boolean> acceptanceMap = new HashMap<String,Boolean>();
 	private String filename;
 	private BufferedReader bReader;
-	public DataContainer(String filename){//Try catch måste implementeras
+	private HashMap<String, String> idNameMap = new HashMap<String, String>();
+	private String idNameMapFileName;
+
+	public DataContainer(String filename, String idNameMapFileName) {
 		this.filename = filename;
+		this.idNameMapFileName = idNameMapFileName;
 		try {
 			readFile(filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		try {
+			readIdNameMapFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void readIdNameMapFile() throws IOException {
+		try{
+			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(idNameMapFileName)));
+		}catch(FileNotFoundException e){
+			System.out.println("Filen fanns inte.");
+			return;
+		}
+
+		String input;
+		String key;
+		String value;
+		String[] data;
+
+		while((input = bReader.readLine()) != null){
+			data = input.split(",");
+				key = data[0];
+				value = data[1];
+				idNameMap.put(key, value);
+		}
+		bReader.close();
+	}
+
+	public HashMap<String, String> getIdNameMap() {
+		return this.idNameMap;
 	}
 
 	private void readFile(String filename) throws IOException{
@@ -60,6 +97,17 @@ public class DataContainer {
 	public void updateAcceptanceMap(HashMap<String,Boolean> update) throws IOException{
 		this.acceptanceMap = update;
 		write();
+	}
+
+	public void saveIdNameMapToDisk() throws IOException {
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(idNameMapFileName),"UTF-8"));
+
+		for (Entry<String, String> entry : idNameMap.entrySet()) {
+			bw.write(entry.getKey() + "," + entry.getValue());
+			bw.newLine();
+		}
+
+		bw.close();
 	}
 
 	public void write() throws IOException{
@@ -109,17 +157,21 @@ public class DataContainer {
 
 
 	public static void main(String[] args) throws IOException{
-		DataContainer dc = new DataContainer("filer/text.txt");
+		DataContainer dc = new DataContainer("filer/text.txt", "filer/testavidnamn.txt");
+
+		System.out.println("idNameMap: " + dc.getIdNameMap());
+
+
 		// System.out.println(dc.getAcceptanceListArdu());
-		HashMap<String,Boolean> map = new HashMap<String,Boolean>();
-		map.put("asdasd1", false);
-		map.put("asdsa2", true);
-		map.put("asddad3", false);
-		map.put("aresr4", false);
-		map.put("dawwa5", true);
-		map.put("wwew6", false);
-		dc.updateAcceptanceMap(map);
-		dc.blip("id");
+		// HashMap<String,Boolean> map = new HashMap<String,Boolean>();
+		// map.put("asdasd1", false);
+		// map.put("asdsa2", true);
+		// map.put("asddad3", false);
+		// map.put("aresr4", false);
+		// map.put("dawwa5", true);
+		// map.put("wwew6", false);
+		// dc.updateAcceptanceMap(map);
+		// dc.blip("id");
 //		System.out.println(dc.getAcceptanceListArdu());
 //		dc.addToAcceptanceMap("bbbb4", true);
 //		dc.addToAcceptanceMap("ccccc5", false);
