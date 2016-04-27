@@ -10,7 +10,6 @@ public class UserAuthentication extends BasicAuthenticator{
 	}
 
 		public boolean checkCredentials(String user, String pass) {
-
 			HashMap<String,String> list = container.getAcceptanceList();
 			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 			
@@ -19,7 +18,7 @@ public class UserAuthentication extends BasicAuthenticator{
 			System.out.println("list.containsKey(user) :"+list.containsKey(user));
 			System.out.println("list.get(user) :"+list.get(user));
 			
-			if(list.containsKey(user) && list.get(user).equals(pass)){
+			if(list.containsKey(user.hashCode()+"") && list.get(user.hashCode()+"").equals(pass.hashCode()+"")){
 				return true;
 			}else{
 				return false;
