@@ -205,10 +205,6 @@ public class UserContainer {
 			uc.addToAcceptanceMap(key, value);
 			key = JOptionPane.showInputDialog("namn");
 			value = JOptionPane.showInputDialog("lösen");
-		}
-		
-		
-
+		}			
 	}
-
 }
