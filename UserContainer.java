@@ -1,4 +1,4 @@
-﻿import java.io.BufferedReader;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -92,8 +92,8 @@ public class UserContainer {
 			key = JOptionPane.showInputDialog("namn");
 			value = JOptionPane.showInputDialog("lösen");
 		}
-		
-		
+
+
 	}
 
 }
