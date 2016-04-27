@@ -22,9 +22,9 @@ public class ClientHttpServer implements Runnable {
 			UserAuthentication uAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
 			uContext.setAuthenticator(uAuth);
 			//BYTA MOT ADMIN AUTHENTICATION SENARE (VID BEHOV):
-			UserAuthentication aAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
+			// UserAuthentication aAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
 			// 
-			aContext.setAuthenticator(aAuth); 
+			// aContext.setAuthenticator(aAuth); 
 			
 			server.start();
 		} catch (IOException e) {
