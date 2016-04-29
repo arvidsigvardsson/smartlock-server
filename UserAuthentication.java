@@ -1,4 +1,4 @@
-import java.util.HashMap;
+﻿import java.util.HashMap;
 
 import com.sun.net.httpserver.BasicAuthenticator;
 
@@ -9,7 +9,7 @@ public class UserAuthentication extends BasicAuthenticator{
 	}
 
 		public boolean checkCredentials(String user, String pass) {
-			//container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
+			container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
 			HashMap<String,String> list = container.getAcceptanceList();
 			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 
