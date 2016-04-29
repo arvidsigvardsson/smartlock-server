@@ -3,13 +3,13 @@ import java.util.HashMap;
 import com.sun.net.httpserver.BasicAuthenticator;
 
 public class UserAuthentication extends BasicAuthenticator{
-	    private UserContainer container = new UserContainer("filer/userList.txt");
-	
+		private UserContainer2 container = new UserContainer2("filer/userList.txt");
 		public UserAuthentication(String message) {
 		super(message);
 	}
 
 		public boolean checkCredentials(String user, String pass) {
+			//container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
 			HashMap<String,String> list = container.getAcceptanceList();
 			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 			
