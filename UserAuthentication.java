@@ -1,9 +1,9 @@
-import java.util.HashMap;
+﻿import java.util.HashMap;
 
 import com.sun.net.httpserver.BasicAuthenticator;
 
 public class UserAuthentication extends BasicAuthenticator{
-		private UserContainer2 container = new UserContainer2("filer/userList.txt");
+		private UserContainer container = new UserContainer("filer/userList.txt");
 		public UserAuthentication(String message) {
 		super(message);
 	}
