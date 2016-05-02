@@ -1,7 +1,13 @@
 public class RootServer {
 	private static boolean openStatus = false;
-	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
-
+	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt");
+	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
+	
+	
+	public static TimestampLog getTimestampLog() {
+		return timestampLog;
+	}
+	
 	public static DataContainer getDataContainer() {
 		return dataContainer;
 	}
@@ -23,5 +29,7 @@ public class RootServer {
 		t2.start();
 		t3.start();
 	}
+
+
 }
 

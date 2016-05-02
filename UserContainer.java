@@ -18,10 +18,13 @@ import javax.swing.JOptionPane;
 
 /**
  * 
- * @author Admin Skriver och läser användarnamn samt lösenord till en text-fil.
- *         Lagrar användar uppgifter och har backupfunktionalitet. En mapp
- *         "filer" behöver finnas i projektmappen. Resterande map (userBackups)
- *         och fil (userList.txt) skapas automatiskt om de inte hittas.
+ * Skriver och läser användarnamn samt lösenord till en text-fil. Lagrar
+ * användar uppgifter och har backupfunktionalitet. En mapp "filer" behöver
+ * finnas i projektmappen. Resterande map (userBackups) och fil (userList.txt)
+ * skapas automatiskt om de inte hittas.
+ * 
+ * @author Admin
+ * 
  * 
  */
 
@@ -53,7 +56,7 @@ public class UserContainer {
 	 *             Kastas om backup mapp inte finns.
 	 * 
 	 */
-	public UserContainer(String filename, int backupLimit, int backupTimeCheck) {
+	public UserContainer(String filename, int backupLimit, long backupTimeCheck) {
 		this(filename);
 		this.backupLimit = backupLimit;
 		this.backupTimeCheck = backupTimeCheck;
@@ -80,7 +83,7 @@ public class UserContainer {
 		System.out.println("Does the backup folder exist?: " + state);
 		if (state) {
 			try {
-				System.out.println("Move all existing backup files to a new folder");
+				System.out.println("Moving all existing backup files to a new folder");
 				this.moveBackupFiles(1, false);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -296,7 +299,11 @@ public class UserContainer {
 	 *            Strängen som ska kontrolleras
 	 * @return boolean true om pass, false om fail
 	 */
-	public boolean characterCheck(String str) {
+	public static boolean characterCheck(String str) {
+		int a = (int)str.charAt(0);
+		if(a==65533){ /*Code for uknown char*/
+			return false;
+		}
 		if (str.isEmpty() || str.contains(" ") || str.contains("å") || str.contains("ä") || str.contains("ö")
 				|| str.contains("Å") || str.contains("Ä") || str.contains("Ö")) {
 			return false;
@@ -477,7 +484,7 @@ public class UserContainer {
 
 		}
 	}
-
+	
 	/**
 	 * Kontrollerar om mappen "userBackups" existerar i mappen "filer", om inte
 	 * så skapas mappen.
@@ -562,7 +569,7 @@ public class UserContainer {
 	 *            gräns i millisekunder för hur ofta backups får skapas t.ex.
 	 *            (1000*60*60) -> inte inom en timme efter en backupskrivning.
 	 */
-	public void setBackupTimeCheck(int backupTimeCheck) {
+	public void setBackupTimeCheck(long backupTimeCheck) {
 		this.backupTimeCheck = backupTimeCheck;
 	}
 
@@ -601,15 +608,15 @@ public class UserContainer {
 
 	/**
 	 * Testmetod för att testa att klassen fungerar. Denna metod exekveras från
-	 * userAuthentication-klassen som har instansierat ett UserContainer
-	 * objekt. Metoden anropas i början av checkCredentials-metoden i
-	 * userAuthentication klassen.
+	 * userAuthentication-klassen som har instansierat ett UserContainer objekt.
+	 * Metoden anropas i början av checkCredentials-metoden i userAuthentication
+	 * klassen.
 	 */
 	public void test() {
 		String input = "";
 		while (!(input.equals("0") || input.equals("exit"))) {
 			input = JOptionPane.showInputDialog(
-					"\n*************************************\n*****^^^TEST PROGRAM^^^*****\n*************************************\n1. add\n2. getmax\n3. gettime\n4. setmax\n5. settime\n6. print\n7. getlist\n8. loadlist\n9. updatehashed\n10. updatenonhashed\n*************************************\nEnter \"0\" or \"exit\" to exit.\n************************************* ");
+					"\n*************************************\n*****^^^TEST PROGRAM^^^*****\n*************************************\n1. add\n2. getmax\n3. gettime\n4. setmax\n5. settime\n6. print\n7. getBackupslist\n8. loadlist\n9. updatehashed\n10. updatenonhashed\n*************************************\nEnter \"0\" or \"exit\" to exit.\n************************************* ");
 			switch (input) {
 
 			case "1":
@@ -661,7 +668,7 @@ public class UserContainer {
 				break;
 
 			case "7":
-				System.out.println("RUNNING: getlist");
+				System.out.println("RUNNING: getBackupslist");
 				String list[] = getBackupsList();
 				String res = "";
 				for (String s : list) {
@@ -722,8 +729,8 @@ public class UserContainer {
 		 * exekvera testningen, det gör den med hjälp av test()-metoden i
 		 * UserContainer-klassen. Då verkar allt fungera riktigt bra PASS! -
 		 * TESTA HELA KLASSEN OCH DESS FUNKTIONER OCH SE OM SERVERN PÅVERKAS I
-		 * REALTID SOM DEN BÖR. OBS:TEST 5 körs genom RootServer-klassen med anropet till test()-metoden 
-		 * avkommenterad.
+		 * REALTID SOM DEN BÖR. OBS:TEST 5 körs genom RootServer-klassen med
+		 * anropet till test()-metoden avkommenterad.
 		 */
 
 		/*
@@ -735,8 +742,8 @@ public class UserContainer {
 		 * in
 		 */
 		/*
-		 * UserContainer uc = new UserContainer("filer/userList.txt"); //
-		 * Filen // skapas String key = JOptionPane.showInputDialog("namn"); //
+		 * UserContainer uc = new UserContainer("filer/userList.txt"); // Filen
+		 * // skapas String key = JOptionPane.showInputDialog("namn"); //
 		 * aaa....ccc String value = JOptionPane.showInputDialog("lösen");//
 		 * 111....333 while (!(key.equals("0") || value.equals("0"))) {
 		 * uc.addToAcceptanceMap(key, value); key =
