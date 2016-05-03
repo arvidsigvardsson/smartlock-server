@@ -96,6 +96,7 @@ public class DataContainer {
 
 	public void updateAcceptanceMap(HashMap<String,Boolean> update) throws IOException{
 		this.acceptanceMap = update;
+		sendAdminPush(); // testar pushnotiser
 		write();
 	}
 
@@ -118,6 +119,7 @@ public class DataContainer {
 
 	public void setIdNameMap(HashMap<String, String> map) {
 		this.idNameMap = map;
+		sendAdminPush(); // testar pushnotiser
 		saveIdNameMapToDisk();
 	}
 
@@ -143,6 +145,7 @@ public class DataContainer {
 
 	public void addToAcceptanceMap(String key,Boolean value) throws IOException{
 		this.acceptanceMap.put(key, value);
+		sendAdminPush(); // testar pushnotiser
 		write();
 	}
 
@@ -194,4 +197,7 @@ public class DataContainer {
 //		System.out.println(dc.getAcceptanceListArdu());
 	}
 
+	public void sendAdminPush() {
+		System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
+	}
 }
