@@ -26,9 +26,9 @@ public class ClientHttpServer implements Runnable {
 			loginContext.setAuthenticator(uAuth);
 
 			//BYTA MOT ADMIN AUTHENTICATION SENARE (VID BEHOV):
-			// UserAuthentication aAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
+			UserAuthentication aAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
 			//
-			// aContext.setAuthenticator(aAuth);
+			aContext.setAuthenticator(aAuth);
 
 			server.start();
 		} catch (IOException e) {
