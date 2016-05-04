@@ -7,10 +7,12 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.InputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.io.OutputStreamWriter;
 
 import java.util.ArrayList;
 
@@ -64,6 +66,35 @@ public class PushNotifier {
 		}
 	}
 
+	public void addToken(String token) {
+		// kollar så att token inte redan finns
+		if (!tokens.contains(token)) {
+			tokens.add(token);
+		}
+		// spara till textfil
+		writeTokensToDisk();
+	}
+
+	public void writeTokensToDisk() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tokensFilePath),"UTF-8"));
+
+			// for (Entry<String, String> entry : idNameMap.entrySet()) {
+			// 	bw.write(entry.getKey() + "," + entry.getValue());
+			// 	bw.newLine();
+			// }
+
+			for (String token : tokens) {
+				bw.write(token);
+				bw.newLine();
+			}
+
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private String makeJsonPushObject() {
 		// return "{\"to\":\"eeo-s16-1vg:APA91bFcKOQ0UrAf4f8e7SOkysDM_78gIlJunBoq4yFw5KooiSKMIzEiUMbELplw7ksO0Dz4Lft9Ekga47SLH9It_eKG-DgnDN7KKA52LyAzzscSOUMkZ0b9oiHVWnbbvq3HpyEN32n7\",\"data\": {\"score\":\"3x1\"}}";
 		try {
@@ -71,7 +102,10 @@ public class PushNotifier {
 			JsonPushData jpd = new JsonPushData();
 			jpd.setMessage("New data on server");
 			JsonPush jp = new JsonPush();
-			jp.setTo(tokens.get(0));
+
+			// sätta lista med registration ids
+			jp.setRegistration_ids(tokens);
+			// jp.setTo(tokens.get(0));
 			// jp.setData(mapper.writeValueAsString(jpd));
 
 			jp.setData(jpd);

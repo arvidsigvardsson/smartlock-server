@@ -18,6 +18,8 @@ public class ClientHttpServer implements Runnable {
 			HttpContext uContext = server.createContext("/client", new ClientHttpHandler());
 			HttpContext aContext =server.createContext("/admin", new ClientAdminHandler());
 			HttpContext loginContext = server.createContext("/login", new LoginHandler());
+			HttpContext pushtokensContext = server.createContext("/pushtokens", new PushTokensHandler());
+
 			server.setExecutor(Executors.newFixedThreadPool(30));
 
 			UserAuthentication uAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
@@ -29,6 +31,8 @@ public class ClientHttpServer implements Runnable {
 			UserAuthentication aAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
 			//
 			aContext.setAuthenticator(aAuth);
+
+			pushtokensContext.setAuthenticator(uAuth);
 
 			server.start();
 		} catch (IOException e) {
