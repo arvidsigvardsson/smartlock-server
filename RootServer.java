@@ -8,6 +8,13 @@ public class RootServer {
 		return pushNotifier;
 	}
 
+	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
+
+
+	public static TimestampLog getTimestampLog() {
+		return timestampLog;
+	}
+
 	public static DataContainer getDataContainer() {
 		return dataContainer;
 	}
@@ -37,5 +44,7 @@ public class RootServer {
 		t2.start();
 		t3.start();
 	}
+
+
 }
 
