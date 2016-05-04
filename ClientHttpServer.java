@@ -38,12 +38,7 @@ public class ClientHttpServer implements Runnable {
 			pushtokensContext.setAuthenticator(uAuth);
 			iosPushContext.setAuthenticator(uAuth);
 
-			//BYTA MOT ADMIN AUTHENTICATION SENARE:
-			UserAuthentication aAuth = new UserAuthentication("Logga in med ditt användarnamn och lösenord.");
-			// 
-			aContext.setAuthenticator(aAuth); 
-			
- 			server.start();
+			server.start();
 		} catch (IOException e) {
 			System.out.println(e);
 		}

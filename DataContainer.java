@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -24,6 +25,8 @@ public class DataContainer {
 	private HashMap<String, Boolean> acceptanceMap = new HashMap<String, Boolean>();
 	private String filename;
 	private BufferedReader bReader;
+	private HashMap<String, String> idNameMap = new HashMap<String, String>();
+	private String idNameMapFileName;
 
 	/**
 	 * Konstuktor som läser in data från angiven fil och lagrar datan i klassens
@@ -32,10 +35,18 @@ public class DataContainer {
 	 * @param filename
 	 *            Filen där datan till instans HashMapen ska läsas in från.
 	 */
-	public DataContainer(String filename) {// Try catch måste implementeras
+
+	public DataContainer(String filename, String idNameMapFileName) {
 		this.filename = filename;
+		this.idNameMapFileName = idNameMapFileName;
 		try {
 			readFile(filename);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			readIdNameMapFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -98,6 +109,32 @@ public class DataContainer {
 			return;
 		}
 		RootServer.getTimestampLog().addTimestamp(id, false);
+	}
+
+	public HashMap<String, String> getIdNameMap() {
+		return this.idNameMap;
+	}
+
+	private void readIdNameMapFile() throws IOException {
+		try{
+			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(idNameMapFileName)));
+		}catch(FileNotFoundException e){
+			System.out.println("Filen fanns inte.");
+			return;
+		}
+
+		String input;
+		String key;
+		String value;
+		String[] data;
+
+		while((input = bReader.readLine()) != null){
+			data = input.split(",");
+				key = data[0];
+				value = data[1];
+				idNameMap.put(key, value);
+		}
+		bReader.close();
 	}
 
 	/**
@@ -290,21 +327,21 @@ public class DataContainer {
 
 
 	public static void main(String[] args) throws IOException {
-		DataContainer dc = new DataContainer("filer/text.txt");
-		// System.out.println(dc.getAcceptanceListArdu());
-		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
-		map.put("asdasd1", false);
-		map.put("asdsa2", true);
-		map.put("asddad3", false);
-		map.put("aresr4", false);
-		map.put("dawwa5", true);
-		map.put("wwew6", false);
-		dc.updateAcceptanceMap(map);
-		dc.blip("id");
-		// System.out.println(dc.getAcceptanceListArdu());
-		// dc.addToAcceptanceMap("bbbb4", true);
-		// dc.addToAcceptanceMap("ccccc5", false);
-		// System.out.println(dc.getAcceptanceListArdu());
+		// DataContainer dc = new DataContainer("filer/text.txt");
+		// // System.out.println(dc.getAcceptanceListArdu());
+		// HashMap<String, Boolean> map = new HashMap<String, Boolean>();
+		// map.put("asdasd1", false);
+		// map.put("asdsa2", true);
+		// map.put("asddad3", false);
+		// map.put("aresr4", false);
+		// map.put("dawwa5", true);
+		// map.put("wwew6", false);
+		// dc.updateAcceptanceMap(map);
+		// dc.blip("id");
+		// // System.out.println(dc.getAcceptanceListArdu());
+		// // dc.addToAcceptanceMap("bbbb4", true);
+		// // dc.addToAcceptanceMap("ccccc5", false);
+		// // System.out.println(dc.getAcceptanceListArdu());
 	}
 
 	public void sendAdminPush() {
