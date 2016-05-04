@@ -1,6 +1,11 @@
 public class RootServer {
 	private static boolean openStatus = false;
 	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
+	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
+
+	public static PushNotifier getPushNotifier() {
+		return pushNotifier;
+	}
 
 	public static DataContainer getDataContainer() {
 		return dataContainer;

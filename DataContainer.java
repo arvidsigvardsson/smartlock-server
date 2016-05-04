@@ -119,7 +119,7 @@ public class DataContainer {
 
 	public void setIdNameMap(HashMap<String, String> map) {
 		this.idNameMap = map;
-		sendAdminPush(); // testar pushnotiser
+		// sendAdminPush(); // testar pushnotiser
 		saveIdNameMapToDisk();
 	}
 
@@ -198,6 +198,6 @@ public class DataContainer {
 	}
 
 	public void sendAdminPush() {
-		System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
+		RootServer.getPushNotifier().sendAdminPushNotification();
 	}
 }
