@@ -199,5 +199,8 @@ public class DataContainer {
 
 	public void sendAdminPush() {
 		RootServer.getPushNotifier().sendAdminPushNotification();
+
+		// för iOS
+		RootServer.setIosPushDataAvailable(true);
 	}
 }

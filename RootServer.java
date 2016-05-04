@@ -1,5 +1,6 @@
 public class RootServer {
 	private static boolean openStatus = false;
+	private static boolean iosPushDataAvailable = false;
 	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
 	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
 
@@ -17,6 +18,14 @@ public class RootServer {
 
 	public static void setOpenStatus(boolean status) {
 		openStatus = status;
+	}
+
+	public static boolean getIosPushDataAvailable() {
+		return iosPushDataAvailable;
+	}
+
+	public static void setIosPushDataAvailable(boolean state) {
+		iosPushDataAvailable = state;
 	}
 
 	public static void main(String[] args) {

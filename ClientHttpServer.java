@@ -20,6 +20,10 @@ public class ClientHttpServer implements Runnable {
 			HttpContext loginContext = server.createContext("/login", new LoginHandler());
 			HttpContext pushtokensContext = server.createContext("/pushtokens", new PushTokensHandler());
 
+			// testar push till iOS
+			HttpContext iosPushContext = server.createContext("/iospush", new IosPushHandler());
+
+
 			server.setExecutor(Executors.newFixedThreadPool(30));
 
 			UserAuthentication uAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
@@ -33,6 +37,7 @@ public class ClientHttpServer implements Runnable {
 			aContext.setAuthenticator(aAuth);
 
 			pushtokensContext.setAuthenticator(uAuth);
+			iosPushContext.setAuthenticator(uAuth);
 
 			server.start();
 		} catch (IOException e) {
