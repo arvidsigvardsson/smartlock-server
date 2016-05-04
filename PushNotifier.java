@@ -100,7 +100,7 @@ public class PushNotifier {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonPushData jpd = new JsonPushData();
-			jpd.setMessage("New data on server");
+			jpd.setMessage("Change to card id data on server");
 			JsonPush jp = new JsonPush();
 
 			// sätta lista med registration ids

@@ -27,6 +27,17 @@ public class PushTokensHandler implements HttpHandler {
 			} catch (IOException e) {
 				System.out.println(e);
 			}
+		} else {
+			try {
+				String response = "Only POST requests permitted";
+				ex.sendResponseHeaders(403, response.length());
+				OutputStream os = ex.getResponseBody();
+				os.write(response.getBytes());
+				os.close();
+			} catch (IOException e) {
+				System.out.println(e);
+			}
+
 		}
 	}
 
