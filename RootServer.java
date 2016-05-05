@@ -4,6 +4,13 @@ public class RootServer {
 	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
 	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
 
+	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
+
+
+	public static TimestampLog getTimestampLog() {
+		return timestampLog;
+	}
+
 	public static PushNotifier getPushNotifier() {
 		return pushNotifier;
 	}

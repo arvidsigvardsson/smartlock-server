@@ -13,18 +13,20 @@ public class ClientHttpHandler implements HttpHandler {
 		System.out.println("Http request received, detta är query: " + ex.getRequestURI().getQuery());
 		System.out.println("Detta är request method: " + ex.getRequestMethod());
 
-		// // avgöra om det är GET eller POST
-		// if ("POST".equals(ex.getRequestMethod()) {
-
-		// } else if ("GET".equals(ex.getRequestMethod()) {
-
-		// } else {
-
-		// }
-
+		// Headers headers = ex.getRequestHeaders();
+		// Set keys  = headers.keySet();
+		// Iterator iter = keys.iterator();
+		// System.out.println(ex.getRequestBody().read());
 
 		String response = "";
 		Map<String, String> params = queryToMap(ex.getRequestURI().getQuery());
+
+		// Set pKeys = params.keySet();
+		// Iterator iterP = pKeys.iterator();
+		// while(iterP.hasNext()){
+		// 	System.out.print("KEY: "+iterP.next().toString());
+		// }
+
 		if ("open".equals(params.get("message"))) {
 			RootServer.setOpenStatus(true);
 			response = "Opening the lock\n";
