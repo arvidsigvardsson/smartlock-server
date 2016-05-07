@@ -49,7 +49,7 @@ public class DataContainer {
 		try{
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(idNameMapFileName)));
 		}catch(FileNotFoundException e){
-			System.out.println("Filen fanns inte.");
+			System.out.println("Filen fanns inte. (DataContainer, readIdNameMapFile)");
 			return;
 		}
 
@@ -84,7 +84,7 @@ public class DataContainer {
 		try{
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
 		}catch(FileNotFoundException e){
-			System.out.println("Filen fanns inte.");
+			System.out.println("Filen fanns inte. (DataContainer, readFile)");
 			return;
 		}
 

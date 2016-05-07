@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  * funktionalitet för att endast hämta Timestamp objekt som innehåller vissa
  * karaktärer t.ex. "29/04/2016". Listan lagras även i en textfil med namnet "timestampLog.txt".
  * Vid start läses alla tidstämplar in från den text filen och lagras i klassens ArrayList<Timestamp>.
- * 
+ *
  * @author Admin
  *
  */
@@ -31,7 +31,7 @@ public class TimestampLog {
 
 	/**
 	 * Konstruktor som skapar en ny tidstämpel logg.
-	 * 
+	 *
 	 * @param filename
 	 *            namnet på txt filen där loggen även ska lagras.
 	 */
@@ -54,7 +54,7 @@ public class TimestampLog {
 		try{
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
 		}catch(FileNotFoundException e){
-			System.out.println("Filen fanns inte.");
+			System.out.println("Filen fanns inte. (TimestampLog, readFile)");
 			return;
 		}
 
@@ -68,14 +68,14 @@ public class TimestampLog {
 			}else{
 				System.out.println("This row couldn't be read into the ArrayList. It doesn't follow the format.");
 			}
-			
+
 		}
 		bReader.close();
 	}
-	
+
 	/**
 	 * Skriver till text filen där alla tidstämplar också lagras.
-	 * 
+	 *
 	 * @throws IOException
 	 *             Kastas om filen inte finns.
 	 */
@@ -90,10 +90,10 @@ public class TimestampLog {
 		}
 		bw.close();
 	}
-		
+
 	/**
 	 * Skapar en tidsstämpel och lagrar den i loggen.
-	 * 
+	 *
 	 * @param user
 	 *            Användarnamn
 	 * @param success
@@ -117,7 +117,7 @@ public class TimestampLog {
 	/**
 	 * Skapar en tidstämpel och lagrar den i loggen samt skriver in den i
 	 * lagrings text filen.
-	 * 
+	 *
 	 * @param user
 	 *            Användarnamn
 	 * @param success
@@ -131,7 +131,7 @@ public class TimestampLog {
 
 	/**
 	 * Returnerar logggen som en ArrayList<Timestamp>.
-	 * 
+	 *
 	 * @return log ArrayList<Timestamp> loggen
 	 */
 	public ArrayList<Timestamp> getTimestampList() {
@@ -141,7 +141,7 @@ public class TimestampLog {
 	/**
 	 * Returnerar en sträng med en tidsstämpel som innehåller information om när
 	 * loggen skapades.
-	 * 
+	 *
 	 * @return created information om när loggen skapades
 	 */
 	public String getCreated() {
@@ -150,7 +150,7 @@ public class TimestampLog {
 
 	/**
 	 * Returnerar hela loggen i sträng-format.
-	 * 
+	 *
 	 * @return str loggen i sträng-format
 	 */
 	public String toString() {
@@ -159,7 +159,7 @@ public class TimestampLog {
 
 	/**
 	 * Returnerar log med sökta element, i sträng-format.
-	 * 
+	 *
 	 * @param only
 	 *            Sträng som anger sökta tidsstämplarna
 	 * @return str loggen i sträng-format
@@ -186,7 +186,7 @@ public class TimestampLog {
 	/**
 	 * Returnerar loggens storlek. Tidsstämple med information om när loggen
 	 * skapades räknas inte in.
-	 * 
+	 *
 	 * @return int loggens storlek
 	 */
 	public int getLogSize() {
@@ -196,7 +196,7 @@ public class TimestampLog {
 	/**
 	 * Returnerar antalet element i loggen med sökta karaktärer. T.ex. kan "seb"
 	 * returnera storleken 5 även om hela loggens storlek är 20.
-	 * 
+	 *
 	 * @param only
 	 *            element som avgör storlek
 	 * @return size int Antal element av sök karaktär i loggen
@@ -216,7 +216,7 @@ public class TimestampLog {
 
 	/**
 	 * Returnerar loggen som en sträng-array.
-	 * 
+	 *
 	 * @return String[] Hela loggen som en sträng-array.
 	 */
 	public String[] getLog() {
@@ -225,7 +225,7 @@ public class TimestampLog {
 
 	/**
 	 * Returnerar en log med endast sökta element, som en sträng-array.
-	 * 
+	 *
 	 * @param only
 	 *            Sökta element t.ex. "seb" eller "29/04/2016".
 	 * @return String[] Hela loggen som en sträng-array.
@@ -338,7 +338,7 @@ public class TimestampLog {
 
 	/**
 	 * Test metod för att testa att klassen fungerar.
-	 * 
+	 *
 	 * @param args
 	 * @throws InterruptedException
 	 *             Behövs för Thread.sleep anropet
