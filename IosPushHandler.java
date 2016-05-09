@@ -28,7 +28,7 @@ public class IosPushHandler implements HttpHandler {
 		// }
 
 		while (!RootServer.getIosPushMessage().isStillValid()) {
-			System.out.println("Message valid? " + RootServer.getIosPushMessage().isStillValid());
+			// System.out.println("Message valid? " + RootServer.getIosPushMessage().isStillValid());
 		}
 
 		try {
