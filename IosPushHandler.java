@@ -13,13 +13,26 @@ import java.util.*;
 public class IosPushHandler implements HttpHandler {
 	public void handle(HttpExchange ex) {
 		System.out.println("iOS push notis-hanterare");
-		while (!RootServer.getIosPushDataAvailable()) {
-			// ligger och väntar...
-			System.out.println("Väntar...");
+		// LongPollingPushMessage message = null;
+		// boolean sendPush = false;
+		// while (!RootServer.getIosPushDataAvailable()) {
+		// 	// ligger och väntar...
+		// 	System.out.println("Väntar...");
+		// }
+
+		// while (!sendPush) {
+		// 	message = RootServer.getIosPushMessage();
+		// 	sendPush = message != null && message.isStillValid();
+		// 	System.out.println("message: " + message);
+		// 	System.out.println("sendPush = " + sendPush);
+		// }
+
+		while (!RootServer.getIosPushMessage().isStillValid()) {
+			// System.out.println("Message valid? " + RootServer.getIosPushMessage().isStillValid());
 		}
 
 		try {
-			String response = "Change to card id data on server";
+			String response = RootServer.getIosPushMessage().getMessage();
 			ex.sendResponseHeaders(200, response.length());
 			OutputStream os = ex.getResponseBody();
 			os.write(response.getBytes());
@@ -27,6 +40,6 @@ public class IosPushHandler implements HttpHandler {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		RootServer.setIosPushDataAvailable(false);
+		// RootServer.setIosPushDataAvailable(false);
 	}
 }

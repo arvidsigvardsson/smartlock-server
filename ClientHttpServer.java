@@ -22,7 +22,7 @@ public class ClientHttpServer implements Runnable {
 			HttpContext logContext = server.createContext("/log", new LogHandler());
 			HttpContext backupConxtext = server.createContext("/backup", new BackupHandler());
 			// testar push till iOS
-			// HttpContext iosPushContext = server.createContext("/iospush", new IosPushHandler());
+			HttpContext iosPushContext = server.createContext("/iospush", new IosPushHandler());
 
 
 			server.setExecutor(Executors.newFixedThreadPool(30));
@@ -38,7 +38,7 @@ public class ClientHttpServer implements Runnable {
 			aContext.setAuthenticator(aAuth);
 
 			pushtokensContext.setAuthenticator(uAuth);
-			// iosPushContext.setAuthenticator(uAuth);
+			iosPushContext.setAuthenticator(uAuth);
 
 			server.start();
 		} catch (IOException e) {
