@@ -3,12 +3,23 @@ public class RootServer {
 	private static boolean iosPushDataAvailable = false;
 	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
 	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
-
+	private static UserContainer userContainer = new UserContainer("filer/userList.txt");
 	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
 
-
+	public static UserContainer getUserContainer(){
+		return userContainer;
+	}
+	
 	public static TimestampLog getTimestampLog() {
 		return timestampLog;
+	}
+	
+	public static String getLog(){
+		return getTimestampLog().toString();
+	}
+	
+	public static String getLog(String only){
+		return getTimestampLog().toString(only);
 	}
 
 	public static PushNotifier getPushNotifier() {
