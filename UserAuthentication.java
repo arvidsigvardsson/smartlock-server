@@ -9,7 +9,7 @@ import com.sun.net.httpserver.BasicAuthenticator;
 	 *
 	 */
 public class UserAuthentication extends BasicAuthenticator{
-		private UserContainer container = new UserContainer("filer/userList.txt");
+		private UserContainer container;
 		private TimestampLog log;
 
 		/**
@@ -19,6 +19,7 @@ public class UserAuthentication extends BasicAuthenticator{
 		public UserAuthentication(String message) {
 		super(message);
 		this.log = RootServer.getTimestampLog();
+		this.container = RootServer.getUserContainer();
 	}
 
 /**

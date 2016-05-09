@@ -19,7 +19,8 @@ public class ClientHttpServer implements Runnable {
 			HttpContext aContext =server.createContext("/admin", new ClientAdminHandler());
 			HttpContext loginContext = server.createContext("/login", new LoginHandler());
 			HttpContext pushtokensContext = server.createContext("/pushtokens", new PushTokensHandler());
-
+			HttpContext logContext = server.createContext("/log", new LogHandler());
+			HttpContext backupConxtext = server.createContext("/backup", new BackupHandler());
 			// testar push till iOS
 			HttpContext iosPushContext = server.createContext("/iospush", new IosPushHandler());
 
@@ -30,7 +31,7 @@ public class ClientHttpServer implements Runnable {
 			uContext.setAuthenticator(uAuth);
 
 			loginContext.setAuthenticator(uAuth);
-
+			logContext.setAuthenticator(uAuth);
 			//BYTA MOT ADMIN AUTHENTICATION SENARE (VID BEHOV):
 			UserAuthentication aAuth = new UserAuthentication("Logga in med ditt anvandarnamn och losenord.");
 			//
