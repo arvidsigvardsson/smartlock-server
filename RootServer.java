@@ -3,10 +3,7 @@ public class RootServer {
 	// private static boolean iosPushDataAvailable = false;
 	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
 	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
-<<<<<<< HEAD
 	private static UserContainer userContainer = new UserContainer("filer/userList.txt");
-=======
->>>>>>> origin/master
 	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
 	private static LongPollingPushMessage iosPushMessage = new LongPollingPushMessage("Invalid message", 0);
 
