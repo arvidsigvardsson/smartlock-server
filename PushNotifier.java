@@ -32,9 +32,22 @@ public class PushNotifier {
 		readTokens(tokensFilePath);
 	}
 
+	public void sendDoorOpenPush() {
+		System.out.println("Ska skicka dörr öppen push");
+		String json = makeJsonPushObjectWithNotification();
+		System.out.println("Detta är json: " + json);
+		sendPushNotification(json);
+	}
+
 	public void sendAdminPushNotification() {
 		System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
 		String json = makeJsonPushObject();
+		sendPushNotification(json);
+	}
+
+	private void sendPushNotification(String json) {
+		// System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
+		// String json = makeJsonPushObject();
 
 		try {
 			URL url = new URL("https://gcm-http.googleapis.com/gcm/send");
@@ -111,6 +124,33 @@ public class PushNotifier {
 			jp.setData(jpd);
 			String json = mapper.writeValueAsString(jp);
 			System.out.println("Json: " + json);
+			return json;
+		} catch (IOException e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+
+	private String makeJsonPushObjectWithNotification() {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonPushData jpd = new JsonPushData();
+			JsonPushNotificationField jpnf = new JsonPushNotificationField("Ny notis från Lockdroidservern", "Dörren är öppen", "icon.png");
+
+			jpd.setMessage("Door is open");
+			// JsonPush jp = new JsonPush();
+			JsonPushWithNotificationField jp = new JsonPushWithNotificationField();
+
+			// sätta lista med registration ids
+			jp.setRegistration_ids(tokens);
+			// jp.setTo(tokens.get(0));
+			// jp.setData(mapper.writeValueAsString(jpd));
+
+			jp.setData(jpd);
+			jp.setNotification(jpnf);
+
+			String json = mapper.writeValueAsString(jp);
+			// System.out.println("Json: " + json);
 			return json;
 		} catch (IOException e) {
 			System.out.println(e);

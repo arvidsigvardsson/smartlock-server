@@ -17,8 +17,6 @@ public class LockHandler implements Runnable {
 	public void run() {
 
 			try {
-
-
 				InputStream in = client.getInputStream();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -26,16 +24,6 @@ public class LockHandler implements Runnable {
 				String response = "";
 
 				if ((s = reader.readLine()) != null) {
-
-					// if(s.equals("on")){
-					// 	System.out.println();
-					// 	System.out.println("Lampan tänds");
-					// }
-					// else if(s.equals("off")){
-					// 	System.out.println();
-					// 	System.out.println("Lampan släcks");
-					// }
-
 					// ifall låset vill ha en uppdatering
 					if(s.equals("u")) {
 						// ifall klienten vill öppna
@@ -55,6 +43,10 @@ public class LockHandler implements Runnable {
 					else if (s.charAt(0) == 'c') {
 						response = "blip received";
 						RootServer.getDataContainer().blip(s.substring(1));
+					}
+					// ifall låset signalerar att dörren är öppen
+					else if (s.equals("door open")) {
+						RootServer.getPushNotifier().sendDoorOpenPush();
 					}
 
 					// OutputStream out = client.getOutputStream();

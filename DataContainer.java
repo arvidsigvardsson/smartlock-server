@@ -340,5 +340,6 @@ public class DataContainer {
 		// för iOS
 		// RootServer.setIosPushDataAvailable(true);
 		RootServer.setIosPushMessage(new LongPollingPushMessage("Change to card id data on server", 2));
+		// RootServer.getIosPushLock().notifyAll();
 	}
 }

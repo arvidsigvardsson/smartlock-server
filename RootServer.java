@@ -6,19 +6,24 @@ public class RootServer {
 	private static UserContainer userContainer = new UserContainer("filer/userList.txt");
 	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
 	private static LongPollingPushMessage iosPushMessage = new LongPollingPushMessage("Invalid message", 0);
+	private static Object iosPushLock = new Object();
+
+	public static Object getIosPushLock() {
+		return iosPushLock;
+	}
 
 	public static UserContainer getUserContainer(){
 		return userContainer;
 	}
-	
+
 	public static TimestampLog getTimestampLog() {
 		return timestampLog;
 	}
-	
+
 	public static String getLog(){
 		return getTimestampLog().toString();
 	}
-	
+
 	public static String getLog(String only){
 		return getTimestampLog().toString(only);
 	}
