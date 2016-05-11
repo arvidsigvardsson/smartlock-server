@@ -135,7 +135,7 @@ public class PushNotifier {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonPushData jpd = new JsonPushData();
-			JsonPushNotificationField jpnf = new JsonPushNotificationField("Ny notis från Lockdroidservern", "Dörren är öppen", "icon.png");
+			JsonPushNotificationField jpnf = new JsonPushNotificationField("Ny notis från Lockdroidservern", "Dörren är öppen", "icon");
 
 			jpd.setMessage("Door is open");
 			// JsonPush jp = new JsonPush();
