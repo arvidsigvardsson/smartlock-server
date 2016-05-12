@@ -340,7 +340,7 @@ public class UserContainer {
 				int i = 0;
 
 				for (File f : backups) {
-					result[i] = f.getAbsolutePath();
+					result[i] = f.getName();
 					i++;
 				}
 				return result;

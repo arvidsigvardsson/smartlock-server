@@ -25,6 +25,10 @@ public class LogHandler implements HttpHandler {
 		} else {
 			System.out.println("Sending complete log\n");
 			response = RootServer.getLog();
+			System.out.println("\nChecking contents of timestamp log that I am about to send to client:");
+			System.out.println("START");
+			System.out.println(response);
+			System.out.println("END");
 		}
 		ex.sendResponseHeaders(200, response.length());
 		OutputStream os = ex.getResponseBody();

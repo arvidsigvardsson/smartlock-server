@@ -114,12 +114,19 @@ public class DataContainer {
 	 *             Kastas om fil inte hittas.
 	 */
 	public void blip(String id) throws IOException{
+		System.out.println("Incoming id is: ");
+		System.out.println("START");
+		System.out.println(id);
+		System.out.println("END");
 		//Användas för vidare funktionalitet, Servern kan lägga på data på id:T
 		System.out.println("BLIP REGISTERED");
 		if (!acceptanceMap.containsKey(id)) {
 			addToAcceptanceMap(id,false);//LÄGG TILL ID
+			RootServer.getTimestampLog().addTimestamp(id,false);	
+			
+		}else{
+			RootServer.getTimestampLog().addTimestamp(id,true);		
 		}
-
 	}
 
 	/**
@@ -338,8 +345,6 @@ public class DataContainer {
 		RootServer.getPushNotifier().sendAdminPushNotification();
 
 		// för iOS
-		// RootServer.setIosPushDataAvailable(true);
-		RootServer.setIosPushMessage(new LongPollingPushMessage("Change to card id data on server", 2));
-		// RootServer.getIosPushLock().notifyAll();
+		RootServer.setIosPushDataAvailable(true);
 	}
 }
