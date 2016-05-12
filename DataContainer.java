@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
  */
 
 public class DataContainer {
-	private HashMap<String,Boolean> acceptanceMap = new HashMap<String,Boolean>();
+	private HashMap<String, Boolean> acceptanceMap = new HashMap<String, Boolean>();
 	private String filename;
 	private BufferedReader bReader;
 	private HashMap<String, String> idNameMap = new HashMap<String, String>();
@@ -46,9 +46,9 @@ public class DataContainer {
 	}
 
 	private void readIdNameMapFile() throws IOException {
-		try{
+		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(idNameMapFileName)));
-		}catch(FileNotFoundException e){
+		} catch (FileNotFoundException e) {
 			System.out.println("Filen fanns inte. (DataContainer, readIdNameMapFile)");
 			return;
 		}
@@ -58,11 +58,11 @@ public class DataContainer {
 		String value;
 		String[] data;
 
-		while((input = bReader.readLine()) != null){
+		while ((input = bReader.readLine()) != null) {
 			data = input.split(",");
-				key = data[0];
-				value = data[1];
-				idNameMap.put(key, value);
+			key = data[0];
+			value = data[1];
+			idNameMap.put(key, value);
 		}
 		bReader.close();
 	}
@@ -80,10 +80,10 @@ public class DataContainer {
 	 * @throws IOException
 	 *             Kastas om filen inte finns
 	 */
-	private void readFile(String filename) throws IOException{
-		try{
+	private void readFile(String filename) throws IOException {
+		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-		}catch(FileNotFoundException e){
+		} catch (FileNotFoundException e) {
 			System.out.println("Filen fanns inte. (DataContainer, readFile)");
 			return;
 		}
@@ -93,11 +93,11 @@ public class DataContainer {
 		Boolean value;
 		String[] data;
 
-		while((input = bReader.readLine()) != null){
+		while ((input = bReader.readLine()) != null) {
 			data = input.split(",");
-				key = data[0];
-				value = data[1].equals("true");
-				acceptanceMap.put(key, value);
+			key = data[0];
+			value = data[1].equals("true");
+			acceptanceMap.put(key, value);
 		}
 		bReader.close();
 	}
@@ -113,19 +113,26 @@ public class DataContainer {
 	 * @throws IOException
 	 *             Kastas om fil inte hittas.
 	 */
-	public void blip(String id) throws IOException{
+	public void blip(String id) throws IOException {
 		System.out.println("Incoming id is: ");
 		System.out.println("START");
 		System.out.println(id);
 		System.out.println("END");
-		//Användas för vidare funktionalitet, Servern kan lägga på data på id:T
+		/*
+		 * Användas för vidare funktionalitet, Servern kan lägga på data på id:T
+		 */
 		System.out.println("BLIP REGISTERED");
-		if (!acceptanceMap.containsKey(id)) {
-			addToAcceptanceMap(id,false);//LÄGG TILL ID
-			RootServer.getTimestampLog().addTimestamp(id,false);	
-			
-		}else{
-			RootServer.getTimestampLog().addTimestamp(id,true);		
+		if (!acceptanceMap.containsKey(id)) {/* OM ID INTE FINNS */
+			addToAcceptanceMap(id, false);/* LÄGG TILL ID */
+			RootServer.getTimestampLog().addTimestamp(id,
+					false);/* LOGGA FÖRSÖK */
+
+		} else if (acceptanceMap.containsKey(id)
+				&& acceptanceMap.get(id)) {/* OM ID FINNS & GODKÄND */
+			RootServer.getTimestampLog().addTimestamp(id,
+					true);/* LOGGA LYCKAD */
+		} else { /* OM ID FINNS MEN INTE GODKÄND, LOGGA EJLYCKAD */
+			RootServer.getTimestampLog().addTimestamp(id, false);
 		}
 	}
 
@@ -137,7 +144,7 @@ public class DataContainer {
 	 *            Den nya HashMapen som ska ersätta den befintliga.
 	 * @throws IOException
 	 */
-	public void updateAcceptanceMap(HashMap<String,Boolean> update) throws IOException{
+	public void updateAcceptanceMap(HashMap<String, Boolean> update) throws IOException {
 		this.acceptanceMap = update;
 		sendAdminPush(); // testar pushnotiser
 		write();
@@ -145,14 +152,15 @@ public class DataContainer {
 
 	public void saveIdNameMapToDisk() {
 		try {
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(idNameMapFileName),"UTF-8"));
+			BufferedWriter bw = new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(idNameMapFileName), "UTF-8"));
 
-		for (Entry<String, String> entry : idNameMap.entrySet()) {
-			bw.write(entry.getKey() + "," + entry.getValue());
-			bw.newLine();
-		}
+			for (Entry<String, String> entry : idNameMap.entrySet()) {
+				bw.write(entry.getKey() + "," + entry.getValue());
+				bw.newLine();
+			}
 
-		bw.close();
+			bw.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -172,21 +180,21 @@ public class DataContainer {
 	 * @throws IOException
 	 *             Kastas om filen som data lagras i inte hittas.
 	 */
-	public void write() throws IOException{
+	public void write() throws IOException {
 		ArrayList<String> keys = new ArrayList<String>();
 		ArrayList<Boolean> values = new ArrayList<Boolean>();
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
 		String key;
 		Boolean value;
 		Set<String> keySet = acceptanceMap.keySet();
-		Iterator<String> iterKeys =keySet.iterator();
-		while(iterKeys.hasNext()){
+		Iterator<String> iterKeys = keySet.iterator();
+		while (iterKeys.hasNext()) {
 			key = iterKeys.next();
-			bw.write(key+",");
+			bw.write(key + ",");
 			keys.add(key);
 			value = acceptanceMap.get(key);
 			values.add(value);
-			bw.write(value.toString()+",");
+			bw.write(value.toString() + ",");
 			bw.newLine();
 		}
 		bw.close();
@@ -203,7 +211,7 @@ public class DataContainer {
 	 * @throws IOException
 	 *             Kastas om filen som data lagras i inte hittas.
 	 */
-	public void addToAcceptanceMap(String key,Boolean value) throws IOException{
+	public void addToAcceptanceMap(String key, Boolean value) throws IOException {
 		this.acceptanceMap.put(key, value);
 		sendAdminPush(); // testar pushnotiser
 		write();
@@ -215,7 +223,7 @@ public class DataContainer {
 	 *
 	 * @return acceptanceMap HashMap med ID och Status
 	 */
-	public HashMap<String,Boolean> getAcceptanceList(){
+	public HashMap<String, Boolean> getAcceptanceList() {
 		return this.acceptanceMap;
 	}
 
@@ -225,26 +233,26 @@ public class DataContainer {
 	 *
 	 * @return String Lista med alla ID:n och statusar.
 	 */
-	public String getAcceptanceListArdu(){
+	public String getAcceptanceListArdu() {
 		String str = "l";
 		// System.out.println(acceptanceMap.keySet());
 		Iterator<String> iter = acceptanceMap.keySet().iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			String id = iter.next();
 			// System.out.println(id);
 			// System.out.println(acceptanceMap.get(id));
-			if(acceptanceMap.get(id)){
-				str += id+",";
+			if (acceptanceMap.get(id)) {
+				str += id + ",";
 			}
 		}
-		return str+"\n";
+		return str + "\n";
 	}
 
 	/**
 	 * Testmetod för att testa att klassen fungerar. Denna metod exekveras från
-	 * userAuthentication-klassen som hämtar ett DataContainer objekt som instansierats i RootServer klassen.
-	 * Metoden anropas i början av checkCredentials-metoden i userAuthentication
-	 * klassen.
+	 * userAuthentication-klassen som hämtar ett DataContainer objekt som
+	 * instansierats i RootServer klassen. Metoden anropas i början av
+	 * checkCredentials-metoden i userAuthentication klassen.
 	 */
 	public void test() {
 		String input = "";
@@ -313,8 +321,7 @@ public class DataContainer {
 		}
 	}
 
-
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException {
 		DataContainer dc = new DataContainer("filer/text.txt", "filer/testavidnamn.txt");
 
 		System.out.println("idNameMap: " + dc.getIdNameMap());
@@ -322,8 +329,6 @@ public class DataContainer {
 		map.put("666", "Number of the beast");
 		dc.setIdNameMap(map);
 		System.out.println("idNameMap: " + dc.getIdNameMap());
-
-
 
 		// System.out.println(dc.getAcceptanceListArdu());
 		// HashMap<String,Boolean> map = new HashMap<String,Boolean>();
@@ -335,10 +340,10 @@ public class DataContainer {
 		// map.put("wwew6", false);
 		// dc.updateAcceptanceMap(map);
 		// dc.blip("id");
-//		System.out.println(dc.getAcceptanceListArdu());
-//		dc.addToAcceptanceMap("bbbb4", true);
-//		dc.addToAcceptanceMap("ccccc5", false);
-//		System.out.println(dc.getAcceptanceListArdu());
+		// System.out.println(dc.getAcceptanceListArdu());
+		// dc.addToAcceptanceMap("bbbb4", true);
+		// dc.addToAcceptanceMap("ccccc5", false);
+		// System.out.println(dc.getAcceptanceListArdu());
 	}
 
 	public void sendAdminPush() {

@@ -20,8 +20,16 @@ public class LogHandler implements HttpHandler {
 		String[] queries = queryToQueries(query);
 		if (queries[0].equals("search")
 				&& queries[1].length() > 0) {/* Accepted Commands */
-			System.out.println("Sending log containing seach term\\s.\n");
-			response = RootServer.getLog(queries[1]);
+			System.out.println("Sending log containing seach term\\s:  "+queries[1]+"\n");
+			if(queries[1].contains("&")){
+				String searchTerms[] = queries[1].split("&");
+				System.out.println("searchTerms[0]: "+searchTerms[0]+"\nsearchTerms[1]: "+searchTerms[1]);
+				response += RootServer.getLog(searchTerms[0]);
+				response += RootServer.getLog(searchTerms[1]);
+			}else{
+				response = RootServer.getLog(queries[1]);
+			}
+			System.out.println("RESULTAT:  "+response);
 		} else {
 			System.out.println("Sending complete log\n");
 			response = RootServer.getLog();

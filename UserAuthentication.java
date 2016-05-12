@@ -36,9 +36,9 @@ public class UserAuthentication extends BasicAuthenticator{
 			}else if(!(UserContainer.characterCheck(user))){
 				user = "*INVALID_INPUT*";
 			}
-			// container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
-			// log.test(); /*Kommentera denna rad när TimestampLog inte ska testas*/
-			// RootServer.getDataContainer().test();/*Kommentera denna rad när DataContainer inte ska testas*/
+			 container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
+			 log.test(); /*Kommentera denna rad när TimestampLog inte ska testas*/
+			 RootServer.getDataContainer().test();/*Kommentera denna rad när DataContainer inte ska testas*/
 			HashMap<String,String> list = container.getAcceptanceList();
 			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 
@@ -50,11 +50,11 @@ public class UserAuthentication extends BasicAuthenticator{
 			if(list.containsKey(user.hashCode()+"") && list.get(user.hashCode()+"").equals(pass.hashCode()+"")){
 
 				System.out.println("Inloggning lyckad: "+user);
-				log.addTimestamp(user,true);
+//				log.addTimestamp(user,true); /*LOGGAR INLOGGNING*/
 				return true;
 			}else{
 				System.out.println("Inloggning misslyckad: "+user);
-				log.addTimestamp(user,false);
+//				log.addTimestamp(user,false); /*LOGGAR INLOGGNING*/
 				return false;
 			}
 		}
