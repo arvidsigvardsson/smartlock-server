@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.swing.JOptionPane;
 
@@ -423,6 +424,7 @@ public class UserContainer {
 	public void createBackup() throws IOException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_hh_mm_ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("Sweden/Stockholm"));
 		String backupName = "filer/userBackups/userBackup_" + sdf.format(new Date()) + ".txt";
 		File backupFile = new File(backupName);
 		File activeFile = new File(this.filename);
@@ -529,6 +531,7 @@ public class UserContainer {
 			int backups = new File("filer/userBackups/").list().length;
 
 			SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_hh_mm_ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("Sweden/Stockholm"));
 			String extraBackupFolderName = "filer/OldBackupFolder_" + sdf.format(new Date());
 			File extraBackupFolder = new File(extraBackupFolderName);
 			extraBackupFolder.mkdir();

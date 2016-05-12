@@ -36,9 +36,9 @@ public class UserAuthentication extends BasicAuthenticator{
 			}else if(!(UserContainer.characterCheck(user))){
 				user = "*INVALID_INPUT*";
 			}
-			//  container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
-			//  log.test(); /*Kommentera denna rad när TimestampLog inte ska testas*/
-			//  RootServer.getDataContainer().test();/*Kommentera denna rad när DataContainer inte ska testas*/
+			 // container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
+			 // log.test(); /*Kommentera denna rad när TimestampLog inte ska testas*/
+			 // RootServer.getDataContainer().test();/*Kommentera denna rad när DataContainer inte ska testas*/
 			HashMap<String,String> list = container.getAcceptanceList();
 			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 

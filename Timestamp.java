@@ -1,6 +1,7 @@
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 
@@ -27,6 +28,7 @@ public class Timestamp {
 	 */
 	public Timestamp(String user, boolean success) {
 		this.sdf = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("Sweden/Stockholm"));
 		if (success) {
 			loginStatus = "Succeeded";
 		} else {

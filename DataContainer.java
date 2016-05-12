@@ -114,6 +114,7 @@ public class DataContainer {
 	 *             Kastas om fil inte hittas.
 	 */
 	public void blip(String id) throws IOException {
+		String user = id;
 		System.out.println("Incoming id is: ");
 		System.out.println("START");
 		System.out.println(id);
@@ -122,6 +123,9 @@ public class DataContainer {
 		 * Användas för vidare funktionalitet, Servern kan lägga på data på id:T
 		 */
 		System.out.println("BLIP REGISTERED");
+		if(this.getIdNameMap().containsKey(id)){
+			user = this.getIdNameMap().get(id); /*Om där finns ett namn mappat till kortets ID, använd den för tidstämpeln*/
+		}
 		if (!acceptanceMap.containsKey(id)) {/* OM ID INTE FINNS */
 			addToAcceptanceMap(id, false);/* LÄGG TILL ID */
 			RootServer.getTimestampLog().addTimestamp(id,
@@ -129,10 +133,10 @@ public class DataContainer {
 
 		} else if (acceptanceMap.containsKey(id)
 				&& acceptanceMap.get(id)) {/* OM ID FINNS & GODKÄND */
-			RootServer.getTimestampLog().addTimestamp(id,
+			RootServer.getTimestampLog().addTimestamp(user,
 					true);/* LOGGA LYCKAD */
 		} else { /* OM ID FINNS MEN INTE GODKÄND, LOGGA EJLYCKAD */
-			RootServer.getTimestampLog().addTimestamp(id, false);
+			RootServer.getTimestampLog().addTimestamp(user, false);
 		}
 	}
 
@@ -350,7 +354,6 @@ public class DataContainer {
 		RootServer.getPushNotifier().sendAdminPushNotification();
 
 		// för iOS
-		// RootServer.setIosPushDataAvailable(true);
-		RootServer.setIosPushMessage(new LongPollingPushMessage("Change to card id data on server", 2));
+		RootServer.setIosPushDataAvailable(true);
 	}
 }
