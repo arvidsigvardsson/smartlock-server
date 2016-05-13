@@ -5,7 +5,6 @@ public class RootServer {
 	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
 	private static UserContainer userContainer = new UserContainer("filer/userList.txt");
 	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
-private static LongPollingPushMessage iosPushMessage = new LongPollingPushMessage("Invalid message", 0);
 
 	public static UserContainer getUserContainer(){
 		return userContainer;
@@ -53,23 +52,16 @@ private static LongPollingPushMessage iosPushMessage = new LongPollingPushMessag
 	public static void setIosPushDataAvailable(boolean state) {
 		iosPushDataAvailable = state;
 	}
-	public static LongPollingPushMessage getIosPushMessage() {
-			return iosPushMessage;
-	}
 
-	public static void setIosPushMessage(LongPollingPushMessage message) {
-		System.out.println("Message: " + message);
-		iosPushMessage = message;
-	}
-		
 	public static void main(String[] args) {
 		Thread t1 = new Thread((Runnable) new LockServer());
 		Thread t2 = new Thread((Runnable) new ClientServer());
 		Thread t3 = new Thread((Runnable) new ClientHttpServer());
-
+		Thread t4 = new Thread((Runnable) new ServerComsInterface());
 		t1.start();
 		t2.start();
 		t3.start();
+		t4.start(); 
 	}
 }
 

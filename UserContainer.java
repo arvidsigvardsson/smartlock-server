@@ -301,8 +301,8 @@ public class UserContainer {
 	 * @return boolean true om pass, false om fail
 	 */
 	public static boolean characterCheck(String str) {
-		int a = (int)str.charAt(0);
-		if(a==65533){ /*Code for uknown char*/
+		int a = (int) str.charAt(0);
+		if (a == 65533) { /* Code for uknown char */
 			return false;
 		}
 		if (str.isEmpty() || str.contains(" ") || str.contains("å") || str.contains("ä") || str.contains("ö")
@@ -334,7 +334,6 @@ public class UserContainer {
 		if (this.backupFolderExists()) {
 			File backupFolder = new File("filer/userBackups/");
 			File[] backups = backupFolder.listFiles();
-			System.out.println("backups.lentgh ....: " + backups.length);
 
 			if (backups.length > 0) {
 				String[] result = new String[backups.length];
@@ -388,8 +387,10 @@ public class UserContainer {
 								 * redan finns
 								 */
 			} else {
-				System.out.println("Backup filen existerar inte");
+				System.out.println("Backup filen existerar inte.");
 			}
+		} else {
+			System.out.println("Inga backup filer existerar.");
 		}
 	}
 
@@ -407,7 +408,7 @@ public class UserContainer {
 	 */
 	public void backup(long timePassed) throws IOException {
 		if (timePassed > this.backupTimeCheck) {
-			System.out.println("yes passed time");
+			System.out.println("yes within backup time check");
 			backupLimitCheck();
 			createBackup();
 		}
@@ -422,7 +423,7 @@ public class UserContainer {
 	 *             Kastas om filer inte hittas
 	 */
 	public void createBackup() throws IOException {
-
+		System.out.println("Creating backup");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_hh_mm_ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("Sweden/Stockholm"));
 		String backupName = "filer/userBackups/userBackup_" + sdf.format(new Date()) + ".txt";
@@ -466,13 +467,13 @@ public class UserContainer {
 	 *             Kastas om fil inte finns.
 	 */
 	public void backupLimitCheck() throws IOException {
-		System.out.println("Inne");
+		//System.out.println("Inne");
 
 		backupFolderExists();
 
 		int backups = new File("filer/userBackups/").list().length;
 		File backupsFolder = new File("filer/userBackups/");
-		System.out.println("backups: " + backups);
+		//System.out.println("backups: " + backups);
 
 		if (backups == this.backupLimit) {
 
@@ -481,12 +482,13 @@ public class UserContainer {
 			backupFiles[0].delete();
 
 		} else if (backups > this.backupLimit) {
-
 			moveBackupFiles(this.backupLimit, true);
 
+		}else{
+			System.out.println("yes within backups limit");
 		}
 	}
-	
+
 	/**
 	 * Kontrollerar om mappen "userBackups" existerar i mappen "filer", om inte
 	 * så skapas mappen.
@@ -782,13 +784,18 @@ public class UserContainer {
 		 * TEST 2 - PASS - Skicka in en ny HashMap med nycklar och värden som
 		 * INTE är hashkodade
 		 */
-		/*
-		 * HashMap<String,String> nonHashedMap = new HashMap<String,String>();
-		 * nonHashedMap.put("citron", "gul"); nonHashedMap.put("apelsin",
-		 * "orange"); nonHashedMap.put("snow", "white"); UserContainer uc = new
-		 * UserContainer("filer/userList.txt");
-		 * uc.updateAcceptanceMapNonHashedData(nonHashedMap);
-		 */
+
+//		HashMap<String, String> nonHashedMap = new HashMap<String, String>();
+//		nonHashedMap.put("citron", "gul");
+//		nonHashedMap.put("apelsin", "orange");
+//		nonHashedMap.put("snow", "white");
+//		nonHashedMap.put("snww", "whiewaw2");
+//		nonHashedMap.put("s23w", "w3213ite");
+//		nonHashedMap.put("sdsa", "121");
+//		nonHashedMap.put("sda", "231");
+//		UserContainer uc = new UserContainer("filer/userList.txt");
+//		uc.updateAcceptanceMapNonHashedData(nonHashedMap);
+
 		/* TEST 1 - PASS - Skriv till fil och läs från fil */
 		/*
 		 * UserContainer uc = new UserContainer("filer/userList.txt"); String

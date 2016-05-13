@@ -17,8 +17,9 @@ import javax.swing.JOptionPane;
  * En log som samlar Timestamp objekt i en ArrayList. Klassen har funktionalitet
  * för att hämta listan som en sträng, som en sträng-array och även
  * funktionalitet för att endast hämta Timestamp objekt som innehåller vissa
- * karaktärer t.ex. "29/04/2016". Listan lagras även i en textfil med namnet "timestampLog.txt".
- * Vid start läses alla tidstämplar in från den text filen och lagras i klassens ArrayList<Timestamp>.
+ * karaktärer t.ex. "29/04/2016". Listan lagras även i en textfil med namnet
+ * "timestampLog.txt". Vid start läses alla tidstämplar in från den text filen
+ * och lagras i klassens ArrayList<Timestamp>.
  *
  * @author Admin
  *
@@ -46,26 +47,31 @@ public class TimestampLog {
 	}
 
 	/**
-	 * Läser in sparade tidsstämplar från timestampLog.txt och lagrar de i klassens ArrayList<Timestamp>.
+	 * Läser in sparade tidsstämplar från timestampLog.txt och lagrar de i
+	 * klassens ArrayList<Timestamp>.
+	 * 
 	 * @param filename
 	 * @throws IOException
 	 */
-	private void readFile(String filename) throws IOException{
-		try{
+	private void readFile(String filename) throws IOException {
+		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-		}catch(FileNotFoundException e){
+		} catch (FileNotFoundException e) {
 			System.out.println("Filen fanns inte. (TimestampLog, readFile)");
 			return;
 		}
 
 		String input;
 		String[] data;
-		//seb 29/4/2016 03:57:18 succeeded
-		while((input = bReader.readLine()) != null){
-			data = input.split(" ");
-			if(data.length==4){
+		// seb 29/4/2016 03:57:18 succeeded
+		while ((input = bReader.readLine()) != null) {
+			data = input.split(",");
+//			System.out.println("DATA LENGTH:-------------------------" + data.length);
+//			System.out.println("\ndata[0]  " + data[0]);
+			if (data.length == 4) {
+
 				log.add(new Timestamp(data));
-			}else{
+			} else {
 				System.out.println("This row couldn't be read into the ArrayList. It doesn't follow the format.");
 			}
 
@@ -154,7 +160,7 @@ public class TimestampLog {
 	 * @return str loggen i sträng-format
 	 */
 	public String toString() {
-		return toString(" ");
+		return toString(",");
 	}
 
 	/**
@@ -190,7 +196,7 @@ public class TimestampLog {
 	 * @return int loggens storlek
 	 */
 	public int getLogSize() {
-		return getLogSize(" ");
+		return getLogSize(":");
 	}
 
 	/**
@@ -202,6 +208,10 @@ public class TimestampLog {
 	 * @return size int Antal element av sök karaktär i loggen
 	 */
 	public int getLogSize(String only) {
+		String terms[] = null;
+		if (only.contains("&")) {
+			terms = only.split("&");
+		}
 		int size = 0;
 		String temp;
 		Iterator<Timestamp> iter = log.iterator();
@@ -210,6 +220,14 @@ public class TimestampLog {
 			if (temp.contains(only)) {
 				size++;
 			}
+			if (terms != null) {
+				for (String elem : terms) {
+					if (temp.contains(elem)) {
+						size++;
+					}
+				}
+			}
+
 		}
 		return size;
 	}
@@ -220,7 +238,7 @@ public class TimestampLog {
 	 * @return String[] Hela loggen som en sträng-array.
 	 */
 	public String[] getLog() {
-		return getLog(" ");
+		return getLog(":");
 	}
 
 	/**
@@ -231,6 +249,10 @@ public class TimestampLog {
 	 * @return String[] Hela loggen som en sträng-array.
 	 */
 	public String[] getLog(String only) {
+		String searchTerms[] = null;
+		if (only.contains("&")) {
+			searchTerms = only.split("&");
+		}
 		String[] stampLog;
 		String temp;
 		int size = getLogSize(only);
@@ -242,6 +264,14 @@ public class TimestampLog {
 			if (temp.contains(only)) {
 				stampLog[i] = temp;
 				i++;
+			}
+			if(searchTerms!=null){
+				for(String elem:searchTerms){
+					if (temp.contains(elem)) {
+						stampLog[i] = temp;
+						i++;
+					}
+				}
 			}
 
 		}
@@ -349,8 +379,8 @@ public class TimestampLog {
 		TimestampLog t = new TimestampLog("filer/timestampLog.txt");
 		System.out.println("LOG SIZE: " + t.getLogSize());
 		System.out.println(t.getCreated());
-		//t.addTimestamp("seb", true);
-		//t.addTimestamp("adam", false);
+		// t.addTimestamp("seb", true);
+		// t.addTimestamp("adam", false);
 		t.addTimestamp("erik", true);
 		// System.out.println("LOG SIZE: " + t.getLogSize());
 		System.out.println("LOG LISTING: " + t.toString());
