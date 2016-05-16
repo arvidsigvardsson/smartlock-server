@@ -44,6 +44,12 @@ public class PushNotifier {
 		String json = makeJsonPushObject();
 		sendPushNotification(json);
 	}
+	
+	public void sendLogUpdatePush() {
+		System.out.println("Nu ska en pushnotis om loglistan skickas ut");
+		String json = makeJsonLogPushObject();
+		sendPushNotification(json);
+	}
 
 	private void sendPushNotification(String json) {
 		// System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
@@ -131,6 +137,29 @@ public class PushNotifier {
 		}
 	}
 
+	private String makeJsonLogPushObject() {
+		// return "{\"to\":\"eeo-s16-1vg:APA91bFcKOQ0UrAf4f8e7SOkysDM_78gIlJunBoq4yFw5KooiSKMIzEiUMbELplw7ksO0Dz4Lft9Ekga47SLH9It_eKG-DgnDN7KKA52LyAzzscSOUMkZ0b9oiHVWnbbvq3HpyEN32n7\",\"data\": {\"score\":\"3x1\"}}";
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonPushData jpd = new JsonPushData();
+			jpd.setMessage("Change to log list on server");
+			JsonPush jp = new JsonPush();
+
+			// sätta lista med registration ids
+			jp.setRegistration_ids(tokens);
+			// jp.setTo(tokens.get(0));
+			// jp.setData(mapper.writeValueAsString(jpd));
+
+			jp.setData(jpd);
+			String json = mapper.writeValueAsString(jp);
+			System.out.println("Json: " + json);
+			return json;
+		} catch (IOException e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+	
 	private String makeJsonPushObjectWithNotification() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();

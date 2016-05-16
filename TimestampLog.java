@@ -111,6 +111,10 @@ public class TimestampLog {
 	 */
 	public void addTimestamp(String user, boolean success, boolean write) {
 		log.add(new Timestamp(user, success));
+		
+		// pushnotis om loglista ska skickas ut
+		RootServer.getPushNotifier().sendLogUpdatePush();
+		
 		if (write) {
 			try {
 				write();
