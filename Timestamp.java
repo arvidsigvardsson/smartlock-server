@@ -34,11 +34,12 @@ public class Timestamp {
 		} else {
 			loginStatus = "Failed";
 		}
-		this.stamp = user + " " + sdf.format(new Date()) + " " + loginStatus;
+		String dateTime[] = sdf.format(new Date()).split(" ");
+		this.stamp = user + "," + dateTime[0] + "," + dateTime[1] +","+loginStatus;
 	}
 
 	public Timestamp(String[] loadedStamp){
-		String res =loadedStamp[0]+" "+loadedStamp[1]+" "+loadedStamp[2]+" "+loadedStamp[3];
+		String res =loadedStamp[0]+","+loadedStamp[1]+","+loadedStamp[2]+","+loadedStamp[3];
 		this.stamp = res;
 	}
 	/**

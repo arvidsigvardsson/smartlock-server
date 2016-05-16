@@ -158,7 +158,7 @@ public class ServerComsInterface implements Runnable {
 
 			case "tlog":
 				System.out.println(
-						frame + "tlog) (TimestampLog)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n2a. getCreated\n2b. getLog(String)\n2c. getLogSize(String)"
+						frame + "tlog) (TimestampLog)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n2a. getCreated\n2b. getLog(String)\n2c. getLogSize(String)\n2d. toString(String)"
 								+ frame);
 				break;
 				
@@ -185,6 +185,15 @@ public class ServerComsInterface implements Runnable {
 				input = sc.nextLine();
 				if(!(input.equals("exit"))){
 					System.out.println(RootServer.getTimestampLog().getLogSize(input)+"\nMethod executed.");
+				}
+				System.out.println(frame);
+				break;	
+				
+			case "2d":
+				System.out.println(frame+"2d) (TimestampLog) toString(searchTerm:String):String\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\nså visas antalet tidstämplar innehållandes söktermen.\n(Det går bra att använda \"&\" för multipla söktermer)");
+				input = sc.nextLine();
+				if(!(input.equals("exit"))){
+					System.out.println(RootServer.getTimestampLog().toString(input)+"\nMethod executed.");
 				}
 				System.out.println(frame);
 				break;		
