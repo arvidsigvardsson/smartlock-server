@@ -27,6 +27,8 @@ public class DataContainer {
 	private BufferedReader bReader;
 	private HashMap<String, String> idNameMap = new HashMap<String, String>();
 	private String idNameMapFileName;
+	private TimeoutClock timeoutClock = new TimeoutClock(5);
+	private boolean hasTimeoutPushBeenSent = false;
 
 	public DataContainer(String filename, String idNameMapFileName) {
 		this.filename = filename;
@@ -44,7 +46,19 @@ public class DataContainer {
 		}
 
 	}
-
+	
+	public TimeoutClock getTimeoutClock() {
+		return this.timeoutClock;
+	}
+	
+	public boolean getHasTimeoutPushBeenSent() {
+		return hasTimeoutPushBeenSent;
+	}
+	
+	public void setHasTimeoutPushBeenSent(boolean status) {
+		hasTimeoutPushBeenSent = status;
+	}
+	
 	private void readIdNameMapFile() throws IOException {
 		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(idNameMapFileName)));

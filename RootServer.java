@@ -61,11 +61,11 @@ public class RootServer {
 		Thread t1 = new Thread((Runnable) new LockServer());
 		// Thread t2 = new Thread((Runnable) new ClientServer());
 		Thread t3 = new Thread((Runnable) new ClientHttpServer());
-		// Thread t4 = new Thread((Runnable) new ServerComsInterface());
+		Thread t4 = new Thread((Runnable) new ServerComsInterface());
 		t1.start();
 		// t2.start();
 		t3.start();
-		// t4.start();
+		t4.start();
 	}
 }
 

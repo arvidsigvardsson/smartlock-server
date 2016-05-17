@@ -25,7 +25,8 @@ public class LockHandler implements Runnable {
 
 				if ((s = reader.readLine()) != null) {
 					// ifall låset vill ha en uppdatering
-					if(s.equals("u")) {
+					if(s.charAt(0) == 'u') {
+						System.out.println("Arduinon vill ha uppdatering");
 						// ifall klienten vill öppna
 						if(RootServer.getOpenStatus()) {
 							// kod för att skicka meddelande...
@@ -38,16 +39,37 @@ public class LockHandler implements Runnable {
 							// response = "This is a list\n";
 							response = RootServer.getDataContainer().getAcceptanceListArdu();
 						}
+						
+						// för timeoutalarm
+						if (s.substring(1).equals("open")) {
+							if (RootServer.getDataContainer().getTimeoutClock().isTimeUp()) {
+								if (!RootServer.getDataContainer().getHasTimeoutPushBeenSent()) {
+									RootServer.getPushNotifier().sendDoorOpenPush();
+								}
+								RootServer.getDataContainer().setHasTimeoutPushBeenSent(true);
+							}
+						} else if (s.substring(1).equals("closed")) {
+							RootServer.getDataContainer().getTimeoutClock().reset();
+							RootServer.getDataContainer().setHasTimeoutPushBeenSent(false);
+						} else {
+							// nåt gick fel
+						}
+						
 					}
 					// ifall låset skickar ett blip
 					else if (s.charAt(0) == 'c') {
 						response = "blip received";
 						RootServer.getDataContainer().blip(s.substring(1));
 					}
+					// för timeoutalarm
+					// else if (s.charAt(0) == 't') {
+					// 	
+					// }
+					
 					// ifall låset signalerar att dörren är öppen
-					else if (s.equals("door open")) {
-						RootServer.getPushNotifier().sendDoorOpenPush();
-					}
+					// else if (s.equals("door open")) {
+					// 	RootServer.getPushNotifier().sendDoorOpenPush();
+					// }
 
 					// OutputStream out = client.getOutputStream();
 					// PrintWriter writer = new PrintWriter(out);
