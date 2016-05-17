@@ -1,5 +1,5 @@
 public class RootServer {
-	private static boolean openStatus = false;
+	// private static boolean openStatus = false;
 	private static boolean iosPushDataAvailable = false;
 	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
 	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
@@ -39,13 +39,13 @@ public class RootServer {
 		return dataContainer;
 	}
 
-	public static boolean getOpenStatus() {
-		return openStatus;
-	}
-
-	public static void setOpenStatus(boolean status) {
-		openStatus = status;
-	}
+	// public static boolean getOpenStatus() {
+	// 	return openStatus;
+	// }
+	// 
+	// public static void setOpenStatus(boolean status) {
+	// 	openStatus = status;
+	// }
 
 	public static LongPollingPushMessage getIosPushMessage() {
 		return iosPushMessage;

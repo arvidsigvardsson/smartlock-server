@@ -28,7 +28,8 @@ public class ClientHttpHandler implements HttpHandler {
 		// }
 
 		if ("open".equals(params.get("message"))) {
-			RootServer.setOpenStatus(true);
+			// RootServer.setOpenStatus(true);
+			RootServer.getDataContainer().setShouldLockBeOpened(true);
 			RootServer.getTimestampLog().addTimestamp(ex.getPrincipal().getUsername(), true);/*LOGGA TRYCKET AV "ÖPPNA LÅS"-KNAPPEN*/
 			response = "Opening the lock\n";
 		} else {

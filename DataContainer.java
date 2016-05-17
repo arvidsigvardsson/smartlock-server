@@ -29,6 +29,7 @@ public class DataContainer {
 	private String idNameMapFileName;
 	private TimeoutClock timeoutClock = new TimeoutClock(5);
 	private boolean hasTimeoutPushBeenSent = false;
+	private boolean shouldLockBeOpened = false;
 
 	public DataContainer(String filename, String idNameMapFileName) {
 		this.filename = filename;
@@ -55,8 +56,16 @@ public class DataContainer {
 		return hasTimeoutPushBeenSent;
 	}
 	
-	public void setHasTimeoutPushBeenSent(boolean status) {
-		hasTimeoutPushBeenSent = status;
+	public void setHasTimeoutPushBeenSent(boolean bool) {
+		hasTimeoutPushBeenSent = bool;
+	}
+	
+	public boolean getShouldLockBeOpened() {
+		return shouldLockBeOpened;
+	}
+	
+	public void setShouldLockBeOpened(boolean bool) {
+		shouldLockBeOpened = bool;
 	}
 	
 	private void readIdNameMapFile() throws IOException {

@@ -28,11 +28,13 @@ public class LockHandler implements Runnable {
 					if(s.charAt(0) == 'u') {
 						System.out.println("Arduinon vill ha uppdatering");
 						// ifall klienten vill öppna
-						if(RootServer.getOpenStatus()) {
+						// if(RootServer.getOpenStatus()) {
+						if (RootServer.getDataContainer().getShouldLockBeOpened()) {
 							// kod för att skicka meddelande...
 							response = "open\n";
 
-							RootServer.setOpenStatus(false);
+							// RootServer.setOpenStatus(false);
+							RootServer.getDataContainer().setShouldLockBeOpened(false);
 						}
 						// annars skicka lista med tillåtna id
 						else {

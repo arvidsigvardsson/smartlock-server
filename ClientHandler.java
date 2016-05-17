@@ -27,7 +27,8 @@ public class ClientHandler implements Runnable {
 
 				while ((s = reader.readLine()) != null) {
 					if(s.equals("open")) {
-						RootServer.setOpenStatus(true);
+						// RootServer.setOpenStatus(true);
+						RootServer.getDataContainer().setShouldLockBeOpened(true);
 						response = "Ok, lets open the lock" + "\n";
 					} else {
 						response = "Server received message: " + s;
