@@ -30,7 +30,8 @@ public class DataContainer {
 	private TimeoutClock timeoutClock = new TimeoutClock(5);
 	private boolean hasTimeoutPushBeenSent = false;
 	private boolean shouldLockBeOpened = false;
-
+	private DoorState doorState = DoorState.CLOSED;
+	
 	public DataContainer(String filename, String idNameMapFileName) {
 		this.filename = filename;
 		this.idNameMapFileName = idNameMapFileName;
@@ -67,6 +68,15 @@ public class DataContainer {
 	public void setShouldLockBeOpened(boolean bool) {
 		shouldLockBeOpened = bool;
 	}
+	
+	public DoorState getDoorState() {
+		return doorState;
+	}
+	
+	public void setDoorState(DoorState state) {
+		doorState = state;
+	}
+	
 	
 	private void readIdNameMapFile() throws IOException {
 		try {

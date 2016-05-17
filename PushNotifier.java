@@ -41,13 +41,25 @@ public class PushNotifier {
 
 	public void sendAdminPushNotification() {
 		System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
-		String json = makeJsonPushObject();
+		String json = makeJsonPushObject("Change to card id data on server");
 		sendPushNotification(json);
 	}
 	
 	public void sendLogUpdatePush() {
 		System.out.println("Nu ska en pushnotis om loglistan skickas ut");
 		String json = makeJsonLogPushObject();
+		sendPushNotification(json);
+	}
+	
+	public void sendSilentDoorOpenPush() {
+		System.out.println("Nu ska en tyst notis att dörren är öppen skickas ut");
+		String json = makeJsonPushObject("opened");
+		sendPushNotification(json);
+	}
+	
+	public void sendSilentDoorClosedPush() {
+		System.out.println("Nu ska en tyst notis att dörren är stängd skickas ut");
+		String json = makeJsonPushObject("closed");
 		sendPushNotification(json);
 	}
 
@@ -114,12 +126,12 @@ public class PushNotifier {
 		}
 	}
 
-	private String makeJsonPushObject() {
+	private String makeJsonPushObject(String message) {
 		// return "{\"to\":\"eeo-s16-1vg:APA91bFcKOQ0UrAf4f8e7SOkysDM_78gIlJunBoq4yFw5KooiSKMIzEiUMbELplw7ksO0Dz4Lft9Ekga47SLH9It_eKG-DgnDN7KKA52LyAzzscSOUMkZ0b9oiHVWnbbvq3HpyEN32n7\",\"data\": {\"score\":\"3x1\"}}";
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonPushData jpd = new JsonPushData();
-			jpd.setMessage("Change to card id data on server");
+			jpd.setMessage(message);
 			JsonPush jp = new JsonPush();
 
 			// sätta lista med registration ids
