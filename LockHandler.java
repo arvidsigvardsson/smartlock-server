@@ -44,6 +44,7 @@ public class LockHandler implements Runnable {
 						
 						// för timeoutalarm
 						if (s.substring(1).equals("open")) {
+							System.out.println("Dörren är öppen");
 							if (RootServer.getDataContainer().getTimeoutClock().isTimeUp()) {
 								if (!RootServer.getDataContainer().getHasTimeoutPushBeenSent()) {
 									RootServer.getPushNotifier().sendDoorOpenPush();
@@ -51,6 +52,7 @@ public class LockHandler implements Runnable {
 								RootServer.getDataContainer().setHasTimeoutPushBeenSent(true);
 							}
 						} else if (s.substring(1).equals("closed")) {
+							System.out.println("Dörren är stängd");
 							RootServer.getDataContainer().getTimeoutClock().reset();
 							RootServer.getDataContainer().setHasTimeoutPushBeenSent(false);
 						} else {
