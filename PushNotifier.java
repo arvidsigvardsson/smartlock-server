@@ -32,9 +32,9 @@ public class PushNotifier {
 		readTokens(tokensFilePath);
 	}
 
-	public void sendDoorOpenPush() {
+	public void sendDoorOpenPush(int timeOpen) {
 		System.out.println("Ska skicka dörr öppen push");
-		String json = makeJsonPushObjectWithNotification();
+		String json = makeJsonPushObjectWithNotification(timeOpen);
 		System.out.println("Detta är json: " + json);
 		sendPushNotification(json);
 	}
@@ -174,13 +174,15 @@ public class PushNotifier {
 		}
 	}
 
-	private String makeJsonPushObjectWithNotification() {
+	private String makeJsonPushObjectWithNotification(int timeOpen) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonPushData jpd = new JsonPushData();
-			JsonPushNotificationField jpnf = new JsonPushNotificationField("Ny notis från Lockdroidservern", "Dörren är öppen", "icon");
+			String msg = "Din dörr har varit öppen i " + timeOpen + " sekunder";
 
-			jpd.setMessage("Door is open");
+			JsonPushNotificationField jpnf = new JsonPushNotificationField("Ny notis från Lockdroidservern", msg, "icon");
+
+			jpd.setMessage(msg);
 			jpd.setSilent(false);
 			// JsonPush jp = new JsonPush();
 			JsonPushWithNotificationField jp = new JsonPushWithNotificationField();

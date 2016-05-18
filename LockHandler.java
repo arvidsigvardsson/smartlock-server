@@ -9,7 +9,7 @@ import java.io.*;
 public class LockHandler implements Runnable {
 	private Socket client;
 
-	
+
 
 	public LockHandler(Socket client) {
 		this.client = client;
@@ -45,7 +45,7 @@ public class LockHandler implements Runnable {
 							// response = "This is a list\n";
 							response = dataContainer.getAcceptanceListArdu();
 						}
-						
+
 						/*
 						// för timeoutalarm
 						if (doorOpenMessage.equals("open")) {
@@ -64,7 +64,7 @@ public class LockHandler implements Runnable {
 							// nåt gick fel
 						}
 						*/
-						
+
 						// tillståndsmaskin för om dörren är öppen eller stängd
 						DoorState nextState = dataContainer.getDoorState();
 						switch(dataContainer.getDoorState()) {
@@ -84,7 +84,7 @@ public class LockHandler implements Runnable {
 									nextState = DoorState.CLOSED;
 								} else if (dataContainer.getTimeoutClock().isTimeUp()) {
 									System.out.println("Nu går larmet, synlig notis ska skickas");
-									RootServer.getPushNotifier().sendDoorOpenPush();
+									RootServer.getPushNotifier().sendDoorOpenPush(dataContainer.getTimeout());
 									nextState = DoorState.OPEN_ALARM;
 								}
 								break;
@@ -99,7 +99,7 @@ public class LockHandler implements Runnable {
 						}
 						dataContainer.setDoorState(nextState);
 					}
-					
+
 					// ifall låset skickar ett blip
 					else if (s.charAt(0) == 'c') {
 						response = "blip received";
@@ -107,9 +107,9 @@ public class LockHandler implements Runnable {
 					}
 					// för timeoutalarm
 					// else if (s.charAt(0) == 't') {
-					// 	
+					//
 					// }
-					
+
 					// ifall låset signalerar att dörren är öppen
 					// else if (s.equals("door open")) {
 					// 	RootServer.getPushNotifier().sendDoorOpenPush();

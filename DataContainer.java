@@ -27,11 +27,12 @@ public class DataContainer {
 	private BufferedReader bReader;
 	private HashMap<String, String> idNameMap = new HashMap<String, String>();
 	private String idNameMapFileName;
-	private TimeoutClock timeoutClock = new TimeoutClock(5);
+	private int timeout = 5;
+	private TimeoutClock timeoutClock = new TimeoutClock(this.timeout);
 	private boolean hasTimeoutPushBeenSent = false;
 	private boolean shouldLockBeOpened = false;
 	private DoorState doorState = DoorState.CLOSED;
-	
+
 	public DataContainer(String filename, String idNameMapFileName) {
 		this.filename = filename;
 		this.idNameMapFileName = idNameMapFileName;
@@ -48,36 +49,39 @@ public class DataContainer {
 		}
 
 	}
-	
+
 	public TimeoutClock getTimeoutClock() {
 		return this.timeoutClock;
 	}
-	
+
 	public boolean getHasTimeoutPushBeenSent() {
 		return hasTimeoutPushBeenSent;
 	}
-	
+
 	public void setHasTimeoutPushBeenSent(boolean bool) {
 		hasTimeoutPushBeenSent = bool;
 	}
-	
+
 	public boolean getShouldLockBeOpened() {
 		return shouldLockBeOpened;
 	}
-	
+
 	public void setShouldLockBeOpened(boolean bool) {
 		shouldLockBeOpened = bool;
 	}
-	
+
 	public DoorState getDoorState() {
 		return doorState;
 	}
-	
+
 	public void setDoorState(DoorState state) {
 		doorState = state;
 	}
-	
-	
+
+	public int getTimeout() {
+		return timeout;
+	}
+
 	private void readIdNameMapFile() throws IOException {
 		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(idNameMapFileName)));
