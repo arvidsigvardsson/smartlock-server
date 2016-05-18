@@ -42,6 +42,13 @@ public class ClientAdminHandler implements HttpHandler {
 				JsonRFID jmap = new JsonRFID();
 				jmap.setRfidMap(RootServer.getDataContainer().getAcceptanceList());
 				jmap.setIdNameMap(RootServer.getDataContainer().getIdNameMap());
+				
+				// kolla om dörren är öppen eller stängd
+				if (RootServer.getDataContainer().getDoorState() == DoorState.CLOSED) {
+					jmap.setDoorOpen(false);
+				} else {
+					jmap.setDoorOpen(true);
+				}
 
 				ObjectMapper mapper = new ObjectMapper();
 

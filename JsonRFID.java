@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class JsonRFID {
 	private HashMap<String, Boolean> rfidMap;
 	private HashMap<String, String> idNameMap;
+	private boolean doorOpen;
 
 	public HashMap<String, String> getIdNameMap() {
 		return idNameMap;
@@ -23,6 +24,14 @@ public class JsonRFID {
 
 	public void setRfidMap(HashMap<String, Boolean> map) {
 		rfidMap = map;
+	}
+	
+	public boolean getDoorOpen() {
+		return doorOpen;
+	}
+	
+	public void setDoorOpen(boolean bool) {
+		doorOpen = bool;
 	}
 
 	// public static void main(String[] args) throws IOException {
