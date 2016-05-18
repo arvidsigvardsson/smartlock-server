@@ -287,8 +287,13 @@ public class UserContainer {
 			System.out.println("Fel: Lösenordet innehåller ett ogiltigt tecken");
 			return;
 		}
-		this.acceptanceMap.put(key.hashCode() + "", value.hashCode() + "");
-		write(true);
+		if(this.acceptanceMap.keySet().contains(key)){
+			System.out.println("Användarnamnet är upptaget!");
+		}else{
+			System.out.println("Användare läggs till i systemet!");
+			this.acceptanceMap.put(key.hashCode() + "", value.hashCode() + "");
+			write(true);
+		}
 	}
 
 	/**
@@ -424,8 +429,8 @@ public class UserContainer {
 	 */
 	public void createBackup() throws IOException {
 		System.out.println("Creating backup");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_hh_mm_ss");
-		sdf.setTimeZone(TimeZone.getTimeZone("Sweden/Stockholm"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_HH_mm_ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("Europe/Stockholm"));
 		String backupName = "filer/userBackups/userBackup_" + sdf.format(new Date()) + ".txt";
 		File backupFile = new File(backupName);
 		File activeFile = new File(this.filename);
@@ -532,8 +537,8 @@ public class UserContainer {
 		if (backupFiles.length != 0) {
 			int backups = new File("filer/userBackups/").list().length;
 
-			SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_hh_mm_ss");
-			sdf.setTimeZone(TimeZone.getTimeZone("Sweden/Stockholm"));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_HH_mm_ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("Europe/Stockholm"));
 			String extraBackupFolderName = "filer/OldBackupFolder_" + sdf.format(new Date());
 			File extraBackupFolder = new File(extraBackupFolderName);
 			extraBackupFolder.mkdir();

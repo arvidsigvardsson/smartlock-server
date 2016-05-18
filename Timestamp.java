@@ -27,8 +27,8 @@ public class Timestamp {
 	 *            true on inloggningen lyckades, false om inte.
 	 */
 	public Timestamp(String user, boolean success) {
-		this.sdf = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
-		sdf.setTimeZone(TimeZone.getTimeZone("Sweden/Stockholm"));
+		this.sdf = new SimpleDateFormat("dd/M/yyyy HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("Europe/Stockholm"));
 		if (success) {
 			loginStatus = "Succeeded";
 		} else {
