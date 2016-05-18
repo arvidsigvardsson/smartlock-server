@@ -44,19 +44,20 @@ public class PushNotifier {
 		String json = makeJsonPushObject("Change to card id data on server");
 		sendPushNotification(json);
 	}
-	
+
 	public void sendLogUpdatePush() {
 		System.out.println("Nu ska en pushnotis om loglistan skickas ut");
-		String json = makeJsonLogPushObject();
+		// String json = makeJsonLogPushObject();
+		String json = makeJsonPushObject("Change to log list on server");
 		sendPushNotification(json);
 	}
-	
+
 	public void sendSilentDoorOpenPush() {
 		System.out.println("Nu ska en tyst notis att dörren är öppen skickas ut");
 		String json = makeJsonPushObject("opened");
 		sendPushNotification(json);
 	}
-	
+
 	public void sendSilentDoorClosedPush() {
 		System.out.println("Nu ska en tyst notis att dörren är stängd skickas ut");
 		String json = makeJsonPushObject("closed");
@@ -132,6 +133,7 @@ public class PushNotifier {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonPushData jpd = new JsonPushData();
 			jpd.setMessage(message);
+			jpd.setSilent(true);
 			JsonPush jp = new JsonPush();
 
 			// sätta lista med registration ids
@@ -171,7 +173,7 @@ public class PushNotifier {
 			return null;
 		}
 	}
-	
+
 	private String makeJsonPushObjectWithNotification() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -179,6 +181,7 @@ public class PushNotifier {
 			JsonPushNotificationField jpnf = new JsonPushNotificationField("Ny notis från Lockdroidservern", "Dörren är öppen", "icon");
 
 			jpd.setMessage("Door is open");
+			jpd.setSilent(false);
 			// JsonPush jp = new JsonPush();
 			JsonPushWithNotificationField jp = new JsonPushWithNotificationField();
 
