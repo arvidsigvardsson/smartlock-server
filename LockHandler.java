@@ -6,33 +6,42 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.io.*;
 
+/**
+* LockHandler skapas som tråd av LockServer, och varje objekt hanterar en socketanslutning från en arduino
+*
+* @author Arvid Sigvardsson
+*/
 public class LockHandler implements Runnable {
 	private Socket client;
-
-
-
+	
+	/**
+	* Konstruerar ett objekt med angiven socket
+	* @param client Den socketanslutning som skall hanteras
+	*/
 	public LockHandler(Socket client) {
 		this.client = client;
 	}
 
+	/**
+	* metod som kallas av systemet när klassen körs som tråd
+	*/
 	public void run() {
-
 			try {
+				// för inläsning av meddelandet över socketen
 				InputStream in = client.getInputStream();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-				String s;
+				String input;
 				String response = "";
 				DataContainer dataContainer = RootServer.getDataContainer();
 
-				if ((s = reader.readLine()) != null) {
+				if ((input = reader.readLine()) != null) {
 					// ifall låset vill ha en uppdatering
-					if(s.charAt(0) == 'u') {
+					if(input.charAt(0) == 'u') {
 						System.out.println("Arduinon vill ha uppdatering");
-						String doorOpenMessage = s.substring(1);
+						String doorOpenMessage = input.substring(1);
 
 						// ifall klienten vill öppna
-						// if(RootServer.getOpenStatus()) {
 						if (dataContainer.getShouldLockBeOpened()) {
 							// kod för att skicka meddelande...
 							response = "open\n";
@@ -42,30 +51,11 @@ public class LockHandler implements Runnable {
 						}
 						// annars skicka lista med tillåtna id
 						else {
-							// response = "This is a list\n";
 							response = dataContainer.getAcceptanceListArdu();
 						}
 
-						/*
-						// för timeoutalarm
-						if (doorOpenMessage.equals("open")) {
-							System.out.println("Dörren är öppen");
-							if (dataContainer.getTimeoutClock().isTimeUp()) {
-								if (!dataContainer.getHasTimeoutPushBeenSent()) {
-									dataContainer.sendDoorOpenPush();
-								}
-								dataContainer.setHasTimeoutPushBeenSent(true);
-							}
-						} else if (doorOpenMessage.equals("closed")) {
-							System.out.println("Dörren är stängd");
-							dataContainer.getTimeoutClock().reset();
-							dataContainer.setHasTimeoutPushBeenSent(false);
-						} else {
-							// nåt gick fel
-						}
-						*/
-
-						// tillståndsmaskin för om dörren är öppen eller stängd
+						// tillståndsmaskin för om dörren är öppen eller stängd, fastställer vilka pushnotiser som ska 
+						// skickas
 						DoorState nextState = dataContainer.getDoorState();
 						switch(dataContainer.getDoorState()) {
 							case CLOSED:
@@ -101,45 +91,23 @@ public class LockHandler implements Runnable {
 					}
 
 					// ifall låset skickar ett blip
-					else if (s.charAt(0) == 'c') {
+					else if (input.charAt(0) == 'c') {
 						response = "blip received";
-						RootServer.getDataContainer().blip(s.substring(1));
+						RootServer.getDataContainer().blip(input.substring(1));
 					}
-					// för timeoutalarm
-					// else if (s.charAt(0) == 't') {
-					//
-					// }
-
-					// ifall låset signalerar att dörren är öppen
-					// else if (s.equals("door open")) {
-					// 	RootServer.getPushNotifier().sendDoorOpenPush();
-					// }
-
-					// OutputStream out = client.getOutputStream();
-					// PrintWriter writer = new PrintWriter(out);
-					// writer.write(response);
+					
+					// skickar meddelande tillbaka över socketen och stänger den sen
 					PrintStream ps = new PrintStream(client.getOutputStream());
 					ps.print(response);
 					System.out.println("Skickar meddelande till arduinon: " + response);
 
 					client.close();
-
-
-
-					// writer.write(s + "\n");
-					// writer.flush();
-					// System.out.println("Mottaget frn klient: " + s);
-//
-
-
-
 				}
-				// writer.close();
 				reader.close();
 				client.close();
 
 			} catch (Exception e) {
-
+				System.out.println(e);
 			}
 
 	}

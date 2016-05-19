@@ -1,31 +1,25 @@
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-
 import java.util.*;
 
+/**
+* Hanterar anslutning till /client. Här kan olika actions som klienter vill kunna utföra läggas. Den enda i dagsläget är
+* om klienten anger queryn /client?message=open så kommer låset nästa gång det ansluter få meddelandet "open" vilket
+* kommer att öppna låset
+*
+* @author Arvid Sigvardsson
+*/
 public class ClientHttpHandler implements HttpHandler {
 	public void handle(HttpExchange ex) throws IOException {
 		System.out.println("Http request received, detta är query: " + ex.getRequestURI().getQuery());
 		System.out.println("Detta är request method: " + ex.getRequestMethod());
 
-		// Headers headers = ex.getRequestHeaders();
-		// Set keys  = headers.keySet();
-		// Iterator iter = keys.iterator();
-		// System.out.println(ex.getRequestBody().read());
-
 		String response = "";
 		Map<String, String> params = queryToMap(ex.getRequestURI().getQuery());
-
-		// Set pKeys = params.keySet();
-		// Iterator iterP = pKeys.iterator();
-		// while(iterP.hasNext()){
-		// 	System.out.print("KEY: "+iterP.next().toString());
-		// }
 
 		if ("open".equals(params.get("message"))) {
 			// RootServer.setOpenStatus(true);

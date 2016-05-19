@@ -8,7 +8,7 @@
  * hastigheten servern får information från Arduinot om dörrens tillstånd
  * (öppen/stängd)
  * 
- * @author Admin
+ * @author Arvid Sigvardsson och Sebastian Sologuren
  *
  */
 public class TimeoutClock {
