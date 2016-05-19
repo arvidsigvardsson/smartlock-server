@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.JOptionPane;
@@ -63,11 +64,8 @@ public class TimestampLog {
 
 		String input;
 		String[] data;
-		// seb 29/4/2016 03:57:18 succeeded
 		while ((input = bReader.readLine()) != null) {
 			data = input.split(",");
-//			System.out.println("DATA LENGTH:-------------------------" + data.length);
-//			System.out.println("\ndata[0]  " + data[0]);
 			if (data.length == 4) {
 
 				log.add(new Timestamp(data));
@@ -111,10 +109,10 @@ public class TimestampLog {
 	 */
 	public void addTimestamp(String user, boolean success, boolean write) {
 		log.add(new Timestamp(user, success));
-		
+
 		// pushnotis om loglista ska skickas ut
 		RootServer.getPushNotifier().sendLogUpdatePush();
-		
+
 		if (write) {
 			try {
 				write();
@@ -168,27 +166,131 @@ public class TimestampLog {
 	}
 
 	/**
-	 * Returnerar log med sökta element, i sträng-format.
-	 *
+	 * Returnerar listan av timestamps med sökta term/termer, i sträng-format.
+	 * Fungerar med logiska uttryck "och"(&) och "eller"(%) för att stapla flera
+	 * söktermer. T.ex. "seb&18/5%seb&19/5" kommer att returnera en sträng med
+	 * timestamps som innehåller seb och datumen 18/5 och 19/5. Man kan högst
+	 * använda sig av 3 del-söktermer per sökterm, t.ex. "seb&18/5&Suc" som
+	 * skulle returnera alla timestamps som innehåller "seb" och "18/5" och
+	 * "Suc". Metoden ser även till att inga dupliceringar av timestamps
+	 * returneras i strängen.
+	 * 
 	 * @param only
-	 *            Sträng som anger sökta tidsstämplarna
-	 * @return str loggen i sträng-format
+	 *            Sträng med söktermer som anger sökta tidsstämplarna
+	 * @return str listan av tidstämplar i sträng-format
 	 */
 	public String toString(String only) {
+		if (only.length() == 0) {
+			only = ",";
+		}
+		String res = "";
+		ArrayList<String> duplicateTimestamps = new ArrayList<String>();
+		/* För att mappa sökterm nr med del-söktermer */
+		HashMap<Integer, String[]> searchStrings = new HashMap<Integer, String[]>();
+		/* Om flera söktermer skickats in */
+		if (only.contains("%")) {
+			/* Lagra varje sökterm i ett element */
+			String searches[] = only.split("%");
+			/* FÖR varje sökterm */
+			for (int i = 0; i < searches.length; i++) {
+				/* OM söktermen består av del-söktermer */
+				if (searches[i].contains("&")) {
+					/* Lagra varje del-sökterm i ett element */
+					String searchTerms[] = searches[i].split("&");
+					/* Mappa söktermen med dess del-söktermer */
+					searchStrings.put(i, searchTerms);
+					/* OM söktermen inte består av del-söktermer */
+				} else {
+					/* Skapa en tom array */
+					String arr[] = new String[] { searches[i] };
+					/* Mappa söktermen till ett tomt element */
+					searchStrings.put(i, arr);
+				}
+			}
+
+			Iterator<Integer> keyIter = searchStrings.keySet().iterator();
+			while (keyIter.hasNext()) {
+				int theKey = keyIter.next();
+				String resu = search(searchStrings.get(theKey));
+				String tempArr[] = resu.split("¨");
+				for (String str : tempArr) {
+					if (!(duplicateTimestamps.contains(str))) {
+						res += str;
+						duplicateTimestamps.add(str);
+					}
+				}
+			}
+		} else if (only.contains("&")) {
+			String searchTerms[] = only.split("&");
+			String resu2 = search(searchTerms);
+
+			String tempArr[] = resu2.split("¨");
+			for (String str : tempArr) {
+				if (!(duplicateTimestamps.contains(str))) {
+					res += str;
+					duplicateTimestamps.add(str);
+				}
+			}
+
+		} else {
+			String searchTerms[] = new String[] { only };
+			String resu3 = search(searchTerms);
+			String tempArr[] = resu3.split("¨");
+			for (String str : tempArr) {
+				if (!(duplicateTimestamps.contains(str))) {
+					res += str;
+					duplicateTimestamps.add(str);
+				}
+			}
+		}
+		if (res.length() > 0) {
+			return res;
+		} else {
+			System.out.println("Fanns inget i loggen som matchade sökningen");
+			return "";
+		}
+
+	}
+
+	/**
+	 * Den här metoden används av toString()-metoderna för att returnera en
+	 * lista av timestamps i sträng format.
+	 * 
+	 * @param terms
+	 *            Array av del-söktermer som bygger upp en sökterm.
+	 * @return Sträng innehållandes alla timestamps med angivna del-söktermer.
+	 */
+	private String search(String[] terms) {
 		String str = "";
 		String temp = "";
+		boolean infoMessage = false;
 		Iterator<Timestamp> iter = log.iterator();
+		// System.out.println(terms[0]+" "+terms[1]+" "+terms[2]);
 		while (iter.hasNext()) {
 			temp = iter.next().getTimestamp();
-			if (temp.contains(only)) {
-				str += "\n" + temp;
+			// System.out.println(temp);
+			if (terms.length == 3) {
+				if (temp.contains(terms[0]) && temp.contains(terms[1]) && temp.contains(terms[2])) {
+					str += "\n" + temp + "¨";
+				}
+			} else if (terms.length == 2) {
+				if (temp.contains(terms[0]) && temp.contains(terms[1])) {
+					str += "\n" + temp + "¨";
+				}
+			} else if (terms.length == 1) {
+				if (temp.contains(terms[0])) {
+					str += "\n" + temp + "¨";
+				}
+			} else if (terms.length > 3 && !infoMessage) {
+				System.out.println("Du kan högst använda dig av 3 del-söktermer per sökterm, t.ex. \"seb&18/5&Suc\" ");
+				infoMessage = true;
 			}
 		}
 		if (str.length() > 0) {
 			return str;
 		} else {
 			System.out.println("Fanns inget i loggen som matchade sökningen");
-			return str;
+			return "";
 		}
 
 	}
@@ -269,8 +371,8 @@ public class TimestampLog {
 				stampLog[i] = temp;
 				i++;
 			}
-			if(searchTerms!=null){
-				for(String elem:searchTerms){
+			if (searchTerms != null) {
+				for (String elem : searchTerms) {
 					if (temp.contains(elem)) {
 						stampLog[i] = temp;
 						i++;
@@ -369,44 +471,4 @@ public class TimestampLog {
 			}
 		}
 	}
-
-	/**
-	 * Test metod för att testa att klassen fungerar.
-	 *
-	 * @param args
-	 * @throws InterruptedException
-	 *             Behövs för Thread.sleep anropet
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws InterruptedException, IOException {
-
-		TimestampLog t = new TimestampLog("filer/timestampLog.txt");
-		System.out.println("LOG SIZE: " + t.getLogSize());
-		System.out.println(t.getCreated());
-		// t.addTimestamp("seb", true);
-		// t.addTimestamp("adam", false);
-		t.addTimestamp("erik", true);
-		// System.out.println("LOG SIZE: " + t.getLogSize());
-		System.out.println("LOG LISTING: " + t.toString());
-
-		// Thread.sleep(1000);
-		// t.addTimestamp("erik", true);
-		// System.out.println("LOG SIZE: " + t.getLogSize());
-		// System.out.println("TOSTRING: " + t.toString());
-		// t.addTimestamp("hadi", true);
-		// t.addTimestamp("arvid", true);
-		// System.out.println("LOG SIZE: " + t.getLogSize());
-		// System.out.println("LOG LISTING: ");
-		// String[] log = t.getLog("seb");
-		// for (String s : log) {
-		// System.out.println(s);
-		// }
-		// System.out.println("STRING ARRAY SIZE: " + log.length);
-		// System.out.println("LOG SIZE: " + t.getLogSize());
-		// System.out.println("END");
-		// System.out.println("START TEST 2");
-		// System.out.println(t.toString());
-
-	}
-
 }

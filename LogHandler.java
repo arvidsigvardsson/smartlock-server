@@ -1,12 +1,15 @@
 import java.io.IOException;
 import java.io.OutputStream;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
 /**
- * Denna klass hanterar HttpContextex log där en användare vill få tag på loggen som lagras internt i servern.
- * Man kan då få en logg på två olika sätt, i båda fallen som en lång sträng.
- * 1. /log? - ger hela loggen
- * 2. /log?search=sökterm - ger en log innehållandes endast de timestamps som innehöll söktermen.
+ * Denna klass hanterar HttpContextex log där en användare vill få tag på loggen
+ * som lagras internt i servern. Man kan då få en logg på två olika sätt, i båda
+ * fallen som en lång sträng. 1. /log? - ger hela loggen 2. /log?search=sökterm
+ * - ger en log innehållandes endast de timestamps som innehöll söktermen.
+ * 
  * @author Admin
  *
  */
@@ -17,22 +20,33 @@ public class LogHandler implements HttpHandler {
 
 		String response = "";
 		String query = ex.getRequestURI().getQuery();
-		String[] queries = queryToQueries(query);
-		if (queries[0].equals("search")
-				&& queries[1].length() > 0) {/* Accepted Commands */
-			System.out.println("Sending log containing seach term\\s:  "+queries[1]+"\n");
-			if(queries[1].contains("&")){
-				String searchTerms[] = queries[1].split("&");
-				System.out.println("searchTerms[0]: "+searchTerms[0]+"\nsearchTerms[1]: "+searchTerms[1]);
-				response += RootServer.getLog(searchTerms[0]);
-				response += RootServer.getLog(searchTerms[1]);
-			}else{
-				response = RootServer.getLog(queries[1]);
+		String[] initialQueries = query.split("=");
+		System.out.println("initialQueries[0]: " + initialQueries[0] + "\ninitialQueries[1]: " + initialQueries[1]);
+		if (initialQueries[0].equals("search")
+				&& initialQueries[1].length() > 0) {/* Accepted Commands */
+			System.out.println("Sending log containing seach term\\s:  " + initialQueries[1] + "\n");
+			if (initialQueries[1].contains("||")) {
+				String secondaryQueries[] = initialQueries[1].split("||");
+				System.out.println("secondaryQueries[0]: " + secondaryQueries[0] + "\nsecondaryQueries[1]: "
+						+ secondaryQueries[1]);
+				for (String elem : secondaryQueries) {
+					if (elem.contains("&")) {
+						String searchTerms[] = elem.split("&");
+						for (String searchTerm : searchTerms) {
+							System.out.println("Current search term: " + searchTerm);
+							response += RootServer.getTimestampLog().toString(searchTerm);
+						}
+
+					}
+				}
+
+			} else {
+				response = RootServer.getTimestampLog().toString(initialQueries[1]);
 			}
-			System.out.println("RESULTAT:  "+response);
+			System.out.println("RESULTAT:  " + response);
 		} else {
 			System.out.println("Sending complete log\n");
-			response = RootServer.getLog();
+			response = RootServer.getTimestampLog().toString();
 			System.out.println("\nChecking contents of timestamp log that I am about to send to client:");
 			System.out.println("START");
 			System.out.println(response);
@@ -43,29 +57,45 @@ public class LogHandler implements HttpHandler {
 		os.write(response.getBytes());
 		os.close();
 	}
+
 	/**
-	 * Parse:ar queries så att search läggs in som ett kommand och resterande efter "="-tecknet 
-	 * som parametrar till kommandot. 
-	 * @param query
-	 * @return
+	 * För att testa klassen isolerat utan HttpExchange.
+	 * 
+	 * @param args
 	 */
-	public static String[] queryToQueries(String query) {
-		return query.split("=");
+	public static void test(String query) {
+		String response = "";
+		String[] initialQueries = query.split("=");
+		System.out.println("initialQueries[0]: " + initialQueries[0] + "\ninitialQueries[1]: " + initialQueries[1]);
+		if (initialQueries[0].equals("search")
+				&& initialQueries[1].length() > 0) {/* Accepted Commands */
+			System.out.println("Sending log containing search term\\s:  " + initialQueries[1] + "\n");
+
+			response = RootServer.getTimestampLog().toString(initialQueries[1]);
+			System.out.println("RESULTAT:  " + response);
+		} else {
+			System.out.println("Sending complete log\n");
+			response = RootServer.getTimestampLog().toString();
+			System.out.println("\nChecking contents of timestamp log that I am about to send to client:");
+			System.out.println("START");
+			System.out.println(response);
+			System.out.println("END");
+		}
 	}
-	
+
 	/**
 	 * För att testa klassen isolerat.
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String[] arr = LogHandler.queryToQueries("search=E&I");
-		// String[] arr = LogHandler.queryToQueries("");
-		for (String elem : arr) {
-			System.out.println(elem + "    " + elem.length());
-		}
-		System.out.println(arr[1]);
-		String arr2 = RootServer.getLog(arr[1]);
-		System.out.println("-----------------------");
-		System.out.println(arr2);
+		RootServer.getTimestampLog().addTimestamp("seb", true);
+		RootServer.getTimestampLog().addTimestamp("benji", true);
+		RootServer.getTimestampLog().addTimestamp("arvid", true);
+		RootServer.getTimestampLog().addTimestamp("seb", false);
+		RootServer.getTimestampLog().addTimestamp("benji", false);
+		RootServer.getTimestampLog().addTimestamp("arvid", false);
+		RootServer.main(args);
+		test("search=seb&Suc%ben%arv&suc");
 	}
 }

@@ -189,7 +189,7 @@ public class ServerComsInterface implements Runnable {
 
 			case "2b":
 				System.out.println(frame
-						+ "2b) (TimestampLog) getLog(searchTerm:String):String[]\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\n(Det går bra att använda \"&\" för multipla söktermer)");
+						+ "2b) (TimestampLog) getLog(searchTerm:String):String[]\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\n(Det går bra att använda \"&\" som logiskt \"och\" och \"%\" som logiskt \"eller\")");
 				input = sc.nextLine();
 				if (!(input.equals("exit"))) {
 					String[] log = RootServer.getTimestampLog().getLog(input);
@@ -204,7 +204,7 @@ public class ServerComsInterface implements Runnable {
 
 			case "2c":
 				System.out.println(frame
-						+ "2c) (TimestampLog) getLogSize(searchTerm:String):int\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\nså visas antalet tidstämplar innehållandes söktermen.\n(Det går bra att använda \"&\" för multipla söktermer)");
+						+ "2c) (TimestampLog) getLogSize(searchTerm:String):int\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\nså visas antalet tidstämplar innehållandes söktermen.\n(Det går bra att använda \"&\" som logiskt \"och\" och \"%\" som logiskt \"eller\")");
 				input = sc.nextLine();
 				if (!(input.equals("exit"))) {
 					System.out.println(RootServer.getTimestampLog().getLogSize(input) + "\nMethod executed.");
@@ -214,7 +214,7 @@ public class ServerComsInterface implements Runnable {
 
 			case "2d":
 				System.out.println(frame
-						+ "2d) (TimestampLog) toString(searchTerm:String):String\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\nså visas antalet tidstämplar innehållandes söktermen.\n(Det går bra att använda \"&\" för multipla söktermer)");
+						+ "2d) (TimestampLog) toString(searchTerm:String):String\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\nså visas antalet tidstämplar innehållandes söktermen.\n(Det går bra att använda \"&\" som logiskt \"och\" och \"%\" som logiskt \"eller\")");
 				input = sc.nextLine();
 				if (!(input.equals("exit"))) {
 					System.out.println(RootServer.getTimestampLog().toString(input) + "\nMethod executed.");

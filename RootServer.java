@@ -11,24 +11,9 @@ public class RootServer {
 	public static UserContainer getUserContainer(){
 		return userContainer;
 	}
-	public static String getList(){
-		String res ="";
-		for(String elem:userContainer.getBackupsList()){
-			res += "\n"+elem;
-		}
-		return res;
-	}
 
 	public static TimestampLog getTimestampLog() {
 		return timestampLog;
-	}
-
-	public static String getLog(){
-		return getTimestampLog().toString();
-	}
-
-	public static String getLog(String only){
-		return getTimestampLog().toString(only);
 	}
 
 	public static PushNotifier getPushNotifier() {
