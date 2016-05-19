@@ -21,7 +21,7 @@ public class BackupHandler implements HttpHandler {
 		String[] queries = queryToQueries(query);/* Accepted types */
 
 		if (queries[0].equals("list")) {/* Accepted Commands */
-			response = RootServer.getList();
+			// response = RootServer.getList();
 			System.out.println("Sending list of userContainer backups available for loading.\n");
 			System.out.println("RESPONSE:" + response);
 		} else if (queries[0].equals("load") && queries[1].length() > 0) {
