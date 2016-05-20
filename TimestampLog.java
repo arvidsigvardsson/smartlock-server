@@ -167,8 +167,8 @@ public class TimestampLog {
 
 	/**
 	 * Returnerar listan av timestamps med sökta term/termer, i sträng-format.
-	 * Fungerar med logiska uttryck "och"(&) och "eller"(%) för att stapla flera
-	 * söktermer. T.ex. "seb&18/5%seb&19/5" kommer att returnera en sträng med
+	 * Fungerar med logiska uttryck "och"(&) och "eller"(¤) för att stapla flera
+	 * söktermer. T.ex. "seb&18/5¤seb&19/5" kommer att returnera en sträng med
 	 * timestamps som innehåller seb och datumen 18/5 och 19/5. Man kan högst
 	 * använda sig av 3 del-söktermer per sökterm, t.ex. "seb&18/5&Suc" som
 	 * skulle returnera alla timestamps som innehåller "seb" och "18/5" och
@@ -188,9 +188,9 @@ public class TimestampLog {
 		/* För att mappa sökterm nr med del-söktermer */
 		HashMap<Integer, String[]> searchStrings = new HashMap<Integer, String[]>();
 		/* Om flera söktermer skickats in */
-		if (only.contains("%")) {
+		if (only.contains("¤")) {
 			/* Lagra varje sökterm i ett element */
-			String searches[] = only.split("%");
+			String searches[] = only.split("¤");
 			/* FÖR varje sökterm */
 			for (int i = 0; i < searches.length; i++) {
 				/* OM söktermen består av del-söktermer */

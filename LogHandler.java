@@ -21,7 +21,6 @@ public class LogHandler implements HttpHandler {
 		String response = "";
 		String query = ex.getRequestURI().getQuery();
 		String[] initialQueries = query.split("=");
-		System.out.println("initialQueries[0]: " + initialQueries[0] + "\ninitialQueries[1]: " + initialQueries[1]);
 		if (initialQueries[0].equals("search")
 				&& initialQueries[1].length() > 0) {/* Accepted Commands */
 			System.out.println("Sending log containing seach term\\s:  " + initialQueries[1] + "\n");
@@ -47,7 +46,6 @@ public class LogHandler implements HttpHandler {
 		} else {
 			System.out.println("Sending complete log\n");
 			response = RootServer.getTimestampLog().toString();
-			System.out.println("\nChecking contents of timestamp log that I am about to send to client:");
 			System.out.println("START");
 			System.out.println(response);
 			System.out.println("END");
