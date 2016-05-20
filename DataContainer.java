@@ -54,18 +54,18 @@ public class DataContainer {
 		return this.timeoutClock;
 	}
 
-	public boolean getHasTimeoutPushBeenSent() {
-		return hasTimeoutPushBeenSent;
-	}
-
-	public void setHasTimeoutPushBeenSent(boolean bool) {
-		hasTimeoutPushBeenSent = bool;
-	}
+	// public boolean getHasTimeoutPushBeenSent() {
+	// 	return hasTimeoutPushBeenSent;
+	// }
+	// 
+	// public void setHasTimeoutPushBeenSent(boolean bool) {
+	// 	hasTimeoutPushBeenSent = bool;
+	// }
 
 	public boolean getShouldLockBeOpened() {
 		return shouldLockBeOpened;
 	}
-
+	
 	public void setShouldLockBeOpened(boolean bool) {
 		shouldLockBeOpened = bool;
 	}
@@ -391,5 +391,6 @@ public class DataContainer {
 		RootServer.getPushNotifier().sendAdminPushNotification();
 
 		// för iOS
-		RootServer.setIosPushMessage(new LongPollingPushMessage("Change to card id data on server", 2));	}
+		// RootServer.setIosPushMessage(new LongPollingPushMessage("Change to card id data on server", 2));	
+	}
 }

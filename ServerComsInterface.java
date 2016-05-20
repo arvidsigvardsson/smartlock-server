@@ -346,41 +346,41 @@ public class ServerComsInterface implements Runnable {
 				System.out.println(frame);
 				break;
 
-			case "4f":
-				System.out.println(frame + "4f) (DataContainer) getHasTimeoutPushBeenSent(void):boolean\n"
-						+ RootServer.getDataContainer().getHasTimeoutPushBeenSent() + "\nMethod executed." + frame);
-				break;
+			// case "4f":
+			// 	System.out.println(frame + "4f) (DataContainer) getHasTimeoutPushBeenSent(void):boolean\n"
+			// 			+ RootServer.getDataContainer().getHasTimeoutPushBeenSent() + "\nMethod executed." + frame);
+			// 	break;
 
-			case "4g":
-				System.out.println(frame
-						+ "4g) (DataContainer) setHasTimeoutPushBeenSent(state:Boolean):void\ntype \"exit\" to exit this method panel.\ntype \"true\" or \"false\".");
-				input = sc.nextLine();
-				if (!input.equals("exit")) {
-					if (input.equals("true") || input.equals("false")) {
-						RootServer.getDataContainer().setHasTimeoutPushBeenSent(Boolean.parseBoolean(input));
-						System.out.println("\nMethod executed.");
-					}
-				} else {
-					System.out.println("You need to type either \"true\" or \"false\" as input.");
-				}
-				System.out.println(frame);
-				break;
+			// case "4g":
+			// 	System.out.println(frame
+			// 			+ "4g) (DataContainer) setHasTimeoutPushBeenSent(state:Boolean):void\ntype \"exit\" to exit this method panel.\ntype \"true\" or \"false\".");
+			// 	input = sc.nextLine();
+			// 	if (!input.equals("exit")) {
+			// 		if (input.equals("true") || input.equals("false")) {
+			// 			RootServer.getDataContainer().setHasTimeoutPushBeenSent(Boolean.parseBoolean(input));
+			// 			System.out.println("\nMethod executed.");
+			// 		}
+			// 	} else {
+			// 		System.out.println("You need to type either \"true\" or \"false\" as input.");
+			// 	}
+			// 	System.out.println(frame);
+			// 	break;
 
-			case "4h":
-				System.out.println(frame
-						+ "4h) (TimeoutClock & DataContainer) runtest\nPress any key to get updated info, type \"exit\" to exit.");
-				RootServer.getDataContainer().getTimeoutClock().reset();
-				RootServer.getDataContainer().setHasTimeoutPushBeenSent(true);
-				input = sc.nextLine();
-				while (!input.equals("exit")) {
-					System.out.println("Time limit: " + RootServer.getDataContainer().getTimeoutClock().getTimeLimit()
-							+ "\nTime elapsed: " + RootServer.getDataContainer().getTimeoutClock().timeElapsed()
-							+ "\nTime up?: " + RootServer.getDataContainer().getTimeoutClock().isTimeUp()
-							+ "\ntype \"exit\" to exit.");
-					input = sc.nextLine();
-				}
-				System.out.println("\nMethod executed." + frame);
-				break;
+			// case "4h":
+			// 	System.out.println(frame
+			// 			+ "4h) (TimeoutClock & DataContainer) runtest\nPress any key to get updated info, type \"exit\" to exit.");
+			// 	RootServer.getDataContainer().getTimeoutClock().reset();
+			// 	RootServer.getDataContainer().setHasTimeoutPushBeenSent(true);
+			// 	input = sc.nextLine();
+			// 	while (!input.equals("exit")) {
+			// 		System.out.println("Time limit: " + RootServer.getDataContainer().getTimeoutClock().getTimeLimit()
+			// 				+ "\nTime elapsed: " + RootServer.getDataContainer().getTimeoutClock().timeElapsed()
+			// 				+ "\nTime up?: " + RootServer.getDataContainer().getTimeoutClock().isTimeUp()
+			// 				+ "\ntype \"exit\" to exit.");
+			// 		input = sc.nextLine();
+			// 	}
+			// 	System.out.println("\nMethod executed." + frame);
+			// 	break;
 			}
 
 		}
