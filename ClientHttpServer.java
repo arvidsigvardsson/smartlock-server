@@ -16,13 +16,18 @@ import java.util.concurrent.Executors;
 *
 */
 public class ClientHttpServer implements Runnable {
+	private int port;
+	
+	public ClientHttpServer(int port) {
+		this.port = port;
+	}
 	/**
 	* metod som kallas av systemet när klassen körs som tråd
 	*/
 	public void run() {
 		try {
 			// instansierar en httpServer
-			HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+			HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 			
 			// endpoint för mobilklienter för att ansluta och signalera till låset att det ska öppnas
 			HttpContext uContext = server.createContext("/client", new ClientHttpHandler());

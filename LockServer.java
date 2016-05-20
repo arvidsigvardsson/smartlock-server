@@ -12,6 +12,11 @@ import java.util.concurrent.Executors;
 *
 */
 public class LockServer implements Runnable {
+	private int port;
+	public LockServer(int port) {
+		this.port = port;
+	}
+	
 	/**
 	* metoden run anropas av systemet när klassen startats som en tråd och körs
 	*/
@@ -22,7 +27,7 @@ public class LockServer implements Runnable {
 		try {
 			System.out.println("LockServer startad");
 			// anger port som anslutning sker till
-			server = new ServerSocket(8888);
+			server = new ServerSocket(port);
 
 			// servern ligger i en oändlig loop och lyssnar på en port. Varje ny anslutning skapar en ny tråd av klassen
 			// LockHandler

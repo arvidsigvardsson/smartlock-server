@@ -1,14 +1,31 @@
+/**
+* RootServer är klassen vars mainmetod startar projektet. Den skapar två servertrådar, en
+* för kommunikation med arduinon i låset, och en för kommunikation med 
+* klientapplikationer. Dessutom kan den starta en tråd för att interaktivt kunna testa
+* servern.
+* Dessutom skapar den tre objekt som klassvariabler som håller data i systemet, samt en 
+* klass för att skicka pushnotiser, och exponerar dem för alla klasser i systemet med 
+* get-metoder. Ett objekt som vill skicka pushnotis kan skriva
+* RootServer.getPushNotifier() för att få tillgång till det objektet.
+*
+* @author Arvid Sigvardsson
+*/
+
 public class RootServer {
-	// private static boolean openStatus = false;
-	private static boolean iosPushDataAvailable = false;
-	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", "filer/idNameMap.txt");
-	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
+	// dataContainer fungerar till stor del som vår databas. Den sparar data i textfil om 
+	// rfid-kort som scannats, om de har access, status om låset ska låsas upp och om 
+	// dörren är öppen eller stängd
+	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", 
+																"filer/idNameMap.txt");
+	// används för att skicka pushnotiser
+	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", 
+																"filer/pushtokens.txt");
+	// lagrar användarnamn och lösenord
 	private static UserContainer userContainer = new UserContainer("filer/userList.txt");
+	// lagrar händelser för låset i en log
 	private static TimestampLog timestampLog = new TimestampLog("filer/timestampLog.txt");
-	private static LongPollingPushMessage iosPushMessage = new LongPollingPushMessage("Invalid message", 0);
 
-
-	public static UserContainer getUserContainer(){
+	public static UserContainer getUserContainer() {
 		return userContainer;
 	}
 
@@ -24,33 +41,15 @@ public class RootServer {
 		return dataContainer;
 	}
 
-	// public static boolean getOpenStatus() {
-	// 	return openStatus;
-	// }
-	// 
-	// public static void setOpenStatus(boolean status) {
-	// 	openStatus = status;
-	// }
-
-	public static LongPollingPushMessage getIosPushMessage() {
-		return iosPushMessage;
-	}
-
-	public static void setIosPushMessage(LongPollingPushMessage message) {
-		System.out.println("Message: " + message);
-		iosPushMessage = message;
-	}
-
-
 	public static void main(String[] args) {
-		Thread t1 = new Thread((Runnable) new LockServer());
-		// Thread t2 = new Thread((Runnable) new ClientServer());
-		Thread t3 = new Thread((Runnable) new ClientHttpServer());
-		Thread t4 = new Thread((Runnable) new ServerComsInterface());
-		t1.start();
-		// t2.start();
-		t3.start();
-		t4.start();
+		// parameter till LockServer och ClientHttpServer är portnumret de ska lyssna på
+		Thread lockServerThread = new Thread((Runnable) new LockServer(8888));
+		Thread clientHttpServerThread = new Thread((Runnable) new ClientHttpServer(8080));
+		Thread interactiveThread = new Thread((Runnable) new ServerComsInterface());
+		
+		lockServerThread.start();
+		clientHttpServerThread.start();
+		interactiveThread.start();
 	}
 }
 

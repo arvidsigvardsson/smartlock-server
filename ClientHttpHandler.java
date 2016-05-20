@@ -7,9 +7,9 @@ import com.sun.net.httpserver.HttpServer;
 import java.util.*;
 
 /**
-* Hanterar anslutning till /client. Här kan olika actions som klienter vill kunna utföra läggas. Den enda i dagsläget är
-* om klienten anger queryn /client?message=open så kommer låset nästa gång det ansluter få meddelandet "open" vilket
-* kommer att öppna låset
+* Hanterar anslutning till /client. Här kan olika actions som klienter vill kunna utföra 
+* läggas. Den enda i dagsläget är om klienten anger queryn /client?message=open så kommer 
+* låset nästa gång det ansluter få meddelandet "open" vilket kommer att öppna låset
 *
 * @author Arvid Sigvardsson
 */
@@ -40,13 +40,12 @@ public class ClientHttpHandler implements HttpHandler {
     Map<String, String> result = new HashMap<String, String>();
     for (String param : query.split("&")) {
         String pair[] = param.split("=");
-        if (pair.length>1) {
+        if (pair.length > 1) {
             result.put(pair[0], pair[1]);
-        }else{
+        } else {
             result.put(pair[0], "");
         }
     }
     return result;
   }
-
 }
