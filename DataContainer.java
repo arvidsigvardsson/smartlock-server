@@ -37,7 +37,7 @@ public class DataContainer {
 		this.filename = filename;
 		this.idNameMapFileName = idNameMapFileName;
 		try {
-			readFile(filename);
+			readAcceptanceMapFile(filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -50,38 +50,79 @@ public class DataContainer {
 
 	}
 
+	/**
+	 * Returnerar tiden som passerat sedan TimeoutClock objektet aktiverades.
+	 * Används i denna klassen för att ha koll på tiden dörren varit öppen så
+	 * att en pushnotis kan göras om den inställda tiden passerats.
+	 * 
+	 * @return tiden som passerat sedan TimeoutClock objektet aktiverades.
+	 */
 	public TimeoutClock getTimeoutClock() {
 		return this.timeoutClock;
 	}
 
 	// public boolean getHasTimeoutPushBeenSent() {
-	// 	return hasTimeoutPushBeenSent;
+	// return hasTimeoutPushBeenSent;
 	// }
-	// 
+	//
 	// public void setHasTimeoutPushBeenSent(boolean bool) {
-	// 	hasTimeoutPushBeenSent = bool;
+	// hasTimeoutPushBeenSent = bool;
 	// }
-
+	/**
+	 * Returnerar värdet som håller koll på om låsmekanismen borde vara öppen.
+	 * 
+	 * @return shouldLockBeOpened info om låsmekanismen borde vara öppen
+	 */
 	public boolean getShouldLockBeOpened() {
 		return shouldLockBeOpened;
 	}
-	
+
+	/**
+	 * Sätter värdet som håller koll på om låsmekanismen borde vara öppen.
+	 * 
+	 * @param bool
+	 *            om låsmekanismen borde vara öppen
+	 */
 	public void setShouldLockBeOpened(boolean bool) {
 		shouldLockBeOpened = bool;
 	}
 
+	/**
+	 * Returnerar dörrens status.
+	 * 
+	 * @return doorState kan returnera ett av följande värden CLOSED, OPEN,
+	 *         OPEN_ALARM
+	 */
 	public DoorState getDoorState() {
 		return doorState;
 	}
 
+	/**
+	 * Sätter dörrens status.
+	 * 
+	 * @param state
+	 *            Ett av följande värden CLOSED, OPEN, OPEN_ALARM
+	 */
 	public void setDoorState(DoorState state) {
 		doorState = state;
 	}
 
+	/**
+	 * Returnerar inställda värdet för hur länge dörrens ska ha stått öppen
+	 * innan en pushnotis skickas.
+	 * 
+	 * @return timeout Värdet för hur länge dörrens ska ha stått öppen innan en
+	 *         pushnotis skickas.
+	 */
 	public int getTimeout() {
 		return timeout;
 	}
-
+	
+	/**
+	 * Läser värden från en text fil som innehåller information om hur kortid:n är mappade till namn.
+	 * Dessa värden lagras sedan i den instansierade HashMap<String,String> idNameMap.
+	 * @throws IOException Kastas om filen inte hittas.
+	 */
 	private void readIdNameMapFile() throws IOException {
 		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(idNameMapFileName)));
@@ -103,13 +144,16 @@ public class DataContainer {
 		}
 		bReader.close();
 	}
-
+	/**
+	 * Returnerar idNameMap innehållandes hur kortid:n är mappade till namn.
+	 * @return idNameMap HashMap<String,String> hur kortid:n är mappade till namn.
+	 */
 	public HashMap<String, String> getIdNameMap() {
 		return this.idNameMap;
 	}
 
 	/**
-	 * Läser in datan i en textfil till klassens instans HashMap. Inläst data
+	 * Läser in datan i en textfil till klassens instansierade acceptanceMap HashMap. Inläst data
 	 * parse:as så att ID lagras som nyckel och Status lagras som värde.
 	 *
 	 * @param filename
@@ -117,7 +161,7 @@ public class DataContainer {
 	 * @throws IOException
 	 *             Kastas om filen inte finns
 	 */
-	private void readFile(String filename) throws IOException {
+	private void readAcceptanceMapFile(String filename) throws IOException {
 		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
 		} catch (FileNotFoundException e) {
@@ -153,18 +197,17 @@ public class DataContainer {
 	public void blip(String id) throws IOException {
 		String user = id;
 		System.out.println("Incoming id is: ");
-		System.out.println("START");
-		System.out.println(id);
-		System.out.println("END");
-		/*
-		 * Användas för vidare funktionalitet, Servern kan lägga på data på id:T
-		 */
+		System.out.println("START"+id+"END");
 		System.out.println("BLIP REGISTERED");
-		if(this.getIdNameMap().containsKey(id)){
-			user = this.getIdNameMap().get(id); /*Om där finns ett namn mappat till kortets ID, använd den för tidstämpeln*/
+		if (this.getIdNameMap().containsKey(id)) {
+			user = this.getIdNameMap()
+					.get(id); /*
+								 * Om där finns ett namn mappat till kortets ID,
+								 * använd den för tidstämpeln
+								 */
 		}
 		if (!acceptanceMap.containsKey(id)) {/* OM ID INTE FINNS */
-			addToAcceptanceMap(id, false);/* LÄGG TILL ID */
+			addToAcceptanceMap(id, false);/* LÄGG TILL ID SOM OAKTIVERAD */
 			RootServer.getTimestampLog().addTimestamp(id,
 					false);/* LOGGA FÖRSÖK */
 
@@ -178,19 +221,23 @@ public class DataContainer {
 	}
 
 	/**
-	 * Ersätter klassens HashMap med den som anges som parameter. Sedan skrivs
+	 * Ersätter klassens accpetanceMap HashMap med den som anges som parameter. Sedan skrivs
 	 * den till text filen.
 	 *
 	 * @param update
 	 *            Den nya HashMapen som ska ersätta den befintliga.
 	 * @throws IOException
 	 */
-	public void updateAcceptanceMap(HashMap<String, Boolean> update) throws IOException {
+	public void setAcceptanceMap(HashMap<String, Boolean> update) throws IOException {
 		this.acceptanceMap = update;
 		sendAdminPush(); // testar pushnotiser
-		write();
+		saveAcceptanceMapToDisk();
 	}
-
+	
+	/**
+	 * Skriver från objektets instansierade IdNameMap HashMap till text filen
+	 * där samma info ska lagras.
+	 */
 	public void saveIdNameMapToDisk() {
 		try {
 			BufferedWriter bw = new BufferedWriter(
@@ -208,9 +255,16 @@ public class DataContainer {
 			e.printStackTrace();
 		}
 	}
-
-	public void setIdNameMap(HashMap<String, String> map) {
-		this.idNameMap = map;
+	/**
+	 * Ersätter klassens idNameMap HashMap med den som anges som parameter. Sedan skrivs
+	 * den till text filen.
+	 *
+	 * @param update
+	 *            Den nya HashMapen som ska ersätta den befintliga.
+	 * @throws IOException
+	 */
+	public void setIdNameMap(HashMap<String, String> update) {
+		this.idNameMap = update;
 		// sendAdminPush(); // testar pushnotiser
 		saveIdNameMapToDisk();
 	}
@@ -221,21 +275,10 @@ public class DataContainer {
 	 * @throws IOException
 	 *             Kastas om filen som data lagras i inte hittas.
 	 */
-	public void write() throws IOException {
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<Boolean> values = new ArrayList<Boolean>();
+	public void saveAcceptanceMapToDisk() throws IOException {
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
-		String key;
-		Boolean value;
-		Set<String> keySet = acceptanceMap.keySet();
-		Iterator<String> iterKeys = keySet.iterator();
-		while (iterKeys.hasNext()) {
-			key = iterKeys.next();
-			bw.write(key + ",");
-			keys.add(key);
-			value = acceptanceMap.get(key);
-			values.add(value);
-			bw.write(value.toString() + ",");
+		for(Entry<String,Boolean> entry: acceptanceMap.entrySet()){
+			bw.write(entry.getKey()+","+entry.getValue().toString());
 			bw.newLine();
 		}
 		bw.close();
@@ -255,8 +298,9 @@ public class DataContainer {
 	public void addToAcceptanceMap(String key, Boolean value) throws IOException {
 		this.acceptanceMap.put(key, value);
 		sendAdminPush(); // testar pushnotiser
-		write();
+		saveAcceptanceMapToDisk();
 	}
+	
 
 	/**
 	 * Returnerar klassens HashMap innehållandes alla ID:n (nycklar) och
@@ -264,7 +308,7 @@ public class DataContainer {
 	 *
 	 * @return acceptanceMap HashMap med ID och Status
 	 */
-	public HashMap<String, Boolean> getAcceptanceList() {
+	public HashMap<String, Boolean> getAcceptanceMap() {
 		return this.acceptanceMap;
 	}
 
@@ -288,7 +332,18 @@ public class DataContainer {
 		}
 		return str + "\n";
 	}
+	
+	/**
+	 * Skickar ut en admin pushnotis.
+	 */
+	public void sendAdminPush() {
+		RootServer.getPushNotifier().sendAdminPushNotification();
 
+		// för iOS
+		// RootServer.setIosPushMessage(new LongPollingPushMessage("Change to
+		// card id data on server", 2));
+	}
+	
 	/**
 	 * Testmetod för att testa att klassen fungerar. Denna metod exekveras från
 	 * userAuthentication-klassen som hämtar ett DataContainer objekt som
@@ -310,7 +365,7 @@ public class DataContainer {
 
 			case "2":
 				System.out.println("RUNNING: getAcceptanceList");
-				HashMap<String, Boolean> map = this.getAcceptanceList();
+				HashMap<String, Boolean> map = this.getAcceptanceMap();
 				String res = "";
 				Iterator<String> keyIter = map.keySet().iterator();
 				while (keyIter.hasNext()) {
@@ -351,7 +406,7 @@ public class DataContainer {
 				map2.put("222", true);
 				map2.put("333", false);
 				try {
-					this.updateAcceptanceMap(map2);
+					this.setAcceptanceMap(map2);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -387,10 +442,5 @@ public class DataContainer {
 		// System.out.println(dc.getAcceptanceListArdu());
 	}
 
-	public void sendAdminPush() {
-		RootServer.getPushNotifier().sendAdminPushNotification();
-
-		// för iOS
-		// RootServer.setIosPushMessage(new LongPollingPushMessage("Change to card id data on server", 2));	
-	}
+	
 }

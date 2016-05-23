@@ -15,7 +15,7 @@ public class RootServer {
 	// dataContainer fungerar till stor del som vår databas. Den sparar data i textfil om 
 	// rfid-kort som scannats, om de har access, status om låset ska låsas upp och om 
 	// dörren är öppen eller stängd
-	private static DataContainer dataContainer = new DataContainer("filer/idlist.txt", 
+	private static DataContainer dataContainer = new DataContainer("filer/idList.txt", 
 																"filer/idNameMap.txt");
 	// används för att skicka pushnotiser
 	private static PushNotifier pushNotifier = new PushNotifier("filer/apikey.txt", 

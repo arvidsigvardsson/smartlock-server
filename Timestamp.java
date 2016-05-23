@@ -9,7 +9,7 @@ import java.util.TimeZone;
  * denne försökt logga in, samt om inloggningen lyckades. Timestamp objekt
  * lagras i en TimestampLog.
  * 
- * @author Admin
+ * @author Sebastian Sologuren
  *
  */
 public class Timestamp {
@@ -24,7 +24,7 @@ public class Timestamp {
 	 * @param user
 	 *            Användarens namn.
 	 * @param success
-	 *            true on inloggningen lyckades, false om inte.
+	 *            true om inloggningen lyckades, false om inte.
 	 */
 	public Timestamp(String user, boolean success) {
 		this.sdf = new SimpleDateFormat("dd/M/yyyy HH:mm:ss");
@@ -37,7 +37,11 @@ public class Timestamp {
 		String dateTime[] = sdf.format(new Date()).split(" ");
 		this.stamp = user + "," + dateTime[0] + "," + dateTime[1] +","+loginStatus;
 	}
-
+	/**
+	 * Denna konstruktor används när man vill omvandla en tidsstämpel i String-array format till Timestamp.
+	 *  
+	 * @param loadedStamp
+	 */
 	public Timestamp(String[] loadedStamp){
 		String res =loadedStamp[0]+","+loadedStamp[1]+","+loadedStamp[2]+","+loadedStamp[3];
 		this.stamp = res;

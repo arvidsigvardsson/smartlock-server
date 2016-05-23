@@ -292,7 +292,7 @@ public class ServerComsInterface implements Runnable {
 
 		case "3b":
 			System.out.println(frame + "3b) (DataContainer) 3b. getAcceptanceList(void):HashMap<String, Boolean>");
-			HashMap<String, Boolean> map = RootServer.getDataContainer().getAcceptanceList();
+			HashMap<String, Boolean> map = RootServer.getDataContainer().getAcceptanceMap();
 			String res2 = "";
 			Iterator<String> keyIter = map.keySet().iterator();
 			while (keyIter.hasNext()) {
@@ -351,7 +351,7 @@ public class ServerComsInterface implements Runnable {
 				map2.put("555", true);
 				map2.put("666", true);
 				try {
-					RootServer.getDataContainer().updateAcceptanceMap(map2);
+					RootServer.getDataContainer().setAcceptanceMap(map2);
 					System.out.println("\nMethod executed.");
 				} catch (IOException e) {
 					e.printStackTrace();

@@ -24,7 +24,7 @@ public class ClientAdminHandler implements HttpHandler {
 				System.out.println("Post request, detta är body: " + body ); //readBody(ex.getRequestBody()));
 				// String body = readBody(ex.getRequestBody());
 				JsonRFID jsonRfid = readJSON(body);
-				RootServer.getDataContainer().updateAcceptanceMap(jsonRfid.getRfidMap());
+				RootServer.getDataContainer().setAcceptanceMap(jsonRfid.getRfidMap());
 				RootServer.getDataContainer().setIdNameMap(jsonRfid.getIdNameMap());
 
 				ex.sendResponseHeaders(200, body.length());
@@ -40,7 +40,7 @@ public class ClientAdminHandler implements HttpHandler {
 
 				// String response = "{\"rfidMap\": {\"abcdef12\": true,\"e5a1ea45\": true,\"f1397af0\": false} }";
 				JsonRFID jmap = new JsonRFID();
-				jmap.setRfidMap(RootServer.getDataContainer().getAcceptanceList());
+				jmap.setRfidMap(RootServer.getDataContainer().getAcceptanceMap());
 				jmap.setIdNameMap(RootServer.getDataContainer().getIdNameMap());
 				
 				// kolla om dörren är öppen eller stängd
