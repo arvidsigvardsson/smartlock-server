@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.io.OutputStream;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -10,7 +9,7 @@ import com.sun.net.httpserver.HttpHandler;
  * fallen som en lång sträng. 1. /log? - ger hela loggen 2. /log?search=sökterm
  * - ger en log innehållandes endast de timestamps som innehöll söktermen.
  * 
- * @author Admin
+ * @author Sebastian Sologuren
  *
  */
 public class LogHandler implements HttpHandler {

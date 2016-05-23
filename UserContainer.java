@@ -33,12 +33,12 @@ public class UserContainer {
 	private HashMap<String, String> acceptanceMap = new HashMap<String, String>();
 	private String filename;
 	private BufferedReader bReader;
-	private int backupLimit = 5;
-	private long timer;
-	private long backupTimeCheck = 0; /*
-										 * i ms, skapar inte backup om inte
-										 * denna tid gått sedan senaste backup
-										 */
+	private int backupLimit = 15;
+	// private long timer;
+	// private long backupTimeCheck = 0; /*
+	// * i ms, skapar inte backup om inte
+	// * denna tid gått sedan senaste backup
+	// */
 
 	/**
 	 * Konstuktor som läser in data från angiven fil och lagrar datan i klassens
@@ -59,8 +59,8 @@ public class UserContainer {
 	 */
 	public UserContainer(String filename, int backupLimit, long backupTimeCheck) {
 		this(filename);
-		this.backupLimit = backupLimit;
-		this.backupTimeCheck = backupTimeCheck;
+		// this.backupLimit = backupLimit;
+		// this.backupTimeCheck = backupTimeCheck;
 	}
 
 	/**
@@ -80,16 +80,17 @@ public class UserContainer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		boolean state = this.backupFolderExists();
-		System.out.println("Does the backup folder exist?: " + state);
-		if (state) {
-			try {
-				System.out.println("Moving all existing backup files to a new folder");
-				this.moveBackupFiles(1, false);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		boolean state = this.userBackupFolderExists();
+		System.out.println("Does the userBackup folder exist?: " + state);
+		// if (state) {
+		// try {
+		// System.out.println("Moving all existing backup files to a new
+		// folder");
+		// this.moveBackupFiles(1, false);
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
+		// }
 	}
 
 	/**
@@ -122,7 +123,7 @@ public class UserContainer {
 		try {
 			bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
 		} catch (FileNotFoundException e) {
-			System.out.println("Filen fanns inte.");
+			System.out.println("Filen fanns inte. (UserContainer, readFile()");
 			return;
 		}
 
@@ -263,7 +264,8 @@ public class UserContainer {
 		}
 		bw.close();
 		if (backup) {
-			backup(System.currentTimeMillis() - this.timer);
+			// backup(System.currentTimeMillis() - this.timer);
+			backup();
 		}
 	}
 
@@ -287,9 +289,9 @@ public class UserContainer {
 			System.out.println("Fel: Lösenordet innehåller ett ogiltigt tecken");
 			return;
 		}
-		if(this.acceptanceMap.keySet().contains(key)){
+		if (this.acceptanceMap.keySet().contains(key)) {
 			System.out.println("Användarnamnet är upptaget!");
-		}else{
+		} else {
 			System.out.println("Användare läggs till i systemet!");
 			this.acceptanceMap.put(key.hashCode() + "", value.hashCode() + "");
 			write(true);
@@ -298,8 +300,8 @@ public class UserContainer {
 
 	/**
 	 * Kollar ifall en sträng är tom eller innehåller ett ogilitigt tecken:
-	 * å,ä,ö,Å,Ä,Ö, , Returnerar true om strängen passerar checken (inte
-	 * innehåller ovanstående).
+	 * 'å','ä','ö','Å','Ä','Ö',' ',',' Returnerar true om strängen passerar
+	 * checken (inte innehåller ovanstående).
 	 * 
 	 * @param str
 	 *            Strängen som ska kontrolleras
@@ -310,8 +312,8 @@ public class UserContainer {
 		if (a == 65533) { /* Code for uknown char */
 			return false;
 		}
-		if (str.isEmpty() || str.contains(" ") || str.contains("å") || str.contains("ä") || str.contains("ö")
-				|| str.contains("Å") || str.contains("Ä") || str.contains("Ö")) {
+		if (str.isEmpty() || str.contains(" ") || str.contains(",") || str.contains("å") || str.contains("ä")
+				|| str.contains("ö") || str.contains("Å") || str.contains("Ä") || str.contains("Ö")) {
 			return false;
 		}
 		return true;
@@ -328,32 +330,99 @@ public class UserContainer {
 	}
 
 	/**
-	 * Returnerar en String-array med filsökvägarna inkl. namnen till
-	 * backupfilerna om där finns några.
+	 * Tar reda på alla filer som existerar i en mapp som angivits som argument
+	 * och returnerar det som en sträng-array.
+	 * 
+	 * @param folder
+	 *            Mappen vars filnamn ska sparar i en sträng array
+	 * @return result Sträng-array innehållandes alla filnamn
+	 */
+	private String[] listFiles(String folder) {
+		File backupFolder = new File("filer/" + folder + "/");
+		File[] backups = backupFolder.listFiles();
+		if (backups.length > 0) {
+			String[] result = new String[backups.length + 1];
+			result[0] = "Available user backup files in the " + folder + " folder";
+			int i = 1;
+
+			for (File f : backups) {
+				result[i] = f.getName();
+				i++;
+			}
+			return result;
+		}
+		System.out.println("Finns inga backup filer i " + folder + " mappen.");
+		return null;
+	}
+
+	/**
+	 * Returnerar en String-array med filsökvägarna inkl. namnen till aktiva
+	 * backupfilerna och gamla backupfilerna, om där finns några.
 	 * 
 	 * @return result String[] där varje element har filsökvägen till en av
 	 *         backupfilerna.
 	 */
-
 	public String[] getBackupsList() {
-		if (this.backupFolderExists()) {
-			File backupFolder = new File("filer/userBackups/");
-			File[] backups = backupFolder.listFiles();
-
-			if (backups.length > 0) {
-				String[] result = new String[backups.length];
-				int i = 0;
-
-				for (File f : backups) {
-					result[i] = f.getName();
-					i++;
-				}
-				return result;
+		int size = 0;
+		String[] active = null;
+		String[] old = null;
+		try {
+			active = getUserBackupsList();
+		} catch (NullPointerException ex) {
+			System.out.println("userBackups mappen är tom.");
+		}
+		try {
+			old = getOldUserBackupsList();
+		} catch (NullPointerException ex) {
+			System.out.println("oldUserBackups mappen är tom.");
+		}
+		if (active != null && old != null) {
+			size = active.length + old.length;
+			String[] res = new String[size];
+			for (int i = 0; i < active.length; i++) {
+				res[i] = active[i];
 			}
-			System.out.println("Finns inga backup filer.");
-			return null;
+			int j = 0;
+			for (int i = active.length; i < size; i++) {
+				res[i] = old[j];
+				j++;
+			}
+			return res;
+		}
+		System.out.println(
+				"Anropa istället metoden för den specifika mappen: getUserBackupsList eller getOldUserBackupsList");
+		return null;
+	}
+
+	/**
+	 * Returnerar en String-array med filsökvägarna inkl. namnen till aktiva
+	 * backupfilerna om där finns några.
+	 * 
+	 * @return result String[] där varje element har filsökvägen till en av
+	 *         backupfilerna. Returnerar null om där inte fanns backup filer.
+	 */
+	public String[] getUserBackupsList() {
+		if (userBackupFolderExists()) {
+			return listFiles("userBackups");
 		} else {
-			System.out.println("Fanns ingen backup mapp men den har skapats nu.");
+			System.out.println("Fanns ingen userBackups mapp men den har skapats nu.");
+			return null;
+		}
+	}
+
+	/**
+	 * Returnerar en String-array med filsökvägarna inkl. namnen till gamla
+	 * backupfilerna om där finns några.
+	 * 
+	 * @return result String[] där varje element har filsökvägen till en av
+	 *         backupfilerna. Returnerar null om där inte fanns backup filer.
+	 */
+
+	public String[] getOldUserBackupsList() {
+		if (oldUserBackupFolderExists()) {
+			return listFiles("oldUserBackups");
+		} else {
+			System.out.println("Fanns ingen oldUserBackups mapp men den har skapats nu.");
 			return null;
 		}
 	}
@@ -364,27 +433,29 @@ public class UserContainer {
 	 * över text filen som lagrar all data. Om backupfilen som angets inte
 	 * existerar händer inget med nuvarande HashMap och lagringst textfil.
 	 * 
-	 * @param backup
+	 * @param backupname
 	 *            backupfilen som ska laddas in
 	 * @throws IOException
 	 *             Kastas om filen inte hittas
 	 */
-	public void loadBackup(String backup) throws IOException {
-		File backupFolder = new File("filer/userBackups/");
+	public void loadBackup(String backupname, String folder) throws IOException {
+		String name = "";
+		File backupFolder = new File("filer/" + folder + "/");
 		File[] backups = backupFolder.listFiles();
 		boolean state = false;
 		if (backups.length > 0) {
 
 			for (File f : backups) {
-				if (f.getName().equals(backup) && state == false) {
+				name = f.getName();
+				if (name.contains(backupname) && state == false) {
 					state = true;
 				}
 			}
 
 			if (state) {
 				HashMap<String, String> newMap = new HashMap<String, String>();
-				String filename = "filer/userBackups/";
-				filename += backup;
+				String filename = "filer/" + folder + "/";
+				filename += name;
 				readFile(filename, newMap);
 				this.updateAcceptanceMap(newMap,
 						false); /*
@@ -399,24 +470,37 @@ public class UserContainer {
 		}
 	}
 
+	// /**
+	// * Kollar upp om tillräcklig tid passerat sedan senaste backupskrivningen
+	// * (Ställs in i klassens instansvariabel) och om tillräcklig tid passerat
+	// så
+	// * anropas backupCheckLimit()-metoden och sedan skrivs en ny backupfil med
+	// * hjälp av anrop till createBackup()-metoden.
+	// *
+	// * @param timePassed
+	// * Tiden som gått sedan senaste backupskrivningen (räknas ut
+	// * automatiskt av klassen).
+	// * @throws IOException
+	// * Kastas om filer inte hittas för backup-funktionaliteten.
+	// */
+	// public void backup(long timePassed) throws IOException {
+	// if (timePassed > this.backupTimeCheck) {
+	// System.out.println("yes within backup time check");
+	// backupLimitCheck();
+	// createBackup();
+	// }
+	// }
 	/**
-	 * Kollar upp om tillräcklig tid passerat sedan senaste backupskrivningen
-	 * (Ställs in i klassens instansvariabel) och om tillräcklig tid passerat så
-	 * anropas backupCheckLimit()-metoden och sedan skrivs en ny backupfil med
-	 * hjälp av anrop till createBackup()-metoden.
-	 * 
-	 * @param timePassed
-	 *            Tiden som gått sedan senaste backupskrivningen (räknas ut
-	 *            automatiskt av klassen).
+	 * Kollar upp om gränsen för backupskrivningar i userBackups mappen har
+	 * uppnåtts (Ställs in i klassens instansvariabel) och skapar sedan en ny
+	 * backupfil med hjälp av anrop till createBackup()-metoden.
+	 *
 	 * @throws IOException
 	 *             Kastas om filer inte hittas för backup-funktionaliteten.
 	 */
-	public void backup(long timePassed) throws IOException {
-		if (timePassed > this.backupTimeCheck) {
-			System.out.println("yes within backup time check");
-			backupLimitCheck();
-			createBackup();
-		}
+	public void backup() throws IOException {
+		backupLimitCheck();
+		createBackup();
 	}
 
 	/**
@@ -435,7 +519,7 @@ public class UserContainer {
 		File backupFile = new File(backupName);
 		File activeFile = new File(this.filename);
 		copyFile(activeFile, backupFile);
-		this.timer = System.currentTimeMillis();
+		// this.timer = System.currentTimeMillis();
 	}
 
 	/**
@@ -472,24 +556,23 @@ public class UserContainer {
 	 *             Kastas om fil inte finns.
 	 */
 	public void backupLimitCheck() throws IOException {
-		//System.out.println("Inne");
+		// System.out.println("Inne");
 
-		backupFolderExists();
-
-		int backups = new File("filer/userBackups/").list().length;
+		userBackupFolderExists();
 		File backupsFolder = new File("filer/userBackups/");
-		//System.out.println("backups: " + backups);
+		int backups = backupsFolder.list().length;
+
+		System.out.println("backups in userBackups folder: " + backups + "  " + this.backupLimit);
 
 		if (backups == this.backupLimit) {
 
-			System.out.println("LimitPassed");
-			File[] backupFiles = backupsFolder.listFiles();
-			backupFiles[0].delete();
+			System.out.println("Backup limit for UserBackups folder Exceeded.");
+			moveBackupFiles(1, false);
 
 		} else if (backups > this.backupLimit) {
-			moveBackupFiles(this.backupLimit, true);
+			moveBackupFiles((backups + 1) - this.backupLimit, false);
 
-		}else{
+		} else {
 			System.out.println("yes within backups limit");
 		}
 	}
@@ -499,17 +582,37 @@ public class UserContainer {
 	 * så skapas mappen.
 	 * 
 	 */
-	public boolean backupFolderExists() {
+	public boolean userBackupFolderExists() {
+		return backupFolderExists("userBackups");
+	}
+
+	/**
+	 * Kontrollerar om mappen "oldUserBackups" existerar i mappen "filer", om
+	 * inte så skapas mappen.
+	 * 
+	 */
+	public boolean oldUserBackupFolderExists() {
+		return backupFolderExists("oldUserBackups");
+	}
+
+	/**
+	 * Kontrollerar om en backup mapp existerar inuti "filer" mappen, och om
+	 * inte så skapas mappen.
+	 * 
+	 * @param folder
+	 *            mappens namn
+	 */
+	public boolean backupFolderExists(String folder) {
 		boolean backupFolderExists = true;
 		try {
 			@SuppressWarnings("unused")
-			int backups = new File("filer/userBackups/").list().length;
+			int backups = new File("filer/" + folder + "/").list().length;
 		} catch (NullPointerException ex) {
 			backupFolderExists = false;
 		}
 
 		if (!backupFolderExists) {
-			File newBackupsFolder = new File("filer/userBackups/");
+			File newBackupsFolder = new File("filer/" + folder + "/");
 			newBackupsFolder.mkdir();
 		}
 		return backupFolderExists;
@@ -520,34 +623,36 @@ public class UserContainer {
 	 * med eller större än det angivna värdet. Om ja flyttas alla de
 	 * backupfilerna till en ny separat Backup mapp.
 	 * 
-	 * @param downTo
-	 *            existerande backupfiler i backup mappen är lika med eller
-	 *            större än det angivna värdet flyttas filerna till en ny mapp.
+	 * @param howMany
+	 *            Hur många filer som ska flyttas över till oldUserBackups
+	 *            mappen eller bara delete:as.
 	 * @param justDelete
 	 *            Om true så flyttas inte filerna till en ny mapp, de delete:as
 	 *            bara.
 	 * @throws IOException
 	 *             Kastas om mapp inte finns.
 	 */
-	private void moveBackupFiles(int downTo, boolean justDelete) throws IOException {
-		backupFolderExists();
+	private void moveBackupFiles(int howMany, boolean justDelete) throws IOException {
+		userBackupFolderExists();
 		File backupsFolder = new File("filer/userBackups/");
 		File[] backupFiles = backupsFolder.listFiles();
 
 		if (backupFiles.length != 0) {
-			int backups = new File("filer/userBackups/").list().length;
+			// int backups = new File("filer/userBackups/").list().length;
 
-			SimpleDateFormat sdf = new SimpleDateFormat("dd_M_YYYY_HH_mm_ss");
-			sdf.setTimeZone(TimeZone.getTimeZone("Europe/Stockholm"));
-			String extraBackupFolderName = "filer/OldBackupFolder_" + sdf.format(new Date());
-			File extraBackupFolder = new File(extraBackupFolderName);
-			extraBackupFolder.mkdir();
+			// SimpleDateFormat sdf = new
+			// SimpleDateFormat("dd_M_YYYY_HH_mm_ss");
+			// sdf.setTimeZone(TimeZone.getTimeZone("Europe/Stockholm"));
+			// String extraBackupFolderName = "filer/OldBackupFolder_" +
+			// sdf.format(new Date());
+			// File extraBackupFolder = new File(extraBackupFolderName);
+			// extraBackupFolder.mkdir();
+			oldUserBackupFolderExists();
 
-			System.out.println("backupFiles.length.. .. .. : " + backupFiles.length);
-
-			for (int i = backups - 1; i >= downTo - 1; i--) {
+			System.out.println("backupFiles.length: " + backupFiles.length);
+			for (int i = 0; i < howMany; i++) {
 				if (!justDelete) {
-					String movedFileName = extraBackupFolderName + "//" + backupFiles[i].getName();
+					String movedFileName = "filer/oldUserBackups/" + backupFiles[i].getName();
 					String originalFileName = "filer/userBackups/" + backupFiles[i].getName();
 					File originalFile = new File(originalFileName);
 					File movedFile = new File(movedFileName);
@@ -571,26 +676,26 @@ public class UserContainer {
 		this.backupLimit = backupLimit;
 	}
 
-	/**
-	 * Sätter inom hur ofta en backup får göras. Skrivningar till lagrings
-	 * textfilen triggar möjlighet till backup.
-	 * 
-	 * @param backupTimeCheck
-	 *            gräns i millisekunder för hur ofta backups får skapas t.ex.
-	 *            (1000*60*60) -> inte inom en timme efter en backupskrivning.
-	 */
-	public void setBackupTimeCheck(long backupTimeCheck) {
-		this.backupTimeCheck = backupTimeCheck;
-	}
+	// /**
+	// * Sätter inom hur ofta en backup får göras. Skrivningar till lagrings
+	// * textfilen triggar möjlighet till backup.
+	// *
+	// * @param backupTimeCheck
+	// * gräns i millisekunder för hur ofta backups får skapas t.ex.
+	// * (1000*60*60) -> inte inom en timme efter en backupskrivning.
+	// */
+	// public void setBackupTimeCheck(long backupTimeCheck) {
+	// this.backupTimeCheck = backupTimeCheck;
+	// }
 
-	/**
-	 * Returnerar värdet för inom hur ofta en backup får göras.
-	 * 
-	 * @return backupTimeCheck värdet för inom hur ofta en backup får göras
-	 */
-	public long getBackupTimeCheck() {
-		return this.backupTimeCheck;
-	}
+	// /**
+	// * Returnerar värdet för inom hur ofta en backup får göras.
+	// *
+	// * @return backupTimeCheck värdet för inom hur ofta en backup får göras
+	// */
+	// public long getBackupTimeCheck() {
+	// return this.backupTimeCheck;
+	// }
 
 	/**
 	 * Returnerar värdet för gränsen för antal backupfiler som får göras innan
@@ -651,11 +756,11 @@ public class UserContainer {
 				System.out.println("END");
 				break;
 
-			case "3":
-				System.out.println("RUNNING: gettime");
-				JOptionPane.showMessageDialog(null, getBackupTimeCheck() + "");
-				System.out.println("END");
-				break;
+			// case "3":
+			// System.out.println("RUNNING: gettime");
+			// JOptionPane.showMessageDialog(null, getBackupTimeCheck() + "");
+			// System.out.println("END");
+			// break;
 
 			case "4":
 				System.out.println("RUNNING: setmax");
@@ -664,12 +769,14 @@ public class UserContainer {
 				System.out.println("END");
 				break;
 
-			case "5":
-				System.out.println("RUNNING: settime");
-				int backupTimeCheck = Integer.parseInt(JOptionPane.showInputDialog("Mata in backup time"));
-				setBackupTimeCheck(backupTimeCheck);
-				System.out.println("END");
-				break;
+			// case "5":
+			// System.out.println("RUNNING: settime");
+			// int backupTimeCheck =
+			// Integer.parseInt(JOptionPane.showInputDialog("Mata in backup
+			// time"));
+			// setBackupTimeCheck(backupTimeCheck);
+			// System.out.println("END");
+			// break;
 
 			case "6":
 				System.out.println("RUNNING: print");
@@ -688,16 +795,17 @@ public class UserContainer {
 				System.out.println("END");
 				break;
 
-			case "8":
-				System.out.println("RUNNING: loadlist");
-				String backupName = JOptionPane.showInputDialog("Namn på backupfil som ska laddas in");
-				try {
-					loadBackup(backupName);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				System.out.println("END");
-				break;
+			// case "8":
+			// System.out.println("RUNNING: loadlist");
+			// String backupName = JOptionPane.showInputDialog("Namn på
+			// backupfil som ska laddas in");
+			// try {
+			// loadBackup(backupName);
+			// } catch (IOException e1) {
+			// e1.printStackTrace();
+			// }
+			// System.out.println("END");
+			// break;
 
 			case "9":
 				System.out.println("RUNNING: updatehashed");
@@ -790,16 +898,16 @@ public class UserContainer {
 		 * INTE är hashkodade
 		 */
 
-//		HashMap<String, String> nonHashedMap = new HashMap<String, String>();
-//		nonHashedMap.put("citron", "gul");
-//		nonHashedMap.put("apelsin", "orange");
-//		nonHashedMap.put("snow", "white");
-//		nonHashedMap.put("snww", "whiewaw2");
-//		nonHashedMap.put("s23w", "w3213ite");
-//		nonHashedMap.put("sdsa", "121");
-//		nonHashedMap.put("sda", "231");
-//		UserContainer uc = new UserContainer("filer/userList.txt");
-//		uc.updateAcceptanceMapNonHashedData(nonHashedMap);
+		// HashMap<String, String> nonHashedMap = new HashMap<String, String>();
+		// nonHashedMap.put("citron", "gul");
+		// nonHashedMap.put("apelsin", "orange");
+		// nonHashedMap.put("snow", "white");
+		// nonHashedMap.put("snww", "whiewaw2");
+		// nonHashedMap.put("s23w", "w3213ite");
+		// nonHashedMap.put("sdsa", "121");
+		// nonHashedMap.put("sda", "231");
+		// UserContainer uc = new UserContainer("filer/userList.txt");
+		// uc.updateAcceptanceMapNonHashedData(nonHashedMap);
 
 		/* TEST 1 - PASS - Skriv till fil och läs från fil */
 		/*

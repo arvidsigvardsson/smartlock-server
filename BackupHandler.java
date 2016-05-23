@@ -29,7 +29,7 @@ public class BackupHandler implements HttpHandler {
 			for (String elem : bFiles) {
 				System.out.println("ELEM: "+elem  +"Comparing to searchTerm... "+queries[1]);
 				if (elem.equals(queries[1])) {
-					RootServer.getUserContainer().loadBackup(queries[1]);
+					RootServer.getUserContainer().loadBackup(queries[1],"userBackups");
 					System.out.println("Loading a backup userContainer file.\n");
 					response = "Backup file found & loaded\n";
 					break; /*Annars blir sista meddelandet "file couldn't be found" när nästa element jämförs*/
@@ -67,7 +67,7 @@ public class BackupHandler implements HttpHandler {
 			for (String elem : bFiles) {
 				System.out.println("ELEM: "+elem  +"Comparing to searchTerm... "+queries[1]);
 				if (elem.equals(queries[1])) {
-					RootServer.getUserContainer().loadBackup(queries[1]);
+					RootServer.getUserContainer().loadBackup(queries[1],"userBackups");
 					System.out.println("Loading a backup userContainer file.\n");
 					response = "Backup file found & loaded\n";
 				} else {

@@ -20,9 +20,11 @@ import javax.swing.JOptionPane;
  * funktionalitet för att endast hämta Timestamp objekt som innehåller vissa
  * karaktärer t.ex. "29/04/2016". Listan lagras även i en textfil med namnet
  * "timestampLog.txt". Vid start läses alla tidstämplar in från den text filen
- * och lagras i klassens ArrayList<Timestamp>.
+ * och lagras i klassens ArrayList<Timestamp>. Klassen har även funktionalitet för att returnera 
+ * en lista med sökta Timestamps. Logiska uttryck OCH (&) och ELLER (£) fungerar för sökning av Timestamps.
+ * t.ex. "seb&17/5£seb&18/5"
  *
- * @author Admin
+ * @author Sebastian Sologuren
  *
  */
 public class TimestampLog {
@@ -70,7 +72,7 @@ public class TimestampLog {
 
 				log.add(new Timestamp(data));
 			} else {
-				System.out.println("This row couldn't be read into the ArrayList. It doesn't follow the format.");
+				System.out.println("This row couldn't be read into the ArrayList. It doesn't follow the format. (TimestampLog, readFile)");
 			}
 
 		}
@@ -83,8 +85,7 @@ public class TimestampLog {
 	 * @throws IOException
 	 *             Kastas om filen inte finns.
 	 */
-	public void write() throws IOException {
-		// seb 29/4/2016 03:57:18 succeeded
+	private void write() throws IOException {
 		ArrayList<Timestamp> stamps = this.getTimestampList();
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
 		Iterator<Timestamp> iterStamps = stamps.iterator();
@@ -166,44 +167,72 @@ public class TimestampLog {
 	}
 
 	/**
-	 * Returnerar listan av timestamps med sökta term/termer, i sträng-format.
-	 * Fungerar med logiska uttryck "och"(&) och "eller"(¤) för att stapla flera
-	 * söktermer. T.ex. "seb&18/5¤seb&19/5" kommer att returnera en sträng med
+	 * Returnerar listan av timestamps med sökta term/termer, i en sträng.
+	 * Fungerar med logiska uttryck "och"(£) och "eller"(£) för att stapla flera
+	 * söktermer. T.ex. "seb&18/5£seb&19/5" kommer att returnera en sträng med
 	 * timestamps som innehåller seb och datumen 18/5 och 19/5. Man kan högst
 	 * använda sig av 3 del-söktermer per sökterm, t.ex. "seb&18/5&Suc" som
 	 * skulle returnera alla timestamps som innehåller "seb" och "18/5" och
 	 * "Suc". Metoden ser även till att inga dupliceringar av timestamps
-	 * returneras i strängen.
+	 * returneras i strängen.2
 	 * 
 	 * @param only
 	 *            Sträng med söktermer som anger sökta tidsstämplarna
 	 * @return str listan av tidstämplar i sträng-format
 	 */
 	public String toString(String only) {
-		if (only.length() == 0) {
+		String str ="";
+		String strArr[];
+		try{
+			strArr = getLog(only);
+		}catch(NullPointerException ex){
+			return str;
+		}
+		for(String elem:strArr){
+			str += elem;
+		}
+		return str;
+	}
+	
+	/**
+	 * Returnerar listan av timestamps med sökta term/termer, i en ArrayList<String>.
+	 * Fungerar med logiska uttryck "och"(£) och "eller"(£) för att stapla flera
+	 * söktermer. T.ex. "seb&18/5£seb&19/5" kommer att returnera en sträng med
+	 * timestamps som innehåller seb och datumen 18/5 och 19/5. Man kan högst
+	 * använda sig av 3 del-söktermer per sökterm, t.ex. "seb&18/5&Suc" som
+	 * skulle returnera alla timestamps som innehåller "seb" och "18/5" och
+	 * "Suc". Metoden ser även till att inga dupliceringar av timestamps
+	 * returneras i strängen.2
+	 * 
+	 * @param only
+	 *            Sträng med söktermer som anger sökta tidsstämplarna
+	 * @return res ArrayList<String> av tidstämplar
+	 */
+	public ArrayList<String> search(String only) {
+		if (only.isEmpty()) {
 			only = ",";
 		}
-		String res = "";
+		ArrayList<String> res = new ArrayList<String>();
 		ArrayList<String> duplicateTimestamps = new ArrayList<String>();
 		/* För att mappa sökterm nr med del-söktermer */
 		HashMap<Integer, String[]> searchStrings = new HashMap<Integer, String[]>();
 		/* Om flera söktermer skickats in */
-		if (only.contains("¤")) {
+		if (only.contains("£")) {
 			/* Lagra varje sökterm i ett element */
-			String searches[] = only.split("¤");
+			String searches[] = only.split("£");
 			/* FÖR varje sökterm */
 			for (int i = 0; i < searches.length; i++) {
 				/* OM söktermen består av del-söktermer */
 				if (searches[i].contains("&")) {
 					/* Lagra varje del-sökterm i ett element */
 					String searchTerms[] = searches[i].split("&");
-					/* Mappa söktermen med dess del-söktermer */
+					/* Mappa söktermens nr med dess del-söktermer */
 					searchStrings.put(i, searchTerms);
 					/* OM söktermen inte består av del-söktermer */
 				} else {
 					/* Skapa en tom array */
 					String arr[] = new String[] { searches[i] };
-					/* Mappa söktermen till ett tomt element */
+					/* Mappa söktermens nr till söktermen */
 					searchStrings.put(i, arr);
 				}
 			}
@@ -211,43 +240,43 @@ public class TimestampLog {
 			Iterator<Integer> keyIter = searchStrings.keySet().iterator();
 			while (keyIter.hasNext()) {
 				int theKey = keyIter.next();
-				String resu = search(searchStrings.get(theKey));
+				String resu = searchAlg(searchStrings.get(theKey));
 				String tempArr[] = resu.split("¨");
 				for (String str : tempArr) {
 					if (!(duplicateTimestamps.contains(str))) {
-						res += str;
+						res.add(str);
 						duplicateTimestamps.add(str);
 					}
 				}
 			}
 		} else if (only.contains("&")) {
 			String searchTerms[] = only.split("&");
-			String resu2 = search(searchTerms);
+			String resu2 = searchAlg(searchTerms);
 
 			String tempArr[] = resu2.split("¨");
 			for (String str : tempArr) {
 				if (!(duplicateTimestamps.contains(str))) {
-					res += str;
+					res.add(str);
 					duplicateTimestamps.add(str);
 				}
 			}
 
 		} else {
 			String searchTerms[] = new String[] { only };
-			String resu3 = search(searchTerms);
+			String resu3 = searchAlg(searchTerms);
 			String tempArr[] = resu3.split("¨");
 			for (String str : tempArr) {
 				if (!(duplicateTimestamps.contains(str))) {
-					res += str;
+					res.add(str);
 					duplicateTimestamps.add(str);
 				}
 			}
 		}
-		if (res.length() > 0) {
+		if (res.size() > 0) {
 			return res;
 		} else {
 			System.out.println("Fanns inget i loggen som matchade sökningen");
-			return "";
+			return null;
 		}
 
 	}
@@ -260,7 +289,7 @@ public class TimestampLog {
 	 *            Array av del-söktermer som bygger upp en sökterm.
 	 * @return Sträng innehållandes alla timestamps med angivna del-söktermer.
 	 */
-	private String search(String[] terms) {
+	private String searchAlg(String[] terms) {
 		String str = "";
 		String temp = "";
 		boolean infoMessage = false;
@@ -314,28 +343,11 @@ public class TimestampLog {
 	 * @return size int Antal element av sök karaktär i loggen
 	 */
 	public int getLogSize(String only) {
-		String terms[] = null;
-		if (only.contains("&")) {
-			terms = only.split("&");
+		if(search(only)==null){
+			return 0;
+		}else{
+			return search(only).size();
 		}
-		int size = 0;
-		String temp;
-		Iterator<Timestamp> iter = log.iterator();
-		while (iter.hasNext()) {
-			temp = iter.next().getTimestamp();
-			if (temp.contains(only)) {
-				size++;
-			}
-			if (terms != null) {
-				for (String elem : terms) {
-					if (temp.contains(elem)) {
-						size++;
-					}
-				}
-			}
-
-		}
-		return size;
 	}
 
 	/**
@@ -355,39 +367,29 @@ public class TimestampLog {
 	 * @return String[] Hela loggen som en sträng-array.
 	 */
 	public String[] getLog(String only) {
-		String searchTerms[] = null;
-		if (only.contains("&")) {
-			searchTerms = only.split("&");
+		String[] resArr;
+		int size = 0;
+		if(only.isEmpty()){
+			only=",";
 		}
-		String[] stampLog;
-		String temp;
-		int size = getLogSize(only);
-		stampLog = new String[size];
-		Iterator<Timestamp> iter = log.iterator();
-		int i = 0;
-		while (iter.hasNext()) {
-			temp = iter.next().getTimestamp();
-			if (temp.contains(only)) {
-				stampLog[i] = temp;
-				i++;
-			}
-			if (searchTerms != null) {
-				for (String elem : searchTerms) {
-					if (temp.contains(elem)) {
-						stampLog[i] = temp;
-						i++;
-					}
-				}
-			}
-
-		}
-		if (i > 0) {
-			return stampLog;
-		} else {
+		ArrayList<String> arr;
+		try{
+		arr = search(only);
+		}catch(NullPointerException ex){
 			System.out.println("Fanns inget i loggen som matchade sökningen");
-			return stampLog;
+			return null;
 		}
-
+		Iterator<String> iter = arr.iterator();
+		while(iter.hasNext()){
+			size++;
+			iter.next();
+		}
+		resArr = new String[size];
+		iter = arr.iterator();
+		for(int i = 0; i<size;i++){
+			resArr[i] = iter.next();
+		}
+		return resArr;
 	}
 
 	/**
