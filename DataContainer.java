@@ -50,24 +50,17 @@ public class DataContainer {
 
 	}
 
-	/**
-	 * Returnerar tiden som passerat sedan TimeoutClock objektet aktiverades.
-	 * Används i denna klassen för att ha koll på tiden dörren varit öppen så
-	 * att en pushnotis kan göras om den inställda tiden passerats.
-	 * 
-	 * @return tiden som passerat sedan TimeoutClock objektet aktiverades.
-	 */
+	/** 
+	 * Returnerar ett timeoutobjekt som används av tillståndsmaskinen i
+	 * LockHandler för att veta om dörren varit öppen längre än viss angiven
+	 * tid.
+	 *
+	 * @return timeoutClock ett timeoutobjekt
+	*/
 	public TimeoutClock getTimeoutClock() {
 		return this.timeoutClock;
 	}
 
-	// public boolean getHasTimeoutPushBeenSent() {
-	// return hasTimeoutPushBeenSent;
-	// }
-	//
-	// public void setHasTimeoutPushBeenSent(boolean bool) {
-	// hasTimeoutPushBeenSent = bool;
-	// }
 	/**
 	 * Returnerar värdet som håller koll på om låsmekanismen borde vara öppen.
 	 * 
@@ -88,7 +81,7 @@ public class DataContainer {
 	}
 
 	/**
-	 * Returnerar dörrens status.
+	 * Returnerar dörrens status. Används av tillståndsmaskinen i LockHandler
 	 * 
 	 * @return doorState kan returnera ett av följande värden CLOSED, OPEN,
 	 *         OPEN_ALARM
@@ -98,7 +91,7 @@ public class DataContainer {
 	}
 
 	/**
-	 * Sätter dörrens status.
+	 * Sätter dörrens status. Används av tillståndsmaskinen i LockHandler
 	 * 
 	 * @param state
 	 *            Ett av följande värden CLOSED, OPEN, OPEN_ALARM
@@ -109,7 +102,7 @@ public class DataContainer {
 
 	/**
 	 * Returnerar inställda värdet för hur länge dörrens ska ha stått öppen
-	 * innan en pushnotis skickas.
+	 * innan en pushnotis skickas. 
 	 * 
 	 * @return timeout Värdet för hur länge dörrens ska ha stått öppen innan en
 	 *         pushnotis skickas.
@@ -238,7 +231,7 @@ public class DataContainer {
 	 * Skriver från objektets instansierade IdNameMap HashMap till text filen
 	 * där samma info ska lagras.
 	 */
-	public void saveIdNameMapToDisk() {
+	private void saveIdNameMapToDisk() {
 		try {
 			BufferedWriter bw = new BufferedWriter(
 					new OutputStreamWriter(new FileOutputStream(idNameMapFileName), "UTF-8"));
@@ -255,6 +248,7 @@ public class DataContainer {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * Ersätter klassens idNameMap HashMap med den som anges som parameter. Sedan skrivs
 	 * den till text filen.
@@ -275,7 +269,7 @@ public class DataContainer {
 	 * @throws IOException
 	 *             Kastas om filen som data lagras i inte hittas.
 	 */
-	public void saveAcceptanceMapToDisk() throws IOException {
+	private void saveAcceptanceMapToDisk() throws IOException {
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
 		for(Entry<String,Boolean> entry: acceptanceMap.entrySet()){
 			bw.write(entry.getKey()+","+entry.getValue().toString());
@@ -336,7 +330,7 @@ public class DataContainer {
 	/**
 	 * Skickar ut en admin pushnotis.
 	 */
-	public void sendAdminPush() {
+	private void sendAdminPush() {
 		RootServer.getPushNotifier().sendAdminPushNotification();
 
 		// för iOS
