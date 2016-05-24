@@ -35,7 +35,7 @@ public class PushNotifier {
 	public void sendDoorOpenPush(int timeOpen) {
 		System.out.println("Ska skicka dörr öppen push");
 		String json = makeJsonPushObjectWithNotification(timeOpen);
-		System.out.println("Detta är json: " + json);
+		// System.out.println("Detta är json: " + json);
 		sendPushNotification(json);
 	}
 
@@ -143,7 +143,7 @@ public class PushNotifier {
 
 			jp.setData(jpd);
 			String json = mapper.writeValueAsString(jp);
-			System.out.println("Json: " + json);
+			// System.out.println("Json: " + json);
 			return json;
 		} catch (IOException e) {
 			System.out.println(e);
@@ -166,7 +166,7 @@ public class PushNotifier {
 
 			jp.setData(jpd);
 			String json = mapper.writeValueAsString(jp);
-			System.out.println("Json: " + json);
+			// System.out.println("Json: " + json);
 			return json;
 		} catch (IOException e) {
 			System.out.println(e);
