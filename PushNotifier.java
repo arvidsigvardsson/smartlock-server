@@ -89,7 +89,7 @@ public class PushNotifier {
 			while ((input = br.readLine()) != null) {
 				responseStr += input;
 			}
-			System.out.println("Svar: " + responseStr);
+			// System.out.println("Svar: " + responseStr);
 
 			System.out.println("Statuskod: " + connection.getResponseCode());
 			connection.disconnect();
