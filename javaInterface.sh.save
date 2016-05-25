@@ -1,0 +1,4 @@
+#!/bin/bash
+javac -cp jackson-annotations-2.7.3.jar:jackson-core-2.7.3.jar:jackson-databind-2.7.3.jar nohup java -cp jackson-annotations-2.7.3.jar:jackson-core-2.7.3.jar:jackson-databind-2.7.3.jar:. JavaInterface < /dev/null > jInterfaceLog.txt 2> jInterfaceErr.txt &
+killall java
+./runserver.sh

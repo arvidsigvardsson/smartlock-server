@@ -62,7 +62,7 @@ public class ServerComsInterface implements Runnable {
 	 */
 	public void testAll() {
 		int testNbr = 1;
-		String commandsArr[] = { "1f", "1a", "1f", "1c", "1b", "1d", "1e", "1g", "1f", "1h", "1f","1i","1j", "2a", "2b", "2c",
+		String commandsArr[] = { "1a", "1a", "1a", "1a", "1a", "1a", "1a", "1g", "1f", "1h", "1f","1i","1j", "2a", "2b", "2c",
 				"2d", "2e", "2b", "2c", "3a", "3b", "3c", "3d", "3e", "3f", "3g", "3h", "3i", "3j", "3k", "3l", "3m",
 				"4a", "4b", "4c", "4d", "4e" };
 		for (int i = 0; i < commandsArr.length && !input.equals("q");i++) {
