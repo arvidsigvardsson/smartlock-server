@@ -38,7 +38,7 @@ public class LockHandler implements Runnable {
 				if ((input = reader.readLine()) != null) {
 					// ifall låset vill ha en uppdatering
 					if(input.charAt(0) == 'u') {
-						System.out.println("Arduinon vill ha uppdatering");
+						//System.out.println("Arduinon vill ha uppdatering");
 						String doorOpenMessage = input.substring(1);
 
 						// ifall klienten vill öppna
@@ -99,7 +99,7 @@ public class LockHandler implements Runnable {
 					// skickar meddelande tillbaka över socketen och stänger den sen
 					PrintStream ps = new PrintStream(client.getOutputStream());
 					ps.print(response);
-					System.out.println("Skickar meddelande till arduinon: " + response);
+					//System.out.println("Skickar meddelande till arduinon: " + response);
 
 					client.close();
 				}
