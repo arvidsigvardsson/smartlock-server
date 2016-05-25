@@ -11,7 +11,7 @@ public class JavaInterfaceCommands {
 	
 	public static void main (String[] args){
 		Scanner scan = new Scanner(System.in);
-		System.out.println(ComsText.info);
+		System.out.println(ComsText.menu);
 		System.out.println("Please enter on of the following command to get a list of available commands for that class");
 		String input = scan.next();
 		System.out.println("I GOT: "+input);
