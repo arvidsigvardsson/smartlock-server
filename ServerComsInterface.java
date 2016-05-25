@@ -17,6 +17,8 @@ public class ServerComsInterface implements Runnable {
 	private String input;
 	private boolean serverTerminal = false;
 	private boolean testing = false;
+	private String commandsArr[];
+
 	/**
 	 * Sätter igång interfacet från en server terminal.
 	 * 
@@ -61,20 +63,31 @@ public class ServerComsInterface implements Runnable {
 	 * Metoden kör igenom alla commands och utgör därmed ett komplett test.
 	 */
 	public void testAll() {
-		int testNbr = 1;
-		String commandsArr[] = { "1a", "1a", "1a", "1a", "1a", "1a", "1a", "1g", "1f", "1h", "1f","1i","1j", "2a", "2b", "2c",
+		commandsArr = new String[] { "1a", "1b", "1c", "1d", "1e", "1g", "1f", "1h", "1f", "1i", "1j", "2a", "2b", "2c",
 				"2d", "2e", "2b", "2c", "3a", "3b", "3c", "3d", "3e", "3f", "3g", "3h", "3i", "3j", "3k", "3l", "3m",
 				"4a", "4b", "4c", "4d", "4e" };
-		for (int i = 0; i < commandsArr.length && !input.equals("q");i++) {
-			System.out.println("Press any button to continue..or 'q' to stop the testing run.\nTest"+testNbr+" out of "+commandsArr.length+" tests.");
+		test();
+	}
+
+	/**
+	 * Metoden kör igenom metoderna som är laddade i commandsArr och ett test.
+	 */
+	private void test() {
+		String title = input;
+		testing = true;
+		int testNbr = 1;
+		for (int i = 0; i < commandsArr.length && !input.equals("q"); i++) {
+			System.out.println("Press any button to continue..or 'q' to stop the testing run.\n" + title.toUpperCase() + ": part "
+					+ testNbr + " out of " + commandsArr.length + " parts.");
 			input = sc.nextLine();
-			if(!input.equals("q")){
+			if (!input.equals("q")) {
 				run(commandsArr[i]);
 				testNbr++;
 			}
 		}
 		serverTerminal = false;
-		System.out.println("Testing run ended. Tests performed: "+(testNbr-1));
+		testing = false;
+		System.out.println("Testing run ended. Tests performed: " + (testNbr - 1 )+" out of " + commandsArr.length);
 	}
 
 	/**
@@ -84,20 +97,49 @@ public class ServerComsInterface implements Runnable {
 	 * @param terminal
 	 */
 	public void comsInterface(boolean serverTerminal) {
-		if(!testing){
+		if (!testing) {
 			System.out.println(ComsText.info);
 		}
 		if (!serverTerminal) {
 			input = sc.nextLine();
 		}
 		switch (input) {
-		
-		case "testall":
-			testing = true;
-			testAll();
-			testing = false;
+
+		case "test1":
+			commandsArr = new String[] { "1a", "1a", "1a", "1a", "1a", "1a", "1a" };
+			test();
 			break;
-			
+
+		case "test2":
+			commandsArr = new String[] { "1d", "1a", "1d", "1g", "1d" };
+			test();
+			break;
+
+		case "test3":
+			commandsArr = new String[] { "1d", "1a", "1d", "1h", "1d" };
+			test();
+			break;
+
+		case "test4":
+			commandsArr = new String[] { "1b", "1i", "1c", "1a", "1i", "1a", "1i","1a","1i","1j","1f" };
+			test();
+			break;
+
+		case "test5":
+			commandsArr = new String[] { "2a", "2b", "2c", "2d", "2e","2e", "2b", "2c", "2d", "3c","2b","3d","2b","2a" };
+			test();
+			break;
+
+		case "test6":
+			commandsArr = new String[] { "3a", "3b", "3c", "2d", "3d","3c", "2d", "3g", "3f", "3e","3b","3c","2d" };
+			test();
+			break;
+
+		case "test7":
+			commandsArr = new String[] { "3m", "3h", "3h", "4d", "3j","3h","3j","4d","4a","3l","4b","4e","3h","3h" };
+			test();
+			break;
+
 		case "stop":
 			System.out.println(ComsText.frame);
 			break;

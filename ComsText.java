@@ -9,7 +9,7 @@ public class ComsText {
 	public static final String info = frame
 			+ "*********Mata in \"menu\" för att komma åt fler kommandon för metodanrop.*********" + frame;
 	public static final String menu = frame
-			+ "menu) Menu\nMata in \"userc\" för att komma åt metoder i UserContainer\nMata in \"tlog\" för att komma åt metoder i TimestampLog\nMata in \"datac\" för att komma åt metoder i DataContainer\nMata in \"doortime\" för att komma åt metoder i TimeoutCounter\nMata in \"testall\" för att stega igenom alla commands en efter en.\nMata in \"stop\" för att avsluta."
+			+ "menu) Menu\nMata in \"userc\" för att komma åt metoder i UserContainer\nMata in \"tlog\" för att komma åt metoder i TimestampLog\nMata in \"datac\" för att komma åt metoder i DataContainer\nMata in \"doortime\" för att komma åt metoder i TimeoutCounter\nMata in \"test1\",\"test2\",\"test3\",\"test4\",\"test5\",\"test6\",\"test7\"\n för att stega igenom commands en efter en som testar klasserna.\nMata in \"stop\" för att avsluta."
 			+ frame;
 	/*------------------------------------------ Klass DataContainer, TimestampLog, UserContainer, TimeoutClock ------------------------------------------*/
 	public static final String datac = frame

@@ -308,7 +308,13 @@ public class UserContainer {
 	 * @return boolean true om pass, false om fail
 	 */
 	public static boolean characterCheck(String str) {
-		int a = (int) str.charAt(0);
+		int a;
+		try{
+			a = (int) str.charAt(0);
+		}catch(StringIndexOutOfBoundsException ex){
+			return false;
+		}
+		
 		if (a == 65533) { /* Code for uknown char */
 			return false;
 		}
