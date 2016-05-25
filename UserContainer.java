@@ -562,7 +562,7 @@ public class UserContainer {
 		File backupsFolder = new File("filer/userBackups/");
 		int backups = backupsFolder.list().length;
 
-		System.out.println("backups in userBackups folder: " + backups + "  " + this.backupLimit);
+		System.out.println("backups in userBackups folder: " + backups + " out of maximum: " + this.backupLimit);
 
 		if (backups == this.backupLimit) {
 

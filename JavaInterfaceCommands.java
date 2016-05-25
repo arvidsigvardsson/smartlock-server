@@ -10,38 +10,27 @@ public class JavaInterfaceCommands {
 	
 	
 	public static void main (String[] args){
-		String frame = "\n******************************************************************************\n";
 		Scanner scan = new Scanner(System.in);
-		System.out.println(
-				frame + "menu) Menu\nMata in \"userc\" för att komma åt metoder i UserContainer\nMata in \"tlog\" för att komma åt metoder i TimestampLog\nMata in \"datac\" för att komma åt metoder i DataContainer\nMata in \"doortime\" för att komma åt metoder i TimeoutCounter"
-						+ frame);
+		System.out.println(ComsText.info);
 		System.out.println("Please enter on of the following command to get a list of available commands for that class");
 		String input = scan.next();
 		System.out.println("I GOT: "+input);
 		switch (input) {
 
 		case "datac":
-			System.out.println(
-					frame + "datac) (DataContainer)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n3a. getAcceptanceListArdu\n3b. getAcceptanceList\n3c. blip\n3d. addToAcceptanceMap\n3e. updateAcceptanceMap"
-							+ frame);
+			System.out.println(ComsText.datac);
 			break;
 			
 		case "tlog":
-			System.out.println(
-					frame + "tlog) (TimestampLog)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n2a. getCreated\n2b. getLog(String)\n2c. getLogSize(String)\n2d. toString(String)"
-							+ frame);
+			System.out.println(ComsText.tlog);
 			break;
 			
 		case "doortime":
-			System.out.println(
-					frame + "doortime) (TimeoutClock & DataContainer)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n4a. getTimeLimit\n4b. timeElapsed\n4c. setTimeLimit\n4d. isTimeUp\n4e. reset\n4f.AVKOMMENTERAD getHasTimeoutPushBeenSent\n4g.AVKOMMENTERAD setHasTimeoutPushBeenSent\n4h. runtest"
-							+ frame);
+			System.out.println(ComsText.doortime);
 			break;
 
 		case "userc":
-			System.out.println(
-					frame + "userc) (UserContainer)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n1a. addToAcceptanceMap\n1b. getBackupLimit\n1c.AVKOMMENTERAD getBackupTimeCheck\n1d. setBackupLimit\n1e.AVKOMMENTERAD setBackupTimeCheck\n1f. printContent\n1g. getBackupslist\n1h. loadBackup\n1i. updateAcceptanceMap\n1j. updateAcceptanceMapNonHashedData\n1k. getUserBackupsList\n1l. getOldUserBackupsList"
-							+ frame);
+			System.out.println(ComsText.userc);
 			break;
 
 		}	

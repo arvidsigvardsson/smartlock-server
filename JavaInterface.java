@@ -1,12 +1,8 @@
 import java.util.Scanner;
 
-public class JavaInterface {
+public class JavaInterface implements Runnable{
 	
-	
-	public static void main (String[] args){
-//		RootServer.getDataContainer();
-//		RootServer.getTimestampLog();
-//		RootServer.getUserContainer();
+	public void run(){
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Please enter a ServerComsInterface command");
 		String input = scan.next();
@@ -14,6 +10,10 @@ public class JavaInterface {
 		ServerComsInterface coms = new ServerComsInterface();
 		coms.run(input);
 		scan.close();
+	}
+	public static void main (String[] args){
+		JavaInterface j = new JavaInterface();
+		j.run();
 	}
 
 }

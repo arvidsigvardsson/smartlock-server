@@ -108,7 +108,7 @@ public class DataContainer {
 	 *         pushnotis skickas.
 	 */
 	public int getTimeout() {
-		return timeout;
+		return timeoutClock.getTimeLimit();
 	}
 	
 	/**

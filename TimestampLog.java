@@ -242,7 +242,21 @@ public class TimestampLog {
 			while (keyIter.hasNext()) {
 				int theKey = keyIter.next();
 				String resu = searchAlg(searchStrings.get(theKey));
-				String tempArr[] = resu.split("¨");
+				if(resu!=null){
+					String tempArr[] = resu.split("¨");
+					for (String str : tempArr) {
+						if (!(noDuplicateTimestamps.contains(str))) {
+							res.add(str);
+							noDuplicateTimestamps.add(str);
+						}
+					}
+				}
+			}
+		} else if (only.contains("&")) {
+			String searchTerms[] = only.split("&");
+			String resu2 = searchAlg(searchTerms);
+			if(resu2!=null){
+				String tempArr[] = resu2.split("¨");
 				for (String str : tempArr) {
 					if (!(noDuplicateTimestamps.contains(str))) {
 						res.add(str);
@@ -250,26 +264,17 @@ public class TimestampLog {
 					}
 				}
 			}
-		} else if (only.contains("&")) {
-			String searchTerms[] = only.split("&");
-			String resu2 = searchAlg(searchTerms);
-
-			String tempArr[] = resu2.split("¨");
-			for (String str : tempArr) {
-				if (!(noDuplicateTimestamps.contains(str))) {
-					res.add(str);
-					noDuplicateTimestamps.add(str);
-				}
-			}
 
 		} else {
 			String searchTerms[] = new String[] { only };
 			String resu3 = searchAlg(searchTerms);
-			String tempArr[] = resu3.split("¨");
-			for (String str : tempArr) {
-				if (!(noDuplicateTimestamps.contains(str))) {
-					res.add(str);
-					noDuplicateTimestamps.add(str);
+			if(resu3!=null){
+				String tempArr[] = resu3.split("¨");
+				for (String str : tempArr) {
+					if (!(noDuplicateTimestamps.contains(str))) {
+						res.add(str);
+						noDuplicateTimestamps.add(str);
+					}
 				}
 			}
 		}
@@ -311,8 +316,7 @@ public class TimestampLog {
 		if (str.length() > 0) {
 			return str;
 		} else {
-			System.out.println("Fanns inget i loggen som matchade sökningen");
-			return "";
+			return null;
 		}
 
 	}

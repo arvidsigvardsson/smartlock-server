@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 /**
@@ -13,59 +14,121 @@ import java.util.Scanner;
  */
 public class ServerComsInterface implements Runnable {
 	private Scanner sc = new Scanner(System.in);
-	private final String frame = "\n******************************************************************************\n";
-	String input;
-	boolean terminal = false;
-
+	private String input;
+	private boolean serverTerminal = false;
+	private boolean testing = false;
+	/**
+	 * Sätter igång interfacet från en server terminal.
+	 * 
+	 * @param command
+	 *            Kommandot man skickar till interfacet.
+	 */
 	public void run(String command) {
 		input = command;
-		terminal = true;
+		serverTerminal = true;
 		run();
 	}
 
+	/**
+	 * Sätter igång interfacet. Om det körs från en server terminal så stängs
+	 * interfacet av efter varje command. Om det kör genom en java terminal så
+	 * kommer interfacet alltid att efterfråga commands till det att man skrivit
+	 * in "stop".
+	 */
 	public void run() {
-		if (terminal) {
-			comsInterface(this.terminal);
+		if (serverTerminal) {
+			comsInterface(this.serverTerminal);
 		} else {
-			while (true) {
-				comsInterface(this.terminal);
+			input = "";
+			while (true && !input.equals("stop")) {
+				comsInterface(this.serverTerminal);
 			}
 		}
 	}
 
-	public void comsInterface(boolean terminal) {
-		System.out.println(
-				frame + "*********Mata in \"menu\" för att komma åt fler kommandon för metodanrop.*********" + frame);
-		if (!terminal) {
+	/**
+	 * För att testa alla commands.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		ServerComsInterface s = new ServerComsInterface();
+		s.input = "";
+		s.testAll();
+	}
+
+	/**
+	 * Metoden kör igenom alla commands och utgör därmed ett komplett test.
+	 */
+	public void testAll() {
+		int testNbr = 1;
+		String commandsArr[] = { "1f", "1a", "1f", "1c", "1b", "1d", "1e", "1g", "1f", "1h", "1f","1i","1j", "2a", "2b", "2c",
+				"2d", "2e", "2b", "2c", "3a", "3b", "3c", "3d", "3e", "3f", "3g", "3h", "3i", "3j", "3k", "3l", "3m",
+				"4a", "4b", "4c", "4d", "4e" };
+		for (int i = 0; i < commandsArr.length && !input.equals("q");i++) {
+			System.out.println("Press any button to continue..or 'q' to stop the testing run.\nTest"+testNbr+" out of "+commandsArr.length+" tests.");
+			input = sc.nextLine();
+			if(!input.equals("q")){
+				run(commandsArr[i]);
+				testNbr++;
+			}
+		}
+		serverTerminal = false;
+		System.out.println("Testing run ended. Tests performed: "+(testNbr-1));
+	}
+
+	/**
+	 * En switch-case sats som känner igen alla commands och exekverar enligt
+	 * angivna instruktioner.
+	 * 
+	 * @param terminal
+	 */
+	public void comsInterface(boolean serverTerminal) {
+		if(!testing){
+			System.out.println(ComsText.info);
+		}
+		if (!serverTerminal) {
 			input = sc.nextLine();
 		}
 		switch (input) {
-
-		case "menu":
-			System.out.println(
-					frame + "menu) Menu\nMata in \"userc\" för att komma åt metoder i UserContainer\nMata in \"tlog\" för att komma åt metoder i TimestampLog\nMata in \"datac\" för att komma åt metoder i DataContainer\nMata in \"doortime\" för att komma åt metoder i TimeoutCounter"
-							+ frame);
+		
+		case "testall":
+			testing = true;
+			testAll();
+			testing = false;
+			break;
+			
+		case "stop":
+			System.out.println(ComsText.frame);
 			break;
 
+		case "menu":
+			System.out.println(ComsText.menu);
+			break;
+		/* Klasser: DataContainer, TimestampLog, UserContainer, TimeoutClock */
 		case "doortime":
-			System.out.println(
-					frame + "doortime) (TimeoutClock & DataContainer)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n4a. getTimeLimit\n4b. timeElapsed\n4c. setTimeLimit\n4d. isTimeUp\n4e. reset\n 4f.AVKOMMENTERAD getHasTimeoutPushBeenSent\n4g.AVKOMMENTERAD setHasTimeoutPushBeenSent\n4h. runtest"
-							+ frame);
+			System.out.println(ComsText.doortime);
+			break;
+
+		case "tlog":
+			System.out.println(ComsText.tlog);
+			break;
+
+		case "datac":
+			System.out.println(ComsText.datac);
 			break;
 
 		case "userc":
-			System.out.println(
-					frame + "userc) (UserContainer)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n1a. addToAcceptanceMap\n1b. getBackupLimit\n1c.AVKOMMENTERAD getBackupTimeCheck\n1d. setBackupLimit\n1e.AVKOMMENTERAD setBackupTimeCheck\n1f. printContent\n1g. getBackupslist\n1h. loadBackup\n1i. updateAcceptanceMap\n1j. updateAcceptanceMapNonHashedData\n1k. getUserBackupsList\n1l. getOldUserBackupsList"
-							+ frame);
+			System.out.println(ComsText.userc);
 			break;
 
+		/* Klassmetoder UserContainer */
 		case "1a":
-			System.out.println(frame
-					+ "1a) (UserContainer) addToAcceptanceMap(username:String,pass:String)\ntype \"exit\" to exit this method panel.\n\nAnge username...");
+			System.out.println(ComsText.userc1a);
 			String user = sc.nextLine();
 			System.out.println("Ange pass...");
 			String pass = sc.nextLine();
-			if (!(user.equals("exit") || pass.equals("exit"))) {
+			if (!(user.isEmpty() && pass.isEmpty()) && !(user.equals("exit") || pass.equals("exit"))) {
 				try {
 					RootServer.getUserContainer().addToAcceptanceMap(user, pass);
 					System.out.println("Method executed.");
@@ -73,29 +136,20 @@ public class ServerComsInterface implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
 		case "1b":
-			System.out.println(frame + "1b) (UserContainer) getBackupLimit(void):int\n"
-					+ RootServer.getUserContainer().getBackupLimit() + "\nMethod executed." + frame);
+			System.out.println(ComsText.userc1b);
 			break;
 
-		// case "1c":
-		// System.out.println(frame + "1c) (UserContainer)
-		// getBackupTimeCheck()(void):long\n"
-		// + RootServer.getUserContainer().getBackupTimeCheck() + "\nMethod
-		// executed." + frame);
-		// break;
-
-		case "1d":
-			System.out.println(frame
-					+ "1d) (UserContainer) setBackupLimit(backupLimit:int)\ntype \"-1\" to exit this method panel.\n\nAnge backups limit...");
+		case "1c":
+			System.out.println(ComsText.userc1c);
 			int limit = -1;
 			try {
 				limit = sc.nextInt();
 			} catch (InputMismatchException ex) {
-				System.out.println("Du måste mata in ett tal." + frame);
+				System.out.println("Du måste mata in ett tal." + ComsText.frame);
 				break;
 			}
 
@@ -103,36 +157,18 @@ public class ServerComsInterface implements Runnable {
 				RootServer.getUserContainer().setBackupLimit(limit);
 				System.out.println("Method executed.");
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
-		// case "1e":
-		// System.out.println(frame
-		// + "1e) (UserContainer) setBackupTimeCheck(time:long)\ntype \"-1\" to
-		// exit this method panel.\n\nAnge backup Time Check limit...");
-		// long time = -1;
-		// try {
-		// time = sc.nextInt();
-		// } catch (InputMismatchException ex) {
-		// System.out.println("Du måste mata in ett tal." + frame);
-		// break;
-		// }
-		// if (time >= 0) {
-		// RootServer.getUserContainer().setBackupTimeCheck(time);
-		// System.out.println("Method executed.");
-		// }
-		// System.out.println(frame);
-		// break;
-
-		case "1f":
-			System.out.println(frame + "1f) (UserContainer) printContent(void):void\n");
+		case "1d":
+			System.out.println(ComsText.userc1d);
 			RootServer.getUserContainer().printContent();
-			System.out.println("\nMethod executed." + frame);
+			System.out.println("\nMethod executed." + ComsText.frame);
 			break;
 
-		case "1g":
+		case "1e":
 			String res = "";
-			System.out.println(frame + "1g) (UserContainer) getBackupsList(void):String[]\n");
+			System.out.println(ComsText.userc1e);
 
 			if (RootServer.getUserContainer().getBackupsList() != null) {
 				String list[] = RootServer.getUserContainer().getBackupsList();
@@ -143,12 +179,11 @@ public class ServerComsInterface implements Runnable {
 					}
 				}
 			}
-			System.out.println(res + "\nMethod executed." + frame);
+			System.out.println(res + "\nMethod executed." + ComsText.frame);
 			break;
 
-		case "1h":
-			System.out.println(frame
-					+ "1h) (UserContainer) loadBackup(filename:String)\ntype \"exit\" to exit this method panel.\n\nAnge backupfilens namn och format...");
+		case "1f":
+			System.out.println(ComsText.userc1f);
 			input = sc.nextLine();
 			if (!(input.equals("exit"))) {
 				try {
@@ -163,12 +198,11 @@ public class ServerComsInterface implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
-		case "1i":
-			System.out.println(frame
-					+ "1i) (UserContainer) updateAcceptanceMap(hashedMap:HashMap<String,String>, backup:Boolean):void\nWARNING! this will replace the current AcceptanceMap \nwith a new one containing the logins of the creators and their super secret passwords.\nPress \"y\" to continue or any other button to exit");
+		case "1g":
+			System.out.println(ComsText.userc1g);
 			input = sc.nextLine();
 			if (input.equals("y")) {
 				HashMap<String, String> hashedMap = new HashMap<String, String>();
@@ -185,12 +219,11 @@ public class ServerComsInterface implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
-		case "1j":
-			System.out.println(frame
-					+ "1j) (UserContainer) updateAcceptanceMapNonHashedData(hashedMap:HashMap<String,String>, backup:Boolean):void\nWARNING! this will replace the current AcceptanceMap \nwith a new one containing the logins of the creators and their super secret passwords.\nPress \"y\" to continue or any other button to exit");
+		case "1h":
+			System.out.println(ComsText.userc1h);
 			input = sc.nextLine();
 			if (input.equals("y")) {
 				HashMap<String, String> nonHashedMap = new HashMap<String, String>();
@@ -207,91 +240,97 @@ public class ServerComsInterface implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
-		case "1k":
-			System.out.println(frame + "1k) (UserContainer) getUserBackupsList(void):void\n");
+		case "1i":
+			System.out.println(ComsText.userc1i);
 			String arr[] = RootServer.getUserContainer().getUserBackupsList();
 			if (arr != null) {
 				for (String elem : arr) {
 					System.out.println(elem);
 				}
+			} else {
+				System.out.println("Finns inga backup filer i mappen.");
 			}
-			System.out.println("\nMethod executed." + frame);
+			System.out.println("\nMethod executed." + ComsText.frame);
 			break;
 
-		case "1l":
-			System.out.println(frame + "1l) (UserContainer) getOldUserBackupsList(void):void\n");
+		case "1j":
+			System.out.println(ComsText.userc1j);
 			String arr2[] = RootServer.getUserContainer().getOldUserBackupsList();
 			if (arr2 != null) {
 				for (String elem : arr2) {
 					System.out.println(elem);
 				}
+			} else {
+				System.out.println("Finns inga backup filer i mappen.");
 			}
 
-			System.out.println("\nMethod executed." + frame);
+			System.out.println("\nMethod executed." + ComsText.frame);
 			break;
 
-		case "tlog":
-			System.out.println(
-					frame + "tlog) (TimestampLog)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n2a. getCreated\n2b. getLog(String)\n2c. getLogSize(String)\n2d. toString(String)"
-							+ frame);
-			break;
-
+		/* Klassmetoder TimestampLog */
 		case "2a":
-			System.out.println(frame + "2a) (TimestampLog) getCreated(void):String\n"
-					+ RootServer.getTimestampLog().getCreated() + "\nMethod executed." + frame);
+			System.out.println(ComsText.tlog2a);
 			break;
 
 		case "2b":
-			System.out.println(frame
-					+ "2b) (TimestampLog) getLog(searchTerm:String):String[]\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\n(Det går bra att använda \"&\" som logiskt \"och\" och \"£\" som logiskt \"eller\")");
+			System.out.println(ComsText.tlog2b);
 			input = sc.nextLine();
 			if (!(input.equals("exit"))) {
 				String[] log = RootServer.getTimestampLog().getLog(input);
 				String result = "";
 				for (String s : log) {
-					result += "\n" + s;
+					result += s;
 				}
 				System.out.println(result + "\nMethod executed.");
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
 		case "2c":
-			System.out.println(frame
-					+ "2c) (TimestampLog) getLogSize(searchTerm:String):int\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\nså visas antalet tidstämplar innehållandes söktermen.\n(Det går bra att använda \"&\" som logiskt \"och\" och \"£\" som logiskt \"eller\")");
+			System.out.println(ComsText.tlog2c);
 			input = sc.nextLine();
 			if (!(input.equals("exit"))) {
 				System.out.println(RootServer.getTimestampLog().getLogSize(input) + "\nMethod executed.");
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
 		case "2d":
-			System.out.println(frame
-					+ "2d) (TimestampLog) toString(searchTerm:String):String\ntype \"exit\" to exit this method panel.\n(OPTIONELLT)Ange en sökterm...\nså visas antalet tidstämplar innehållandes söktermen.\n(Det går bra att använda \"&\" som logiskt \"och\" och \"£\" som logiskt \"eller\")");
+			System.out.println(ComsText.tlog2d);
 			input = sc.nextLine();
 			if (!(input.equals("exit"))) {
 				System.out.println(RootServer.getTimestampLog().toString(input) + "\nMethod executed.");
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
-		case "datac":
-			System.out.println(
-					frame + "datac) (DataContainer)\nMata in korresponderande nummer med bokstav för att aktivera en metod\n3a. getAcceptanceListArdu\n3b. getAcceptanceList\n3c. blip\n3d. addToAcceptanceMap\n3e. updateAcceptanceMap"
-							+ frame);
+		case "2e":
+			System.out.println(ComsText.tlog2e);
+			input = sc.nextLine();
+			if (!(input.equals("exit"))) {
+				System.out.println(
+						"Mata in \"true\" för inloggningen var ska loggas som lyckad. Annars, matta in vad som helst.");
+				String input2 = sc.nextLine();
+				if (input2.equals("true")) {
+					RootServer.getTimestampLog().addTimestamp(input, true);
+				} else {
+					RootServer.getTimestampLog().addTimestamp(input, false);
+				}
+				System.out.println("\nMethod executed.");
+			}
+			System.out.println(ComsText.frame);
 			break;
 
+		/* Klassmetoder DataContainer */
 		case "3a":
-			System.out.println(frame + "3a) (DataContainer) 3a. getAcceptanceListArdu(void):String\n"
-					+ RootServer.getDataContainer().getAcceptanceListArdu() + "\nMethod executed." + frame);
+			System.out.println(ComsText.datac3a);
 			break;
 
 		case "3b":
-			System.out.println(frame + "3b) (DataContainer) 3b. getAcceptanceList(void):HashMap<String, Boolean>");
+			System.out.println(ComsText.datac3b);
 			HashMap<String, Boolean> map = RootServer.getDataContainer().getAcceptanceMap();
 			String res2 = "";
 			Iterator<String> keyIter = map.keySet().iterator();
@@ -299,12 +338,11 @@ public class ServerComsInterface implements Runnable {
 				String key = keyIter.next();
 				res2 += "\n" + key + "  " + map.get(key).toString();
 			}
-			System.out.println(res2 + "\n\nMethod executed." + frame);
+			System.out.println(res2 + "\n\nMethod executed." + ComsText.frame);
 			break;
 
 		case "3c":
-			System.out.println(frame
-					+ "3c) (DataContainer) blip(id:String):void\ntype \"exit\" to exit this method panel.\nAnge ett virtuellt ID som ska blippas...");
+			System.out.println(ComsText.datac3c);
 			input = sc.nextLine();
 			if (!(input.equals("exit"))) {
 				try {
@@ -314,12 +352,11 @@ public class ServerComsInterface implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
 		case "3d":
-			System.out.println(frame
-					+ "3d) (DataContainer) addToAcceptanceMap(key:String, value:Boolean):void\ntype \"exit\" to exit this method panel.\nAnge ett kort ID som ska läggas till...");
+			System.out.println(ComsText.datac3d);
 			input = sc.nextLine();
 			if (!(input.equals("exit"))) {
 				System.out.print("Ange om kortets ID ska vara godkänt (true/false)...");
@@ -335,12 +372,11 @@ public class ServerComsInterface implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
 		case "3e":
-			System.out.println(frame
-					+ "3e) (DataContainer) updateAcceptanceMap(map:HashMap<String,Boolean>):void\nWARNING! this will replace the current AcceptanceMap \nwith a new one containing the card IDs of the creators.\nPress \"y\" to continue or any other button to exit");
+			System.out.println(ComsText.datac3e);
 			input = sc.nextLine();
 			if (input.equals("y")) {
 				HashMap<String, Boolean> map2 = new HashMap<String, Boolean>();
@@ -357,24 +393,110 @@ public class ServerComsInterface implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
+		case "3f":
+			System.out.println(ComsText.datac3f);
+			HashMap<String, String> map2 = RootServer.getDataContainer().getIdNameMap();
+			String res3 = "";
+			for (Entry<String, String> entry : map2.entrySet()) {
+				res3 += "kort-id: " + entry.getKey() + "  kortnamn: " + entry.getValue() + "\n";
+			}
+			System.out.println(res3 + "\nMethod executed." + ComsText.frame);
+			break;
+
+		case "3g":
+			System.out.println(ComsText.datac3g);
+			input = sc.nextLine();
+			if (input.equals("y")) {
+				HashMap<String, String> map3 = new HashMap<String, String>();
+				map3.put("111", "Sebastian");
+				map3.put("222", "Arvid");
+				map3.put("333", "Mikael");
+				map3.put("444", "Hadi");
+				map3.put("555", "Benjamin");
+				map3.put("666", "Viktor");
+				RootServer.getDataContainer().setIdNameMap(map3);
+				System.out.println("\nMethod executed.");
+			}
+			System.out.println(ComsText.frame);
+			break;
+
+		case "3h":
+			System.out.println(ComsText.datac3h);
+			break;
+
+		case "3i":
+			System.out.println(ComsText.datac3i);
+			input = sc.nextLine().toLowerCase();
+			if (!input.equals("exit")) {
+				if (input.equals("open")) {
+					RootServer.getDataContainer().setDoorState(DoorState.OPEN);
+					System.out.println(
+							"Door state: " + RootServer.getDataContainer().getDoorState() + "\nMethod executed.");
+				} else if (input.equals("openalarm")) {
+					RootServer.getDataContainer().setDoorState(DoorState.OPEN_ALARM);
+					System.out.println(
+							"Door state: " + RootServer.getDataContainer().getDoorState() + "\nMethod executed.");
+				} else if (input.equals("closed")) {
+					RootServer.getDataContainer().setDoorState(DoorState.CLOSED);
+					System.out.println(
+							"Door state: " + RootServer.getDataContainer().getDoorState() + "\nMethod executed.");
+				}
+			}
+			System.out.println(ComsText.frame);
+			break;
+
+		case "3j":
+			System.out.println(ComsText.datac3j);
+			break;
+
+		case "3k":
+			System.out.println(ComsText.datac3k);
+			input = sc.nextLine().toLowerCase();
+			if (!input.equals("exit")) {
+				if (input.equals("true")) {
+					RootServer.getDataContainer().setShouldLockBeOpened(true);
+					System.out.println("ShouldLockBeOpened value: "
+							+ RootServer.getDataContainer().getShouldLockBeOpened() + "\nMethod executed.");
+				}
+			}
+			System.out.println(ComsText.frame);
+			break;
+
+		case "3l":
+			System.out.println(ComsText.datac3l);
+			break;
+
+		case "3m":
+			System.out.println(ComsText.datac3m);
+			int inp = 0;
+			try {
+				inp = sc.nextInt();
+			} catch (InputMismatchException ex) {
+				System.out.println("Du måste ange ett heltal.");
+				System.out.println(ComsText.frame);
+			}
+			if (inp != 0) {
+				RootServer.getDataContainer().getTimeoutClock().setTimeLimit(inp);
+				System.out.println("Timeout value (time limit): " + RootServer.getDataContainer().getTimeout()
+						+ "\nMethod executed.");
+			}
+			System.out.println(ComsText.frame);
+			break;
+
+		/* Klassmetoder TimeoutClock */
 		case "4a":
-			System.out.println(frame + "4a) (TimeoutClock) getTimeLimit(void):int\n"
-					+ RootServer.getDataContainer().getTimeoutClock().getTimeLimit() + " sekunder.\nMethod executed."
-					+ frame);
+			System.out.println(ComsText.doortime4a);
 			break;
 
 		case "4b":
-			System.out.println(frame + "4b) (TimeoutClock) timeElapsed(void):int\n"
-					+ RootServer.getDataContainer().getTimeoutClock().timeElapsed() + " sekunder.\nMethod executed."
-					+ frame);
+			System.out.println(ComsText.doortime4b);
 			break;
 
 		case "4c":
-			System.out.println(frame
-					+ "4c) (TimeoutClock) setTimeLimit(limit:int):void\ntype \"exit\" to exit this method panel.\nAnge i sekunder hur lång tid dörren får vara öppen innan en push-notis skickas ut till app:en.");
+			System.out.println(ComsText.doortime4c);
 			input = sc.nextLine();
 			if (!(input.equals("exit"))) {
 				try {
@@ -382,25 +504,24 @@ public class ServerComsInterface implements Runnable {
 				} catch (NumberFormatException ex) {
 					System.out.println("Du måste mata in ett heltal.");
 				}
-				System.out.println("\nMethod executed.");
+				System.out.println("Timeout value: " + RootServer.getDataContainer().getTimeoutClock().getTimeLimit()
+						+ "\nMethod executed.");
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
 		case "4d":
-			System.out.println(frame + "4d) (TimeoutClock) isTimeUp(void):boolean\n"
-					+ RootServer.getDataContainer().getTimeoutClock().isTimeUp() + "\nMethod executed." + frame);
+			System.out.println(ComsText.doortime4d);
 			break;
 
 		case "4e":
-			System.out.println(frame
-					+ "4e) (TimeoutClock) reset(void):void\nDen här metoden kommer att nollställa räknaren. Tryck \"y\" för att fortsätta eller valfri annan knapp för att avbryta.");
+			System.out.println(ComsText.doortime4e);
 			input = sc.nextLine();
 			if (input.equals("y")) {
 				RootServer.getDataContainer().getTimeoutClock().reset();
 				System.out.println("\nMethod executed.");
 			}
-			System.out.println(frame);
+			System.out.println(ComsText.frame);
 			break;
 
 		// case "4f":
