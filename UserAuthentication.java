@@ -31,6 +31,7 @@ public class UserAuthentication extends BasicAuthenticator{
  * @return booelan Om användarnamnet och lösenordet finns med i listan
  */
 		public boolean checkCredentials(String user, String pass) {
+			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 			if(user.isEmpty()){
 				user = "*EMPTY*";
 			}else if(!(UserContainer.characterCheck(user,false))){
@@ -40,7 +41,6 @@ public class UserAuthentication extends BasicAuthenticator{
 			 // log.test(); /*Kommentera denna rad när TimestampLog inte ska testas*/
 			 // RootServer.getDataContainer().test();/*Kommentera denna rad när DataContainer inte ska testas*/
 			HashMap<String,String> list = container.getAcceptanceList();
-			System.out.println("USER: "+user+" "+"PASS: "+pass+" END ");
 
 			System.out.println("Empty? :" + list.isEmpty()+
 			"\n"+"Size: "+list.size());
