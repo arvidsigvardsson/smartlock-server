@@ -106,7 +106,7 @@ public class ServerComsInterface implements Runnable {
 		switch (input) {
 
 		case "test1":
-			commandsArr = new String[] { "1a", "1a", "1a", "1a", "1a", "1a", "1a" };
+			commandsArr = new String[] { "1a", "1a", "1a", "1a", "1a", "1a", "1a","1a" };
 			test();
 			break;
 
@@ -136,7 +136,7 @@ public class ServerComsInterface implements Runnable {
 			break;
 
 		case "test7":
-			commandsArr = new String[] { "3m", "3h", "3h", "4d", "3j","3h","3j","4d","4a","3l","4b","4e","3h","3h" };
+			commandsArr = new String[] { "3l", "3m", "3h", "3h", "3h","3k","4b","4d","3m","4a","3h","4b","4b","3h","4b","3k","3h","3k" };
 			test();
 			break;
 
@@ -320,8 +320,13 @@ public class ServerComsInterface implements Runnable {
 		case "2b":
 			System.out.println(ComsText.tlog2b);
 			input = sc.nextLine();
+			String[] log;
 			if (!(input.equals("exit"))) {
-				String[] log = RootServer.getTimestampLog().getLog(input);
+				try{
+				log = RootServer.getTimestampLog().getLog(input);
+				}catch(NullPointerException ex){
+					break;
+				}
 				String result = "";
 				for (String s : log) {
 					result += s;
