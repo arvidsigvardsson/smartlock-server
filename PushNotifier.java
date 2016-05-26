@@ -20,11 +20,27 @@ import java.net.URL;
 import java.net.HttpURLConnection;
 import javax.net.ssl.HttpsURLConnection;
 
+/**
+ * Klassen PushNotifier skickar pushnotiser till androidklienter via Googles GCM-service. 
+ * Detta görs genom att göra ett POST-request till en GCM-server. I det requestet krävs en
+ * api-nyckel, som är lagrad i en textfil, samt en token till varje klient som vill ta 
+ * emot notiser, också lagrade i en textfil. Klienter registrerar sig via endpointen 
+ * /pushtokens som hanteras av klassen PushTokensHandler, som anropar denna klass via
+ * metoden addToken. Till requestet skapas ett jsonobjekt innehållande tokens samt annan 
+ * info om notisen. Beroende på om det är en synlig eller tyst notis som skickas används 
+ * metoderna makeJsonPushObject eller makeJsonPushObjectWithNotification
+ */
 public class PushNotifier {
 	private String tokensFilePath;
 	private String apiKey;
 	private ArrayList<String> tokens;
 
+	/**
+	 * Konstruerar ett objekt med filnamn till filer med api-nyckel och tokens
+	 *
+	 * @param apiFilePath fil med api-nyckel
+	 * @param tokensFilePath fil med tokens
+	 */
 	public PushNotifier(String apiFilePath, String tokensFilePath) {
 		this.tokensFilePath = tokensFilePath;
 
@@ -32,6 +48,12 @@ public class PushNotifier {
 		readTokens(tokensFilePath);
 	}
 
+	/**
+	 * skickar ut en synlig notis med meddelandet att dörren varit öppen en viss angiven
+	 * tid
+	 *
+	 * @param timeOpen den tid som ska visas i meddelandet
+	 */
 	public void sendDoorOpenPush(int timeOpen) {
 		System.out.println("Ska skicka dörr öppen push");
 		String json = makeJsonPushObjectWithNotification(timeOpen);
@@ -39,49 +61,67 @@ public class PushNotifier {
 		sendPushNotification(json);
 	}
 
+	/**
+	 * skickar ut en tyst notis om att listan med RFID-kort har uppdaterats, så att 
+	 * klienter kan liveuppdateras
+	 */
 	public void sendAdminPushNotification() {
 		System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
 		String json = makeJsonPushObject("Change to card id data on server");
 		sendPushNotification(json);
 	}
-
+	
+	/**
+	 * skickar ut en tyst notis om att loglistan har uppdaterats, så att klienter kan 
+	 * liveuppdateras
+	 */
 	public void sendLogUpdatePush() {
 		System.out.println("Nu ska en pushnotis om loglistan skickas ut");
-		// String json = makeJsonLogPushObject();
 		String json = makeJsonPushObject("Change to log list on server");
 		sendPushNotification(json);
 	}
 
+	/**
+	 * skickar ut en tyst notis om att dörren är öppen, så att klienter kan ändra dörrikon
+	 * i ui
+	 */
 	public void sendSilentDoorOpenPush() {
 		System.out.println("Nu ska en tyst notis att dörren är öppen skickas ut");
 		String json = makeJsonPushObject("opened");
 		sendPushNotification(json);
 	}
 
+	/**
+	 * skickar ut en tyst notis om att dörren är stängd, så att klienter kan ändra 
+	 * dörrikon i ui
+	 */
 	public void sendSilentDoorClosedPush() {
 		System.out.println("Nu ska en tyst notis att dörren är stängd skickas ut");
 		String json = makeJsonPushObject("closed");
 		sendPushNotification(json);
 	}
 
+	// metod för att göra pushnotisrequest, tar json som argument
 	private void sendPushNotification(String json) {
-		// System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
-		// String json = makeJsonPushObject();
-
 		try {
 			URL url = new URL("https://gcm-http.googleapis.com/gcm/send");
 			HttpURLConnection connection = (HttpsURLConnection) url.openConnection();
+			// api-nyckel krävs i Authorization-headern
 			connection.setRequestProperty("Authorization", "key=" + apiKey);
 			connection.setRequestProperty("Content-type", "application/json");
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Accept-Charset", "UTF-8");
 
+			// skriver json som http-body
 			DataOutputStream os = new DataOutputStream(connection.getOutputStream());
 			os.write(json.getBytes());
 			os.flush();
 			os.close();
 
+			// läser in svar från GCM-servern. Tidigare använde vi svaret i debugsyfte och
+			// skrev ut det i konsollen, nu ignorerar vi det, och skriver bara ut 
+			// statuskoden
 			InputStream response = connection.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(response));
 			String responseStr = "";
@@ -89,8 +129,7 @@ public class PushNotifier {
 			while ((input = br.readLine()) != null) {
 				responseStr += input;
 			}
-			// System.out.println("Svar: " + responseStr);
-
+			
 			System.out.println("Statuskod: " + connection.getResponseCode());
 			connection.disconnect();
 		} catch (IOException e) {
@@ -98,6 +137,9 @@ public class PushNotifier {
 		}
 	}
 
+	/**
+	 * metod för att lägga till tokens, anropas av PushTokensHandler
+	 */
 	public void addToken(String token) {
 		// kollar så att token inte redan finns
 		if (!tokens.contains(token)) {
@@ -107,14 +149,10 @@ public class PushNotifier {
 		writeTokensToDisk();
 	}
 
-	public void writeTokensToDisk() {
+	// sparar tokens till textfil
+	private void writeTokensToDisk() {
 		try {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tokensFilePath),"UTF-8"));
-
-			// for (Entry<String, String> entry : idNameMap.entrySet()) {
-			// 	bw.write(entry.getKey() + "," + entry.getValue());
-			// 	bw.newLine();
-			// }
 
 			for (String token : tokens) {
 				bw.write(token);
@@ -127,36 +165,13 @@ public class PushNotifier {
 		}
 	}
 
+	// skapar ett jsonobjekt som används till notisen
 	private String makeJsonPushObject(String message) {
-		// return "{\"to\":\"eeo-s16-1vg:APA91bFcKOQ0UrAf4f8e7SOkysDM_78gIlJunBoq4yFw5KooiSKMIzEiUMbELplw7ksO0Dz4Lft9Ekga47SLH9It_eKG-DgnDN7KKA52LyAzzscSOUMkZ0b9oiHVWnbbvq3HpyEN32n7\",\"data\": {\"score\":\"3x1\"}}";
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonPushData jpd = new JsonPushData();
 			jpd.setMessage(message);
 			jpd.setSilent(true);
-			JsonPush jp = new JsonPush();
-
-			// sätta lista med registration ids
-			jp.setRegistration_ids(tokens);
-			// jp.setTo(tokens.get(0));
-			// jp.setData(mapper.writeValueAsString(jpd));
-
-			jp.setData(jpd);
-			String json = mapper.writeValueAsString(jp);
-			// System.out.println("Json: " + json);
-			return json;
-		} catch (IOException e) {
-			System.out.println(e);
-			return null;
-		}
-	}
-
-	private String makeJsonLogPushObject() {
-		// return "{\"to\":\"eeo-s16-1vg:APA91bFcKOQ0UrAf4f8e7SOkysDM_78gIlJunBoq4yFw5KooiSKMIzEiUMbELplw7ksO0Dz4Lft9Ekga47SLH9It_eKG-DgnDN7KKA52LyAzzscSOUMkZ0b9oiHVWnbbvq3HpyEN32n7\",\"data\": {\"score\":\"3x1\"}}";
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			JsonPushData jpd = new JsonPushData();
-			jpd.setMessage("Change to log list on server");
 			JsonPush jp = new JsonPush();
 
 			// sätta lista med registration ids
@@ -224,19 +239,5 @@ public class PushNotifier {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-	}
-
-	public String toString() {
-		String s = "";
-		s += "Api key: " + apiKey + "\nTokens:\n";
-		for(String token : tokens) {
-			s = s + token + "\n";
-		}
-		return s;
-	}
-
-	public static void main(String[] args) {
-		PushNotifier pn = new PushNotifier("filer/apikey.txt", "filer/pushtokens.txt");
-		System.out.println(pn);
 	}
 }
