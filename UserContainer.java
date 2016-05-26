@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -281,21 +282,20 @@ public class UserContainer {
 	 *             Kastas om filen som data lagras i inte hittas.
 	 */
 	public void addToAcceptanceMap(String key, String value) throws IOException {
-
-		if (!characterCheck(key,false)) {
+		if (this.acceptanceMap.containsKey(key.hashCode() + "")) {
+			System.out.println("Användarnamnet är upptaget!");
+			return;
+		} else if (!characterCheck(key, false)) {
 			System.out.println("Fel: Användarnamnet innehåller ett ogiltigt tecken");
 			return;
-		} else if (!characterCheck(value,true)) {
+		} else if (!characterCheck(value, true)) {
 			System.out.println("Fel: Lösenordet innehåller ett ogiltigt tecken");
 			return;
 		}
-		if (this.acceptanceMap.keySet().contains(key)) {
-			System.out.println("Användarnamnet är upptaget!");
-		} else {
-			System.out.println("Användare läggs till i systemet!");
-			this.acceptanceMap.put(key.hashCode() + "", value.hashCode() + "");
-			write(true);
-		}
+		System.out.println("Användare läggs till i systemet!");
+		this.acceptanceMap.put(key.hashCode() + "", value.hashCode() + "");
+		write(true);
+
 	}
 
 	/**
@@ -307,22 +307,22 @@ public class UserContainer {
 	 *            Strängen som ska kontrolleras
 	 * @return boolean true om pass, false om fail
 	 */
-	public static boolean characterCheck(String str,boolean pass) {
+	public static boolean characterCheck(String str, boolean pass) {
 		int a;
-		try{
+		try {
 			a = (int) str.charAt(0);
-		}catch(StringIndexOutOfBoundsException ex){
+		} catch (StringIndexOutOfBoundsException ex) {
 			return false;
 		}
-		
+
 		if (a == 65533) { /* Code for uknown char */
 			return false;
 		}
-		if(pass){
-			if (str.isEmpty() || str.contains(" ")){
+		if (pass) {
+			if (str.isEmpty() || str.contains(" ")) {
 				return false;
 			}
-		}else{
+		} else {
 			if (str.isEmpty() || str.contains(" ") || str.contains(",") || str.contains("å") || str.contains("ä")
 					|| str.contains("ö") || str.contains("Å") || str.contains("Ä") || str.contains("Ö")) {
 				return false;
