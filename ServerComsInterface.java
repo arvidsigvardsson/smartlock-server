@@ -126,7 +126,7 @@ public class ServerComsInterface implements Runnable {
 			break;
 
 		case "test5":
-			commandsArr = new String[] { "2a", "2b", "2c", "2d", "2e","2e", "2b", "2c", "2d", "3c","2b","3d","2b","2a" };
+			commandsArr = new String[] { "1a","2a", "2b", "2c", "2d", "2e","2e", "2b", "2c", "2d", "3c","2b","3d","2b","2a" };
 			test();
 			break;
 
