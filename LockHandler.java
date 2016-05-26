@@ -101,13 +101,8 @@ public class LockHandler implements Runnable {
 					ps.print(response);
 					//System.out.println("Skickar meddelande till arduinon: " + response);
 
-					
-					
 					client.close();
 				}
-				// testar att stänga inputstreamen
-				in.close();
-				
 				reader.close();
 				client.close();
 

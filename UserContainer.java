@@ -282,10 +282,10 @@ public class UserContainer {
 	 */
 	public void addToAcceptanceMap(String key, String value) throws IOException {
 
-		if (!characterCheck(key)) {
+		if (!characterCheck(key,false)) {
 			System.out.println("Fel: Användarnamnet innehåller ett ogiltigt tecken");
 			return;
-		} else if (!characterCheck(value)) {
+		} else if (!characterCheck(value,true)) {
 			System.out.println("Fel: Lösenordet innehåller ett ogiltigt tecken");
 			return;
 		}
@@ -307,7 +307,7 @@ public class UserContainer {
 	 *            Strängen som ska kontrolleras
 	 * @return boolean true om pass, false om fail
 	 */
-	public static boolean characterCheck(String str) {
+	public static boolean characterCheck(String str,boolean pass) {
 		int a;
 		try{
 			a = (int) str.charAt(0);
@@ -318,9 +318,15 @@ public class UserContainer {
 		if (a == 65533) { /* Code for uknown char */
 			return false;
 		}
-		if (str.isEmpty() || str.contains(" ") || str.contains(",") || str.contains("å") || str.contains("ä")
-				|| str.contains("ö") || str.contains("Å") || str.contains("Ä") || str.contains("Ö")) {
-			return false;
+		if(pass){
+			if (str.isEmpty() || str.contains(" ")){
+				return false;
+			}
+		}else{
+			if (str.isEmpty() || str.contains(" ") || str.contains(",") || str.contains("å") || str.contains("ä")
+					|| str.contains("ö") || str.contains("Å") || str.contains("Ä") || str.contains("Ö")) {
+				return false;
+			}
 		}
 		return true;
 	}

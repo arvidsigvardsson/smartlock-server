@@ -33,7 +33,7 @@ public class UserAuthentication extends BasicAuthenticator{
 		public boolean checkCredentials(String user, String pass) {
 			if(user.isEmpty()){
 				user = "*EMPTY*";
-			}else if(!(UserContainer.characterCheck(user))){
+			}else if(!(UserContainer.characterCheck(user,false))){
 				user = "*INVALID_INPUT*";
 			}
 			 // container.test(); /*Kommentera denna rad när UserContainer inte ska testas*/
