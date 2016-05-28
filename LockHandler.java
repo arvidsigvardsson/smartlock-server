@@ -92,8 +92,9 @@ public class LockHandler implements Runnable {
 
 					// ifall låset skickar ett blip
 					else if (input.charAt(0) == 'c') {
-						response = "blip received";
-						RootServer.getDataContainer().blip(input.substring(1));
+						String cardId = input.substring(1);
+						response = "card with id " + cardId + " received";
+						RootServer.getDataContainer().blip(cardId);
 					}
 					
 					// skickar meddelande tillbaka över socketen och stänger den sen
