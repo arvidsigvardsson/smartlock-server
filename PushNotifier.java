@@ -168,7 +168,7 @@ public class PushNotifier {
 	// skapar ett jsonobjekt som används till notisen
 	private String makeJsonPushObject(String message) {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
+			// skapar javaobjekt som sedan ska konverteras till jsonobjekt
 			JsonPushData jpd = new JsonPushData();
 			jpd.setMessage(message);
 			jpd.setSilent(true);
@@ -176,12 +176,11 @@ public class PushNotifier {
 
 			// sätta lista med registration ids
 			jp.setRegistration_ids(tokens);
-			// jp.setTo(tokens.get(0));
-			// jp.setData(mapper.writeValueAsString(jpd));
-
 			jp.setData(jpd);
+			
+			// konverterar javaobjekt till jsonobjekt
+			ObjectMapper mapper = new ObjectMapper();
 			String json = mapper.writeValueAsString(jp);
-			// System.out.println("Json: " + json);
 			return json;
 		} catch (IOException e) {
 			System.out.println(e);
@@ -189,9 +188,11 @@ public class PushNotifier {
 		}
 	}
 
+	// skapar ett jsonobjekt som även innehåller info om hur en synlig notis ska visas upp
+	// för användare av mobilklient
 	private String makeJsonPushObjectWithNotification(int timeOpen) {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
+			// skapar javaobjekt som sedan ska konverteras till jsonobjekt
 			JsonPushData jpd = new JsonPushData();
 			String msg = "Din dörr har varit öppen i " + timeOpen + " sekunder";
 
@@ -199,26 +200,24 @@ public class PushNotifier {
 
 			jpd.setMessage(msg);
 			jpd.setSilent(false);
-			// JsonPush jp = new JsonPush();
 			JsonPushWithNotificationField jp = new JsonPushWithNotificationField();
 
 			// sätta lista med registration ids
 			jp.setRegistration_ids(tokens);
-			// jp.setTo(tokens.get(0));
-			// jp.setData(mapper.writeValueAsString(jpd));
-
 			jp.setData(jpd);
 			jp.setNotification(jpnf);
 
+			// konverterar javaobjekt till jsonobjekt
+			ObjectMapper mapper = new ObjectMapper();
 			String json = mapper.writeValueAsString(jp);
-			// System.out.println("Json: " + json);
 			return json;
 		} catch (IOException e) {
 			System.out.println(e);
 			return null;
 		}
 	}
-
+	
+	// läser in api-nyckel från textfil
 	private void readApiKey(String apiFilePath) {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(apiFilePath)));
@@ -228,6 +227,7 @@ public class PushNotifier {
 		}
 	}
 
+	//läser in tokens från textfil
 	private void readTokens(String tokensFilePath) {
 		tokens = new ArrayList<String>();
 		try {
