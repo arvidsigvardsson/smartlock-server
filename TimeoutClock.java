@@ -1,12 +1,9 @@
 /**
  * Håller koll på när en notis ska sändas ut till app:en om att dörren varit
  * öppen för länge. Servern tar emot ett meddelande från Arduinot i klassen
- * LockHandler där servern får info om dörren är öppen eller stängd. I
- * DataContainer klassen finns två metoder (get/set) för om en push-notifikation
- * har sänts ut. En push-notifikation sänds endast ut en gång för varje gång
- * dörren stått öppen för länge. Fungerar med en sekunds marginal då detta är
- * hastigheten servern får information från Arduinot om dörrens tillstånd
- * (öppen/stängd)
+ * LockHandler där servern får info om dörren är öppen eller stängd, och där
+ * finns en tillståndsmaskin som hanterar dörrstatus, som använder denna klass
+ * för timeoutfunktion
  * 
  * @author Arvid Sigvardsson och Sebastian Sologuren
  *

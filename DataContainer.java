@@ -15,10 +15,11 @@ import javax.swing.JOptionPane;
 
 /**
  * Lagrar id:n och derast status (giltig/ogiltig) i en HashMap<String,Boolean>.
- * Klassen läser och skriver även till en text fil där all data lagras.
- *
+ * Lagrar även hur kortID:n är mappade till kortnamn i en HashMap
+ * <String,String> Klassen läser och skriver även till en text filer där all
+ * data lagras.
+ * 
  * @author Sebastian, tillägg av Arvid
- *
  */
 
 public class DataContainer {

@@ -8,7 +8,7 @@
 * get-metoder. Ett objekt som vill skicka pushnotis kan skriva
 * RootServer.getPushNotifier() för att få tillgång till det objektet.
 *
-* @author Arvid Sigvardsson
+* @author Arvid Sigvardsson och Sebastian Sologuren
 */
 
 public class RootServer {

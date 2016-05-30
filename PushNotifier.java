@@ -29,6 +29,8 @@ import javax.net.ssl.HttpsURLConnection;
  * metoden addToken. Till requestet skapas ett jsonobjekt innehållande tokens samt annan 
  * info om notisen. Beroende på om det är en synlig eller tyst notis som skickas används 
  * metoderna makeJsonPushObject eller makeJsonPushObjectWithNotification
+ *
+ * @author Arvid Sigvardsson
  */
 public class PushNotifier {
 	private String tokensFilePath;
