@@ -66,9 +66,9 @@ public class PushNotifier {
 	 * klienter kan liveuppdateras
 	 */
 	public void sendAdminPushNotification() {
-		System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
-		String json = makeJsonPushObject("Change to card id data on server");
-		sendPushNotification(json);
+		// System.out.println("Nu ska en pushnotis om adminlistan skickas ut");
+		// String json = makeJsonPushObject("Change to card id data on server");
+		// sendPushNotification(json);
 	}
 	
 	/**
@@ -76,9 +76,9 @@ public class PushNotifier {
 	 * liveuppdateras
 	 */
 	public void sendLogUpdatePush() {
-		System.out.println("Nu ska en pushnotis om loglistan skickas ut");
-		String json = makeJsonPushObject("Change to log list on server");
-		sendPushNotification(json);
+		// System.out.println("Nu ska en pushnotis om loglistan skickas ut");
+		// String json = makeJsonPushObject("Change to log list on server");
+		// sendPushNotification(json);
 	}
 
 	/**
