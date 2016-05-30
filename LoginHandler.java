@@ -18,6 +18,8 @@ public class LoginHandler implements HttpHandler {
 	/**
 	 * metod som kallas av HttpServer när klassen startas som tråd för att behandla 
 	 * inkommande request
+	 * 
+	 * @params ex objekt som används för att hantera Http-requestet
 	 */
 	public void handle(HttpExchange ex) throws IOException {
 		System.out.println("Inloggning sker");

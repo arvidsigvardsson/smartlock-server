@@ -9,12 +9,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
-* ClientHttpServer hanterar alla inkommande httprequest till servern. En HttpServer instansieras och sätts att lyssna på * angiven port, i vårt fall port 8080, inte port 80 som är standard eftersom vi använder en proxyserver som 
-* vidarebefordrar https-trafik till vår server.
-* De olika HttpContexterna motsvarar olika endpoints där servern kan kontaktas, och de startar en tråd av en handler för
-* varje inkommande request.
-*
-*/
+ * ClientHttpServer hanterar alla inkommande httprequest till servern. En HttpServer
+ * instansieras och sätts att lyssna på * angiven port, i vårt fall port 8080, inte port 
+ * 80 som är standard eftersom vi använder en proxyserver som vidarebefordrar https-trafik
+ * till vår server.
+ * De olika HttpContexterna motsvarar olika endpoints där servern kan kontaktas, och de 
+ * startar en tråd av en handler för varje inkommande request.
+ *
+ * @author Arvid Sigvardsson med tillägg av Sebastian Sologuren
+ */
 public class ClientHttpServer implements Runnable {
 	private int port;
 	

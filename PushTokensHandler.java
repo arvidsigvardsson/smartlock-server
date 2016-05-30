@@ -10,7 +10,21 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.util.*;
 
+/**
+ * Hanterar endpointen /pushtokens, som låter mobilklienter ansluta och lägga till sin 
+ * unika token som används vid pushnotiser. Dessa skickas till objektet pushNotifier som 
+ * lagrar dem
+ *
+ * @author Arvid Sigvardsson
+ */
 public class PushTokensHandler implements HttpHandler {
+	
+	/**
+	 * metod som kallas av HttpServer när klassen startas som tråd för att behandla 
+	 * inkommande request
+	 * 
+	 * @params ex objekt som används för att hantera Http-requestet
+	 */
 	public void handle(HttpExchange ex) {
 		System.out.println("PushTokensHandler");
 		String response = "";
@@ -18,16 +32,17 @@ public class PushTokensHandler implements HttpHandler {
 		// avgöra typ av request
 		if ("POST".equals(ex.getRequestMethod())) {
 			System.out.println("Post-request");
-			// try {
-				String body = readBody(ex.getRequestBody());
-				if (!body.equals("") && body != null) {
-					RootServer.getPushNotifier().addToken(body);
-					response = body;
-					responseCode = 200;
-				} else {
-					response = "Empty body not allowed";
-					responseCode = 400;
-				}
+			String body = readBody(ex.getRequestBody());
+			if (!body.equals("") && body != null) {
+				// skicka token till pushNotifier där de används för att skicka 
+				// pushnotiser
+				RootServer.getPushNotifier().addToken(body);
+				response = body;
+				responseCode = 200;
+			} else {
+				response = "Empty body not allowed";
+				responseCode = 400;
+			}
 		} else {
 			response = "Only POST requests permitted";
 			responseCode = 403;
@@ -44,6 +59,7 @@ public class PushTokensHandler implements HttpHandler {
 		}	
 	}
 
+	// hjälpmetod som läser http-body och konverterar till sträng
 	private String readBody(InputStream is) {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));

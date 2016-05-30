@@ -13,6 +13,12 @@ import java.util.concurrent.Executors;
 */
 public class LockServer implements Runnable {
 	private int port;
+	
+	/**
+	 * Konstruerar en server som lyssnar på angiven port
+	 *
+	 * @param port port att lyssna på
+	 */
 	public LockServer(int port) {
 		this.port = port;
 	}

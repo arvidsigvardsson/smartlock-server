@@ -11,9 +11,16 @@ import java.util.*;
 * läggas. Den enda i dagsläget är om klienten anger queryn /client?message=open så kommer 
 * låset nästa gång det ansluter få meddelandet "open" vilket kommer att öppna låset
 *
-* @author Arvid Sigvardsson
+* @author Arvid Sigvardsson och Sebastian Sologuren
 */
 public class ClientHttpHandler implements HttpHandler {
+	
+	/**
+	 * metod som kallas av HttpServer när klassen startas som tråd för att behandla 
+	 * inkommande request
+	 * 
+	 * @params ex objekt som används för att hantera Http-requestet
+	 */
 	public void handle(HttpExchange ex) throws IOException {
 		System.out.println("Http request received, detta är query: " + ex.getRequestURI().getQuery());
 		System.out.println("Detta är request method: " + ex.getRequestMethod());
@@ -23,8 +30,10 @@ public class ClientHttpHandler implements HttpHandler {
 		Map<String, String> params = queryToMap(ex.getRequestURI().getQuery());
 
 		if ("open".equals(params.get("message"))) {
+			// signalera till arduinon att låset ska öppnas
 			RootServer.getDataContainer().setShouldLockBeOpened(true);
-			RootServer.getTimestampLog().addTimestamp(ex.getPrincipal().getUsername(), true);/*LOGGA TRYCKET AV "ÖPPNA LÅS"-KNAPPEN*/
+			// lägga till händelse i loggen
+			RootServer.getTimestampLog().addTimestamp(ex.getPrincipal().getUsername(), true);
 			response = "Opening the lock\n";
 			responseCode = 200;
 		} else {
@@ -32,14 +41,16 @@ public class ClientHttpHandler implements HttpHandler {
 			response = "Bad Request\n";
 			responseCode = 400;
 		}
-
+		
+		// skicka svar
 		ex.sendResponseHeaders(responseCode, response.length());
 		OutputStream os = ex.getResponseBody();
 		os.write(response.getBytes());
 		os.close();
 	}
 
-	public static Map<String, String> queryToMap(String query) {
+	// hjälpmetod för att läsa requestets parametrar och lagra dem i en Map
+	private static Map<String, String> queryToMap(String query) {
 		Map<String, String> result = new HashMap<String, String>();
 		if (query == null) {
 			return result;

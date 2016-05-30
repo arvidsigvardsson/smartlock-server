@@ -14,19 +14,34 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonParseException;
 
+/**
+ * Hanterar endpointen /admin. Via den kan mobilklienter ansluta för att antingen läsa 
+ * vilka rfidkort som är registrerade och har access och deras namn (GET-request), eller
+ * uppdatera den informationen (POST-request)
+ *
+ * @author Arvid Sigvardsson
+ */
 public class ClientAdminHandler implements HttpHandler {
+	/**
+	 * metod som kallas av HttpServer när klassen startas som tråd för att behandla 
+	 * inkommande request
+	 * 
+	 * @params ex objekt som används för att hantera Http-requestet
+	 */
 	public void handle(HttpExchange ex) {
 		System.out.println("Adminhanterare");
 		// avgöra om det är GET eller POST
 		if ("POST".equals(ex.getRequestMethod())) {
 			try {
 				String body = readBody(ex.getRequestBody());
-				System.out.println("Post request, detta är body: " + body ); //readBody(ex.getRequestBody()));
-				// String body = readBody(ex.getRequestBody());
+				System.out.println("Post request, detta är body: " + body );
+				// skapar ett jsonobjekt med innehållet i Http-bodyn, hämta ut parametrar // ur det objektet, och skicka vidare dem till dataContainer
 				JsonRFID jsonRfid = readJSON(body);
 				RootServer.getDataContainer().setAcceptanceMap(jsonRfid.getRfidMap());
 				RootServer.getDataContainer().setIdNameMap(jsonRfid.getIdNameMap());
 
+				// svara på requestet med ett eko av det inkommande, så att klienten kan
+				// kontrollera att rätt data kommit fram, om klienten vill
 				ex.sendResponseHeaders(200, body.length());
 				OutputStream os = ex.getResponseBody();
 				os.write(body.getBytes());
@@ -37,8 +52,7 @@ public class ClientAdminHandler implements HttpHandler {
 		} else if ("GET".equals(ex.getRequestMethod())) {
 			try {
 				System.out.println("Get request");
-
-				// String response = "{\"rfidMap\": {\"abcdef12\": true,\"e5a1ea45\": true,\"f1397af0\": false} }";
+				// konstruerar ett jsonobjekt för som svar på GET-request, och hämta data // till detta från dataContainer
 				JsonRFID jmap = new JsonRFID();
 				jmap.setRfidMap(RootServer.getDataContainer().getAcceptanceMap());
 				jmap.setIdNameMap(RootServer.getDataContainer().getIdNameMap());
@@ -49,25 +63,20 @@ public class ClientAdminHandler implements HttpHandler {
 				} else {
 					jmap.setDoorOpen(true);
 				}
-
 				ObjectMapper mapper = new ObjectMapper();
-
 				String response = mapper.writeValueAsString(jmap);
-
+				
+				// skicka svaret
 				ex.sendResponseHeaders(200, response.length());
-
 				OutputStream os = ex.getResponseBody();
 				os.write(response.getBytes());
 				os.close();
 			} catch (IOException e) {
 				System.out.println(e);
 		}
-		} else {
-
-		}
-
 	}
 
+	// hjälpmetod som läser Http-bodyn och returnerar en jsonsträng
 	private String readBody(InputStream is) {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -82,8 +91,9 @@ public class ClientAdminHandler implements HttpHandler {
 			return "Error reading body, " + e;
 		}
 	}
-
-	public JsonRFID readJSON(String jsonString) {
+	
+	// hjälpmetod som konverterar en jsonsträng till ett javaobjekt
+	private JsonRFID readJSON(String jsonString) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonRFID jobj = mapper.readValue(jsonString, JsonRFID.class);
