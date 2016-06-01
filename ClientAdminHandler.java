@@ -73,6 +73,7 @@ public class ClientAdminHandler implements HttpHandler {
 				os.close();
 			} catch (IOException e) {
 				System.out.println(e);
+			}
 		}
 	}
 
